@@ -1,6 +1,6 @@
 "use strict";
 
-// Connection Pool
+// Internal Modules
 import pool from "../../pool.js";
 
 // Exports
@@ -20,7 +20,7 @@ async function dropTable(tableName, cascade = false) {
             await pool.query(`DROP TABLE ${tableName} CASCADE;`);
         }
     } catch (err) {
-        console.log(`Dropping table ${tableName} failed: ${err.messsage}`);
+        console.error(`Dropping table ${tableName} failed: ${err.messsage}`);
 
         return false;
     }

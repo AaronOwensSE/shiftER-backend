@@ -1,6 +1,6 @@
 "use strict";
 
-// PostgreSQL
+// External Dependencies
 import pg from "pg";
 
 // Exports

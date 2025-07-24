@@ -1,0 +1,26 @@
+{
+  "name": "shifter-backend",
+  "version": "1.0.0",
+  "description": "Backend for an app that enables groups of professionals to compete for work shifts in the style of a fantasy sports draft.",
+  "main": "index.js",
+  "scripts": {
+    "test": "shifter"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AaronOwensSE/shifter.git"
+  },
+  "author": "Aaron Owens",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AaronOwensSE/shifter/issues"
+  },
+  "homepage": "https://github.com/AaronOwensSE/shifter#readme",
+  "type": "module",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "pg": "^8.16.3"
+  }
+}
