@@ -1,15 +1,13 @@
 "use strict";
 
-// Connection Pool
-import pool from "../../pool.js";
-
-// Constants
-// Can change to export a single object if desired.
+// Internal Modules
 import {
     USER_ID_MAX_LENGTH,
     USER_NAME_MAX_LENGTH,
     USER_EMAIL_MAX_LENGTH,
-} from "../../../../constants.js";
+} from              "../../../../constants.js";
+
+import pool from    "../../pool.js";
 
 // Exports
 export default async function createSchema() {
@@ -25,14 +23,13 @@ async function createUsersTable() {
         await pool.query(`
             CREATE TABLE users (
                 id VARCHAR(${USER_ID_MAX_LENGTH.toString()}) PRIMARY KEY,
-                salt TEXT,
                 hash TEXT,
                 name VARCHAR(${USER_NAME_MAX_LENGTH.toString()}),
                 email VARCHAR(${USER_EMAIL_MAX_LENGTH.toString()})
             );
         `);
     } catch (err) {
-        console.log(`Failed to create table users: ${err.message}`);
+        console.error(`Failed to create table users: ${err.message}`);
 
         return false;
     }
@@ -48,11 +45,12 @@ async function createSessionsTable() {
             CREATE TABLE sessions (
                 id TEXT PRIMARY KEY,
                 expires DATE,
-                user_id VARCHAR(${USER_ID_MAX_LENGTH.toString()}) REFERENCES users (id) ON DELETE CASCADE
+                user_id VARCHAR(${USER_ID_MAX_LENGTH.toString()})
+                    REFERENCES users (id) ON DELETE CASCADE
             );
         `);
     } catch (err) {
-        console.log(`Failed to create table sessions: ${err.message}`);
+        console.error(`Failed to create table sessions: ${err.message}`);
 
         return false;
     }

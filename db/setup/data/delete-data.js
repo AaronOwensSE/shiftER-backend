@@ -1,6 +1,6 @@
 "use strict";
 
-// Connection Pool
+// Internal Modules
 import pool from "../../pool.js";
 
 // Exports
@@ -16,7 +16,7 @@ async function deleteTableData(tableName) {
     try {
         await pool.query(`DELETE FROM ${tableName};`);
     } catch (err) {
-        console.log(`Data deletion from table ${tableName} failed: ${err.message}`);
+        console.error(`Data deletion from table ${tableName} failed: ${err.message}`);
 
         return false;
     }
