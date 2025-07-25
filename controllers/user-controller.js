@@ -30,7 +30,7 @@ async function createUser(id, password, name, email) {
         return false;
     }
 
-    const hash = generateHash(password);
+    const hash = await generateHash(password);
     const userCreated = await userModel.createUser(id, hash, name, email);
 
     if (userCreated) {
@@ -51,7 +51,7 @@ async function userExists(id) {
 
     try {
         const result = await userModel.readUser(id);
-        const userFound = result.length > 0;
+        const userFound = result.rowCount > 0;
 
         if (userFound) {
             console.log(`User ${id} exists.`);
@@ -67,9 +67,9 @@ async function userExists(id) {
     }
 }
 
-function generateHash(password) {
-    const salt = bcrypt.genSalt(SALT_DEFAULT_ROUNDS);
-    const hash = bcrypt.hash(password, salt);
+async function generateHash(password) {
+    const salt = await bcrypt.genSalt(SALT_DEFAULT_ROUNDS);
+    const hash = await bcrypt.hash(password, salt);
 
     return hash;
 }

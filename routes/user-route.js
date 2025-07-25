@@ -8,6 +8,7 @@ import userController from "../controllers/user-controller.js";
 const userRouter = Router();
 userRouter.post("/",
     (req, res) => {
+        console.log(req.body);
         const { id, password, name, email } = req.body;
         userController.createUser(id, password, name, email);
     }
