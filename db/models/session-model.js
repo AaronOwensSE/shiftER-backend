@@ -62,21 +62,29 @@ async function deleteSession(id) {
     }
 }
 
+async function deleteUserSessions(userId) {
+    console.log(`Delete user sessions: ${userId}`);
+
+    try {
+        const result = await pool.query("DELETE FROM sessions WHERE user_id = $1;", [userId]);
+        console.log(`Delete user sessions succeeded: ${result.rowCount} sessions deleted.`);
+
+        return true;
+    } catch (error) {
+        console.error(`Delete user sessions failed: ${error.message}`);
+
+        return false;
+    }
+}
+
 async function deleteExpiredSessions() {
     console.log("Delete expired sessions.");
 
     try {
         const result = await pool.query("DELETE FROM sessions WHERE expires < NOW();");
+        console.log(`Delete expired sessions succeeded: ${result.rowCount} sessions deleted.`);
 
-        if (result.rowCount > 0) {
-            console.log("Delete expired sessions succeeded.");
-
-            return true;
-        } else {
-            console.error("Delete expired sessions failed: No expired sessions.");
-
-            return false;
-        }
+        return true;
     } catch (error) {
         console.error(`Delete expired sessions failed: ${error.message}`);
 
@@ -84,5 +92,12 @@ async function deleteExpiredSessions() {
     }
 }
 
-const sessionModel = { createSession, readSession, deleteSession, deleteExpiredSessions };
+const sessionModel = {
+    createSession,
+    readSession,
+    deleteSession,
+    deleteUserSessions,
+    deleteExpiredSessions
+};
+
 export default sessionModel;
