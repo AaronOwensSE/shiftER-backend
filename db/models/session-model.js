@@ -1,8 +1,5 @@
 "use strict";
 
-// External Dependencies
-import "crypto";
-
 // Internal Modules
 import pool from "../pool.js";
 
