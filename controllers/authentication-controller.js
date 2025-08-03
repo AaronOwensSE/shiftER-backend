@@ -2,8 +2,10 @@
 
 // External Dependencies
 import bcrypt from "bcrypt";
+import "crypto";
 
 // Internal Modules
+import "../constants.js";
 import sessionModel from "../db/models/session-model.js";
 
 // Be mindful not to pass detailed backend error outputs on to frontend. A user should not be able
@@ -26,7 +28,15 @@ async function logIn(userId, password) {
         return false;
     }
     
-    // create unique session ID
+    const sessionId = await getUniqueSessionId();
+
+    if (!sessionId) {
+        console.error("Unable to log in: Unable to acquire unique session ID.");
+
+        return false;
+    }
+    
+    // insert session id to db
     // set cookie containing session ID with same expiration
     // return true/false
 }
@@ -62,5 +72,46 @@ async function authenticateCredentials(userId, password) {
         console.error(`Authenticate user failed: ${error.message}`);
 
         return false;
+    }
+}
+
+async function getUniqueSessionId() {
+    console.log("Get unique session ID.");
+
+    let sessionId;
+
+    for (let i = 0; i < SESSION_ID_ATTEMPTS; i++) {
+        sessionId = crypto.randomBytes(SESSION_ID_LENGTH_IN_BYTES).toString("hex");
+
+        try {
+            if (!(await sessionIdExists(sessionId))) {
+                return sessionId;
+            }
+        } catch (error) {
+            console.error(`Get unique session ID failed: ${error.message}`);
+
+            return false;
+        }
+    }
+
+    console.error(
+        `Get unique session ID failed: 
+        Unable to acquire unique session ID in ${SESSION_ID_ATTEMPTS} attempts.`
+    );
+
+    return false;
+}
+
+async function sessionIdExists(id) {
+    console.log("Session ID exists?");
+
+    try {
+        const result = await readSession(id);
+
+        return result.rowCount > 0;
+    } catch (error) {
+        console.error(`Session ID exists? failed: ${error.message}`);
+
+        throw Error("Read session failed.");
     }
 }
