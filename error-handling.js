@@ -1,3 +1,5 @@
+"use strict";
+
 class Result {
     constructor( { ok, value, message } ) {
         this.ok = ok;
