@@ -1,50 +1,51 @@
 "use strict";
 
 // Internal Modules
+import Result from "../../error-handling.js";
 import pool from "../pool.js";
 
 // Exports
 async function createUser(id, hash, name, email) {
-    console.log(`Create user: ${id}, ${hash}, ${name}, ${email}`);
+    let result = new Result();
 
     try {
         await pool.query(
             "INSERT INTO users (id, hash, name, email) VALUES ($1, $2, $3, $4);",
             [id, hash, name, email]
         );
-    } catch (error) {
-        console.error(`Create user failed: ${error.message}`);
 
-        return false;
+        result.ok = true;
+    } catch (error) {
+        result.ok = false;
+        result.message = error.message;
     }
 
-    console.log("Create user succeeded.");
-
-    return true;
+    return result;
 }
 
 async function readUser(id) {
-    console.log(`Read user: ${id}`);
+    let result = new Result();
 
     try {
-        const result = await pool.query("SELECT * FROM users WHERE id = $1;", [id]);
-        console.log("Read user succeeded.");
-
-        return result;
+        const queryResult = await pool.query("SELECT * FROM users WHERE id = $1;", [id]);
+        result.ok = true;
+        result.value = queryResult;
     } catch (error) {
-        console.error(`Read user failed: ${error.message}`);
-
-        throw Error("Query failed.");
+        result.ok = false;
+        result.message = error.message;
     }
+
+    return result;
 }
 
 async function updateUser(id, updates) {
-    console.log(`Update user: ${id}`);
+    let result = new Result();
 
     if (!isValidUpdate(updates)) {
-        console.error("Update user failed: Invalid updates.");
+        result.ok = false;
+        result.message = "Invalid update.";
 
-        return false;
+        return result;
     }
 
     const fieldNames = Object.keys(updates);
@@ -54,44 +55,40 @@ async function updateUser(id, updates) {
     const updateParams = buildUpdateParams(id, fieldValues);
 
     try {
-        const result = await pool.query(updateQuery, updateParams);
+        const queryResult = await pool.query(updateQuery, updateParams);
 
-        if (result.rowCount > 0) {
-            console.log("Update user succeeded.");
-
-            return true;
+        if (queryResult.rowCount > 0) {
+            result.ok = true;
         } else {
-            console.error("Update user failed: User does not exist.");
-
-            return false;
+            result.ok = false;
+            result.message = "User does not exist.";
         }
     } catch (error) {
-        console.error(`Update user failed: ${error.message}`);
-
-        return false;
+        result.ok = false;
+        result.message = error.message;
     }
+
+    return result;
 }
 
 async function deleteUser(id) {
-    console.log(`Delete user: ${id}`);
+    let result = new Result();
 
     try {
-        const result = await pool.query("DELETE FROM users WHERE id = $1;", [id]);
+        const queryResult = await pool.query("DELETE FROM users WHERE id = $1;", [id]);
 
-        if (result.rowCount > 0) {
-            console.log("Delete user succeeded.");
-
-            return true;
+        if (queryResult.rowCount > 0) {
+            result.ok = true;
         } else {
-            console.error("Delete user failed: User does not exist.");
-
-            return false;
+            result.ok = false;
+            result.message = "User does not exist.";
         }
     } catch (error) {
-        console.error(`Delete user failed: ${error.message}`);
-
-        return false;
+        result.ok = false;
+        result.message = error.message;
     }
+
+    return result;
 }
 
 const userModel = { createUser, readUser, updateUser, deleteUser };
