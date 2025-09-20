@@ -1,92 +1,89 @@
 "use strict";
 
 // Internal Modules
+import Result from "../../error-handling.js";
 import pool from "../pool.js";
 
 // Exports
 async function createSession(id, userId, expires) {
-    console.log(`Create session: ${id}`);
+    let result = new Result;
 
     try {
         await pool.query(
             "INSERT INTO sessions (id, user_id, expires) VALUES ($1, $2, $3);",
             [id, userId, expires]
         );
+
+        result.ok = true;
     } catch (error) {
-        console.error(`Create session failed: ${error.message}`);
-
-        return false;
+        result.ok = false;
+        result.message = error.message;
     }
-    console.log("Create session succeeded.");
 
-    return true;
+    return result;
 }
 
 async function readSession(id) {
-    console.log(`Read session ID: ${id}`);
+    let result = new Result();
 
     try {
-        const result = await pool.query("SELECT * FROM sessions WHERE id = $1;", [id]);
-        console.log("Read session ID succeeded.");
-
-        return result;
+        const queryResult = await pool.query("SELECT * FROM sessions WHERE id = $1;", [id]);
+        result.ok = true;
+        result.value = queryResult;
     } catch (error) {
-        console.error(`Read session ID failed: ${error.message}`);
-
-        throw Error("Query failed.");
+        result.ok = false;
+        result.message = error.message;
     }
+
+    return result;
 }
 
 async function deleteSession(id) {
-    console.log(`Delete session: ${id}`);
+    let result = new Result();
 
     try {
-        const result = await pool.query("DELETE FROM sessions WHERE id = $1;", [id]);
+        const queryResult = await pool.query("DELETE FROM sessions WHERE id = $1;", [id]);
 
-        if (result.rowCount > 0) {
-            console.log("Delete session succeeded.");
-
-            return true;
+        if (queryResult.rowCount > 0) {
+            result.ok = true;
         } else {
-            console.error("Delete session failed: Session does not exist.");
-
-            return false;
+            result.ok = false;
+            result.message = "Session does not exist.";
         }
     } catch (error) {
-        console.error(`Delete session failed: ${error.message}`);
-
-        return false;
+        result.ok = false;
+        result.message = error.message;
     }
+
+    return result;
 }
 
 async function deleteUserSessions(userId) {
-    console.log(`Delete user sessions: ${userId}`);
+    let result = new Result();
 
     try {
-        const result = await pool.query("DELETE FROM sessions WHERE user_id = $1;", [userId]);
-        console.log(`Delete user sessions succeeded: ${result.rowCount} sessions deleted.`);
-
-        return true;
+        await pool.query("DELETE FROM sessions WHERE user_id = $1;", [userId]);
+        result.ok = true;
     } catch (error) {
-        console.error(`Delete user sessions failed: ${error.message}`);
-
-        return false;
+        result.ok = false;
+        result.message = error.message;
     }
+
+    return result;
 }
 
 async function deleteExpiredSessions() {
-    console.log("Delete expired sessions.");
+    let result = new Result();
 
     try {
-        const result = await pool.query("DELETE FROM sessions WHERE expires < NOW();");
-        console.log(`Delete expired sessions succeeded: ${result.rowCount} sessions deleted.`);
-
-        return true;
+        await pool.query("DELETE FROM sessions WHERE expires < NOW();");
+        result.ok = true;
     } catch (error) {
-        console.error(`Delete expired sessions failed: ${error.message}`);
-
-        return false;
+        result.ok = false;
+        result.message = error.message;
     }
+
+    return result;
 }
 
 const sessionModel = {
