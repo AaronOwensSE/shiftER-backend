@@ -28,8 +28,14 @@ async function readSession(id) {
 
     try {
         const queryResult = await pool.query("SELECT * FROM sessions WHERE id = $1;", [id]);
-        result.ok = true;
-        result.value = queryResult;
+
+        if (queryResult.rowCount > 0) {
+            result.ok = true;
+            result.value = queryResult;
+        } else {
+            result.ok = false;
+            result.message = "Session does not exist.";
+        }
     } catch (error) {
         result.ok = false;
         result.message = error.message;
