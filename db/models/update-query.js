@@ -1,3 +1,5 @@
+"use strict";
+
 // Internal Modules
 import Result from "../../error-handling.js";
 import pool from "../pool.js";
@@ -37,7 +39,7 @@ export default updateQuery;
 
 // Helper Functions
 function isValidUpdate(tableName, primaryKey, fields) {
-    return isValidPrimaryKey(tableName, primaryKey) && isValidUpdateSet(tableName, fields);
+    return isValidPrimaryKey(tableName, primaryKey) && isValidFieldSet(tableName, fields);
 }
 
 function isValidPrimaryKey(tableName, primaryKey) {
@@ -58,7 +60,7 @@ function isValidPrimaryKey(tableName, primaryKey) {
     }
 }
 
-function isValidUpdateSet(tableName, fields) {
+function isValidFieldSet(tableName, fields) {
     switch (tableName) {
         case "users":
             return Boolean(fields.hash || fields.name || fields.email);
@@ -143,10 +145,11 @@ function buildSetClause(fields) {
 
 function buildFieldList(fieldNames, nextParamNum) {
     // field_1 = $1, field_2 = $2, . . . , field_n = $n
+
     let fieldListParts = [];
 
-    for (let i = nextParamNum; i <= fieldNames.length; i++) {
-        fieldListParts.push(`${fieldNames[i]} = $${i}`);
+    for (let i = 0; i < fieldNames.length; i++, nextParamNum++) {
+        fieldListParts.push(`${fieldNames[i]} = $${nextParamNum}`);
     }
 
     const fieldList = fieldListParts.join(", ");
@@ -165,7 +168,7 @@ function buildWhereClause(primaryKey, nextParamNum) {
     // to be practical and deal with it here.
     const whereWord = "WHERE ";
     const primaryKeyNames = Object.keys(primaryKey);
-    const primaryKeyList = buildPrimaryKeyList(primaryKeyNames, nextParamNum);
+    const primaryKeyList = buildFieldList(primaryKeyNames, nextParamNum);
     const semicolon = ";";
 
     whereClauseParts.push(whereWord, primaryKeyList, semicolon);
