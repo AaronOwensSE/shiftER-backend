@@ -3,6 +3,7 @@
 // Internal Modules
 import Result from "../../error-handling.js";
 import pool from "../pool.js";
+import updateQuery from "./update-query.js";
 
 // Exports
 async function createUser(id, hash, name, email) {
@@ -45,6 +46,13 @@ async function readUser(id) {
 }
 
 async function updateUser(id, updates) {
+    const result = updateQuery("users", { id }, { updates });
+
+    return result;
+}
+
+/*
+async function updateUser(id, updates) {
     let result = new Result();
 
     if (!isValidUpdate(updates)) {
@@ -76,6 +84,7 @@ async function updateUser(id, updates) {
 
     return result;
 }
+*/
 
 async function deleteUser(id) {
     let result = new Result();
@@ -101,11 +110,11 @@ const userModel = { createUser, readUser, updateUser, deleteUser };
 export default userModel;
 
 // Helper Functions
-function isValidUpdate(updates) {
+/*function isValidUpdate(updates) {
     return updates.hash || updates.name || updates.email;
-}
+}*/
 
-function buildUpdateQuery(fieldNames) {
+/*function buildUpdateQuery(fieldNames) {
     let updateQueryParts = [];
     updateQueryParts.push("UPDATE users");
     pushSetClause(updateQueryParts, fieldNames);
@@ -114,15 +123,15 @@ function buildUpdateQuery(fieldNames) {
     const updateQuery = updateQueryParts.join(" ");
 
     return updateQuery;
-}
+}*/
 
-function pushSetClause(updateQueryParts, fieldNames) {
+/*function pushSetClause(updateQueryParts, fieldNames) {
     updateQueryParts.push("SET");
     const fieldSettings = buildFieldSettings(fieldNames);
     updateQueryParts.push(fieldSettings);
-}
+}*/
 
-function buildFieldSettings(fieldNames) {
+/*function buildFieldSettings(fieldNames) {
     let fieldSettingsParts = [];
 
     for (let i = 0; i < fieldNames.length; i++) {
@@ -134,12 +143,12 @@ function buildFieldSettings(fieldNames) {
     const fieldSettings = fieldSettingsParts.join(", ");
 
     return fieldSettings;
-}
+}*/
 
-function buildUpdateParams(id, fieldValues) {
+/*function buildUpdateParams(id, fieldValues) {
     let updateParams = [];
     updateParams.push(id);
     updateParams.push(...fieldValues);
 
     return updateParams;
-}
+}*/
