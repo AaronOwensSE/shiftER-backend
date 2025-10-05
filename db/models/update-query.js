@@ -1,12 +1,12 @@
 "use strict";
 
 // Internal Modules
-import Result from "../../error-handling.js";
+import errorHandling from "../../error-handling.js";
 import pool from "../pool.js";
 
 // Exports
 async function updateQuery(tableName, primaryKey, fields) {
-    let result = new Result();
+    let result = new errorHandling.Result();
 
     if (!isValidUpdate(tableName, primaryKey, fields)) {
         result.ok = false;
@@ -35,7 +35,24 @@ async function updateQuery(tableName, primaryKey, fields) {
     return result;
 }
 
+// Production
 export default updateQuery;
+
+// Testing
+export const testing =
+    process.env.NODE_ENV === "test" ?
+    {
+        updateQuery,
+        isValidUpdate,
+        isValidPrimaryKey,
+        isValidFieldSet,
+        buildUpdateQuery,
+        buildSetClause,
+        buildFieldList,
+        buildWhereClause,
+        buildUpdateParams
+    }
+    : {};
 
 // Helper Functions
 function isValidUpdate(tableName, primaryKey, fields) {
