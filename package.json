@@ -4,7 +4,7 @@
   "description": "Backend for an app that enables groups of professionals to compete for work shifts in the style of a fantasy sports draft.",
   "main": "index.js",
   "scripts": {
-    "test": "shifter"
+    "test": "cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "repository": {
     "type": "git",
@@ -22,5 +22,9 @@
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0",
+    "jest": "^30.2.0"
   }
 }
