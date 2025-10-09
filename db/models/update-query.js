@@ -39,6 +39,7 @@ async function updateQuery(tableName, primaryKey, fields) {
 export default updateQuery;
 
 // Testing
+// We can't conditionally export, but we can conditionally build the object being exported.
 export const testing =
     process.env.NODE_ENV === "test" ?
     {
@@ -50,6 +51,7 @@ export const testing =
         buildSetClause,
         buildFieldList,
         buildWhereClause,
+        buildConditionList,
         buildUpdateParams
     }
     : {};
@@ -185,13 +187,27 @@ function buildWhereClause(primaryKey, nextParamNum) {
     // to be practical and deal with it here.
     const whereWord = "WHERE ";
     const primaryKeyNames = Object.keys(primaryKey);
-    const primaryKeyList = buildFieldList(primaryKeyNames, nextParamNum);
+    const primaryKeyList = buildConditionList(primaryKeyNames, nextParamNum);
     const semicolon = ";";
 
     whereClauseParts.push(whereWord, primaryKeyList, semicolon);
     const whereClause = whereClauseParts.join("");  // No space delimiter.
     
     return whereClause;
+}
+
+function buildConditionList(primaryKeyNames, nextParamNum) {
+    // field_1 = $1 AND field_2 = $2 AND . . . AND field_n = $n
+
+    let conditionListParts = [];
+
+    for (let i = 0; i < primaryKeyNames.length; i++, nextParamNum++) {
+        conditionListParts.push(`${primaryKeyNames[i]} = $${nextParamNum}`);
+    }
+
+    const constraintList = conditionListParts.join(" AND ");
+
+    return constraintList;
 }
 
 function buildUpdateParams(primaryKey, fields) {
