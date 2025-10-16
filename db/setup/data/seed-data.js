@@ -1,11 +1,17 @@
 "use strict";
 
 // Internal Modules
-import pool from            "../../pool.js";
+import "../../../env-config.js";    // Should always be first.
+import pool from "../../pool.js";
 import { createUser } from  "../../models/user-model.js";
+import cleanup from "../../../cleanup.js";
 
-// Exports
-export default async function seedData() {
+// Run
+await seedData();
+await cleanup();
+
+// Main Function
+async function seedData() {
     console.log("Attempting to seed database schema:");
     await seedUsers();
     await seedSessions();

@@ -1,10 +1,16 @@
 "use strict";
 
 // Internal Modules
+import "../../../env-config.js";    // Should always be first.
 import pool from "../../pool.js";
+import cleanup from "../../cleanup.js";
 
-// Exports
-export default async function deleteData() {
+// Run
+await deleteData();
+await cleanup();
+
+// Main Function
+async function deleteData() {
     console.log("Attempting to delete data:");
     await deleteTableData("sessions");
     await deleteTableData("users");

@@ -1,16 +1,23 @@
 "use strict";
 
 // Internal Modules
+import "../../../env-config.js";    // Should always be first.
+
 import {
     USER_ID_MAX_LENGTH,
     USER_NAME_MAX_LENGTH,
     USER_EMAIL_MAX_LENGTH,
-} from              "../../../../constants.js";
+} from "../../../../constants.js";
 
-import pool from    "../../pool.js";
+import pool from "../../pool.js";
+import cleanup from "../../../cleanup.js";
 
-// Exports
-export default async function createSchema() {
+// Run
+await createSchema();
+await cleanup();
+
+// Main Function
+async function createSchema() {
     console.log("Attempting to create database schema:");
     await createUsersTable();
     await createSessionsTable();
