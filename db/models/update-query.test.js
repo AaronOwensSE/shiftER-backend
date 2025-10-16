@@ -1,9 +1,9 @@
 "use strict";
 
 // Internal Modules
-import "../../env-config.js";    // Should always be first.
+import crypt from "../../crypt.js";
+import pool from "../pool.js";
 import { testing } from "./update-query.js";
-import cleanup from "../../cleanup.js";
 
 // Run
 // Test Set
@@ -171,17 +171,40 @@ test("isValidUpdate: Statement Coverage 1", () => {
 });
 
 test("updateQuery: Statement Coverage 1", async () => {
+    // Ensure entry is available in a state that will update.
+    const id = "updateQueryTC1";
+    const hash = crypt.generateHash("mypassword1");
+    const name = "Update Query TC1";
+    const email = "updateQueryTC1@example.com";
+
+    try {
+        await pool.query("DELETE FROM users WHERE id = $1;", [id]);
+        await pool.query(
+            "INSERT INTO users (id, hash, name, email) VALUES ($1, $2, $3, $4);",
+            [ id, hash, name, email ]
+        );
+    } catch (error) {}
+
+    // Update entry.
     const tableName = "users";
-    const primaryKey = { id: "janey" };
-    const fields = { name: "Jane Jackson" };
+    const primaryKey = { id: id };
+    const fields = { name: "newname" };
     const result = await testing.updateQuery(tableName, primaryKey, fields);
 
     expect(result.ok).toBe(true);
 });
 
 test("updateQuery: Statement Coverage 2", async () => {
+    // Ensure update will occur on nonexistent entry.
+    const id = "nobody";
+
+    try {
+        pool.query("DELETE FROM users WHERE id = $1;", [id]);
+    } catch (error) {}
+
+    // Update entry.
     const tableName = "users";
-    const primaryKey = { id: "nobody" };
+    const primaryKey = { id: id };
     const fields = { email: "nobody@nobody.com" };
     const result = await testing.updateQuery(tableName, primaryKey, fields);
 
@@ -189,15 +212,29 @@ test("updateQuery: Statement Coverage 2", async () => {
 });
 
 test("updateQuery: Statement Coverage 3", async () => {
+    // Ensure entry is available.
+    const id = "updateQueryTC3";
+    const hash = crypt.generateHash("mypassword111");
+    const name = "Update Query TC3";
+    const email = "updateQueryTC3@example.com";
+
+    try {
+        await pool.query(
+            "INSERT INTO users (id, hash, name, email) VALUES ($1, $2, $3, $4);",
+            [ id, hash, name, email ]);
+    } catch (error) {}
+
+    // Update entry with bad field.
     const tableName = "users";
-    const primaryKey = { id: "bob" };
-    const fields = { email: "nobody@nobody.com", fake_field: "something" };
+    const primaryKey = { id: id };
+    const fields = { email: "newemail", fake_field: "something" };
     const result = await testing.updateQuery(tableName, primaryKey, fields);
 
     expect(result.ok).toBe(false);
 });
 
 test("updateQuery: Statement Coverage 4", async () => {
+    // Should reject based on table name validation. No DB setup needed.
     const tableName = "fake_table";
     const primaryKey = { id: "nobody" };
     const fields = { email: "nobody@nobody.com" };
@@ -205,6 +242,3 @@ test("updateQuery: Statement Coverage 4", async () => {
 
     expect(result.ok).toBe(false);
 });
-
-// Cleanup
-await cleanup();
