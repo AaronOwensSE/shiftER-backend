@@ -1,10 +1,10 @@
 "use strict";
 
 // External Dependencies
-import bcrypt from "bcrypt";
+//import bcrypt from "bcrypt";
 
 // Internal Modules
-import { SALT_DEFAULT_ROUNDS } from "../constants.js";
+import crypt from "crypt.js";
 import { isValidUser } from "../validation.js";
 import userModel from "../db/models/user-model.js";
 
@@ -30,7 +30,7 @@ async function createUser(id, password, name, email) {
         return false;
     }
 
-    const hash = await generateHash(password);
+    const hash = await crypt.generateHash(password);
     const userCreated = await userModel.createUser(id, hash, name, email);
 
     if (userCreated) {
@@ -67,9 +67,11 @@ async function userExists(id) {
     }
 }
 
+/* moved to crypt.js
 async function generateHash(password) {
     const salt = await bcrypt.genSalt(SALT_DEFAULT_ROUNDS);
     const hash = await bcrypt.hash(password, salt);
 
     return hash;
 }
+*/
