@@ -30,7 +30,7 @@ export default function setup() {
     const directory = path.dirname(filePath);
 
     // Combines segments into an absolute path.
-    const absolutePath = path.resolve(directory, "../.env");
+    const absolutePath = path.resolve(directory, "./.env");
 
     dotenv.config({ path: absolutePath });
 }

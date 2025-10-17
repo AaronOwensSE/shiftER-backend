@@ -1,11 +1,15 @@
 "use strict";
 
 // Internal Modules
-import pool from "../pool.js";
 import crypt from "../../crypt.js";
+import pool from "../pool.js";
 import { testing } from "./user-model.js";
 
-// Run
+// Setup/Teardown
+afterAll( async () => {
+    await pool.end();
+});
+
 // Test Set
 /*
 Some test cases require the database to be prepared with certain data or cleared of certain data. To

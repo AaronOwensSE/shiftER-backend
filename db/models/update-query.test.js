@@ -5,7 +5,11 @@ import crypt from "../../crypt.js";
 import pool from "../pool.js";
 import { testing } from "./update-query.js";
 
-// Run
+// Setup/Teardown
+afterAll( async () => {
+    await pool.end();
+});
+
 // Test Set
 test("buildFieldList: Statement Coverage 1.", () => {
     const fieldNames = [ "id", "name", "email" ];
