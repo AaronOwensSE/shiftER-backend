@@ -215,6 +215,7 @@ test("updateQuery: Statement Coverage 2", async () => {
     const result = await testing.updateQuery(tableName, primaryKey, fields);
 
     expect(result.ok).toBe(false);
+    expect(result.message).toBe("Entry does not exist.");
 });
 
 // Query failure
@@ -238,6 +239,7 @@ test("updateQuery: Statement Coverage 3", async () => {
     const result = await testing.updateQuery(tableName, primaryKey, fields);
 
     expect(result.ok).toBe(false);
+    expect(result.message).toBe("column \"fake_field\" of relation \"users\" does not exist");
 });
 
 // Validation failure
@@ -249,4 +251,5 @@ test("updateQuery: Statement Coverage 4", async () => {
     const result = await testing.updateQuery(tableName, primaryKey, fields);
 
     expect(result.ok).toBe(false);
+    expect(result.message).toBe("Invalid update.");
 });

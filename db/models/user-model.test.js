@@ -75,6 +75,7 @@ test("readUser: Statement Coverage 2", async () => {
     const result = await testing.readUser(id);
 
     expect(result.ok).toBe(false);
+    expect(result.message).toBe("User does not exist.");
 });
 
 // Failed query
@@ -142,6 +143,7 @@ test("deleteUser: Statement Coverage 2", async () => {
     const result = await testing.deleteUser(id);
 
     expect(result.ok).toBe(false);
+    expect(result.message).toBe("User does not exist.");
 });
 
 // Failed query
