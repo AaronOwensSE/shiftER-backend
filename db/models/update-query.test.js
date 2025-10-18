@@ -174,6 +174,7 @@ test("isValidUpdate: Statement Coverage 1", () => {
     expect(valid).toBe(true);
 });
 
+// Successful update
 test("updateQuery: Statement Coverage 1", async () => {
     // Ensure entry is available in a state that will update.
     const id = "updateQueryTC1";
@@ -198,6 +199,7 @@ test("updateQuery: Statement Coverage 1", async () => {
     expect(result.ok).toBe(true);
 });
 
+// Non-existent entry
 test("updateQuery: Statement Coverage 2", async () => {
     // Ensure update will occur on nonexistent entry.
     const id = "nobody";
@@ -215,6 +217,7 @@ test("updateQuery: Statement Coverage 2", async () => {
     expect(result.ok).toBe(false);
 });
 
+// Query failure
 test("updateQuery: Statement Coverage 3", async () => {
     // Ensure entry is available.
     const id = "updateQueryTC3";
@@ -237,6 +240,7 @@ test("updateQuery: Statement Coverage 3", async () => {
     expect(result.ok).toBe(false);
 });
 
+// Validation failure
 test("updateQuery: Statement Coverage 4", async () => {
     // Should reject based on table name validation. No DB setup needed.
     const tableName = "fake_table";

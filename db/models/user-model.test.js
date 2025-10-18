@@ -11,12 +11,7 @@ afterAll( async () => {
 });
 
 // Test Set
-/*
-Some test cases require the database to be prepared with certain data or cleared of certain data. To
-keep test cases independent, we want to avoid using other functions under test to perform these
-tasks. Instead, it's important that we perform these tasks manually in our test cases, using
-functions not currently under test.
-*/
+// Successful creation
 test("createUser: Statement Coverage 1", async () => {
     // Delete user if it exists to test creation of new user.
     const id = "cuTestCase1";
@@ -34,6 +29,7 @@ test("createUser: Statement Coverage 1", async () => {
     expect(result.ok).toBe(true);
 });
 
+// Failed query
 test("createUser: Statement Coverage 2", async () => {
     const id = null;
     const hash = crypt.generateHash("mypassword2");
@@ -44,6 +40,7 @@ test("createUser: Statement Coverage 2", async () => {
     expect(result.ok).toBe(false);
 });
 
+// Successful read
 test("readUser: Statement Coverage 1", async () => {
     // Create user to read.
     const id = "readUserTC1";
@@ -65,6 +62,7 @@ test("readUser: Statement Coverage 1", async () => {
     expect(result.value.rows[0].id).toBe(id);
 });
 
+// Nonexistent entry
 test("readUser: Statement Coverage 2", async () => {
     // Delete user if it exists to test read of missing user.
     const id = "readUserTC2";
@@ -79,6 +77,7 @@ test("readUser: Statement Coverage 2", async () => {
     expect(result.ok).toBe(false);
 });
 
+// Failed query
 test("readUser: Statement Coverage 3", async () => {
     const id = false;
     const result = await testing.readUser(id);
@@ -86,6 +85,7 @@ test("readUser: Statement Coverage 3", async () => {
     expect(result.ok).toBe(false);
 });
 
+// Successful update
 test("updateUser: Statement Coverage 1", async () => {
     // Ensure user is available in a state that will update.
     const id = "updateUserTC1";
@@ -108,6 +108,7 @@ test("updateUser: Statement Coverage 1", async () => {
     expect(result.ok).toBe(true);
 });
 
+// Successful deletion
 test("deleteUser: Statement Coverage 1", async () => {
     // Create user to delete.
     const id = "deleteUserTC1";
@@ -128,6 +129,7 @@ test("deleteUser: Statement Coverage 1", async () => {
     expect(result.ok).toBe(true);
 });
 
+// Nonexistent entry
 test("deleteUser: Statement Coverage 2", async () => {
     // Ensure user is already deleted.
     const id = "deleteUserTC2";
@@ -142,6 +144,7 @@ test("deleteUser: Statement Coverage 2", async () => {
     expect(result.ok).toBe(false);
 });
 
+// Failed query
 test("deleteUser: Statement Coverage 3", async () => {
     const id = null;
     const result = await testing.deleteUser(id);
