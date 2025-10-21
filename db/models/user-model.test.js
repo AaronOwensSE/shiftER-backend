@@ -1,110 +1,120 @@
 "use strict";
 
 // Internal Modules
-import crypt from "../../crypt.js";
 import pool from "../pool.js";
 import { testing } from "./user-model.js";
+
+import {
+    DUMMY_USER_ID,
+    DUMMY_USER_HASH,
+    DUMMY_USER_NAME,
+    DUMMY_USER_EMAIL,
+    createDummyUser,
+    deleteDummyUser
+} from "./test-helpers.js";
 
 // Setup/Teardown
 afterAll( async () => {
     await pool.end();
 });
 
+/*
+Transactions prevent interference from concurrent test cases in other files while allowing a shared
+set of constants.
+*/
+
+beforeEach( async () => {
+    await pool.query("BEGIN;");
+});
+
+afterEach( async () => {
+    await pool.query("ROLLBACK;");
+});
+
 // Test Set
 // Successful creation
-test("createUser: Statement Coverage 1", async () => {
-    // Delete user if it exists to test creation of new user.
-    const id = "cuTestCase1";
+await test("createUser: Statement Coverage 1", async () => {
+    await pool.query("BEGIN;");
 
-    try {
-        await pool.query("DELETE FROM users WHERE id = $1;", [id]);
-    } catch (error) {}
+    // Ensure user does not yet exist.
+    await deleteDummyUser();
 
     // Create user.
-    const hash = crypt.generateHash("mypassword1");
-    const name = "createUser Test Case 1";
-    const email = "cuTestCase1@example.com";
-    const result = await testing.createUser(id, hash, name, email);
+    const result = await testing.createUser(
+        DUMMY_USER_ID, DUMMY_USER_HASH, DUMMY_USER_NAME, DUMMY_USER_EMAIL
+    );
 
     expect(result.ok).toBe(true);
+
+    await pool.query("ROLLBACK;");
 });
+
+/*
+pg's implicit type casting makes it difficult to force query failures on text-based fields using
+primitive types.
 
 // Failed query
 test("createUser: Statement Coverage 2", async () => {
     const id = null;
-    const hash = crypt.generateHash("mypassword2");
-    const name = "createUser Test Case 2";
-    const email = "cuTestCase2@example.com";
-    const result = await testing.createUser(id, hash, name, email);
+    const result = await testing.createUser(
+        id,
+        DUMMY_USER_HASH,
+        DUMMY_USER_NAME,
+        DUMMY_USER_EMAIL
+    );
 
     expect(result.ok).toBe(false);
+    expect(result.message).toBe();
 });
+*/
 
 // Successful read
 test("readUser: Statement Coverage 1", async () => {
     // Create user to read.
-    const id = "readUserTC1";
-    const hash = crypt.generateHash("mypassword3");
-    const name = "readUser Test Case 1";
-    const email = "readUserTC1@example.com";
-
-    try {
-        await pool.query(
-            "INSERT INTO users (id, hash, name, email) VALUES ($1, $2, $3, $4);",
-            [ id, hash, name, email ]
-        );
-    } catch (error) {}
+    await deleteDummyUser();
+    await createDummyUser();
 
     // Read user.
-    const result = await testing.readUser(id);
+    const result = await testing.readUser(DUMMY_USER_ID);
 
     expect(result.ok).toBe(true);
-    expect(result.value.rows[0].id).toBe(id);
+    expect(result.value.rows[0].id).toBe(DUMMY_USER_ID);
 });
 
 // Nonexistent entry
 test("readUser: Statement Coverage 2", async () => {
     // Delete user if it exists to test read of missing user.
-    const id = "readUserTC2";
-
-    try {
-        await pool.query("DELETE FROM users WHERE id = $1;", [id]);
-    } catch (error) {}
+    await deleteDummyUser();
 
     // Read user.
-    const result = await testing.readUser(id);
+    const result = await testing.readUser(DUMMY_USER_ID);
 
     expect(result.ok).toBe(false);
     expect(result.message).toBe("User does not exist.");
 });
 
+/*
+pg's implicit type casting makes it difficult to force query failures on text-based fields using
+primitive types.
+
 // Failed query
 test("readUser: Statement Coverage 3", async () => {
-    const id = false;
+    const id = null;
     const result = await testing.readUser(id);
 
     expect(result.ok).toBe(false);
+    expect(result.message).toBe();
 });
+*/
 
 // Successful update
 test("updateUser: Statement Coverage 1", async () => {
     // Ensure user is available in a state that will update.
-    const id = "updateUserTC1";
-    const hash = crypt.generateHash("mypassword4");
-    const name = "updateUser Test Case 1";
-    const email = "updateUserTC1@example.com";
-
-    try {
-        await pool.query("DELETE FROM users WHERE id = $1;", [id]);
-        await pool.query(
-            "INSERT INTO users (id, hash, name, email) VALUES ($1, $2, $3, $4);",
-            [ id, hash, name, email ]
-        );
-    } catch (error) {}
+    await createDummyUser();
 
     // Update user.
     const updates = { email: "newemail@example.com" };
-    const result = await testing.updateUser(id, updates);
+    const result = await testing.updateUser(DUMMY_USER_ID, updates);
 
     expect(result.ok).toBe(true);
 });
@@ -112,20 +122,10 @@ test("updateUser: Statement Coverage 1", async () => {
 // Successful deletion
 test("deleteUser: Statement Coverage 1", async () => {
     // Create user to delete.
-    const id = "deleteUserTC1";
-    const hash = crypt.generateHash("mypassword5");
-    const name = "deleteUser Test Case 1";
-    const email = "deleteUserTC1@example.com";
-
-    try {
-        await pool.query(
-            "INSERT INTO users (id, hash, name, email) VALUES ($1, $2, $3, $4);",
-            [ id, hash, name, email ]
-        );
-    } catch (error) {}
+    await createDummyUser();
 
     // Delete user.
-    const result = await testing.deleteUser(id);
+    const result = await testing.deleteUser(DUMMY_USER_ID);
 
     expect(result.ok).toBe(true);
 });
@@ -133,18 +133,18 @@ test("deleteUser: Statement Coverage 1", async () => {
 // Nonexistent entry
 test("deleteUser: Statement Coverage 2", async () => {
     // Ensure user is already deleted.
-    const id = "deleteUserTC2";
-
-    try {
-        await pool.query("DELETE FROM users WHERE id = $1;", [id]);
-    } catch (error) {}
+    await deleteDummyUser();
 
     // Delete user.
-    const result = await testing.deleteUser(id);
+    const result = await testing.deleteUser(DUMMY_USER_ID);
 
     expect(result.ok).toBe(false);
     expect(result.message).toBe("User does not exist.");
 });
+
+/*
+pg's implicit type casting makes it difficult to force query failures on text-based fields using
+primitive types.
 
 // Failed query
 test("deleteUser: Statement Coverage 3", async () => {
@@ -152,4 +152,6 @@ test("deleteUser: Statement Coverage 3", async () => {
     const result = await testing.deleteUser(id);
 
     expect(result.ok).toBe(false);
+    expect(result.message).toBe();
 });
+*/

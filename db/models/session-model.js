@@ -1,12 +1,12 @@
 "use strict";
 
 // Internal Modules
-import Result from "../../error-handling.js";
+import errorHandling from "../../error-handling.js";
 import pool from "../pool.js";
 
 // Exports
 async function createSession(id, userId, expires) {
-    let result = new Result;
+    let result = new errorHandling.Result();
 
     try {
         await pool.query(
@@ -24,7 +24,7 @@ async function createSession(id, userId, expires) {
 }
 
 async function readSession(id) {
-    let result = new Result();
+    let result = new errorHandling.Result();
 
     try {
         const queryResult = await pool.query("SELECT * FROM sessions WHERE id = $1;", [id]);
@@ -44,8 +44,23 @@ async function readSession(id) {
     return result;
 }
 
+async function readUserSessions(userId) {
+    let result = new errorHandling.Result();
+
+    try {
+        const queryResult = await pool.query("SELECT * FROM sessions WHERE user_id = $1;", [userId]);
+        result.ok = true;
+        result.value = queryResult;
+    } catch (error) {
+        result.ok = false;
+        result.message = error.message;
+    }
+
+    return result;
+}
+
 async function deleteSession(id) {
-    let result = new Result();
+    let result = new errorHandling.Result();
 
     try {
         const queryResult = await pool.query("DELETE FROM sessions WHERE id = $1;", [id]);
@@ -65,11 +80,12 @@ async function deleteSession(id) {
 }
 
 async function deleteUserSessions(userId) {
-    let result = new Result();
+    let result = new errorHandling.Result();
 
     try {
-        await pool.query("DELETE FROM sessions WHERE user_id = $1;", [userId]);
+        const queryResult = await pool.query("DELETE FROM sessions WHERE user_id = $1;", [userId]);
         result.ok = true;
+        result.value = queryResult;
     } catch (error) {
         result.ok = false;
         result.message = error.message;
@@ -79,11 +95,12 @@ async function deleteUserSessions(userId) {
 }
 
 async function deleteExpiredSessions() {
-    let result = new Result();
+    let result = new errorHandling.Result();
 
     try {
-        await pool.query("DELETE FROM sessions WHERE expires < NOW();");
+        const queryResult = await pool.query("DELETE FROM sessions WHERE expires < NOW();");
         result.ok = true;
+        result.value = queryResult;
     } catch (error) {
         result.ok = false;
         result.message = error.message;
@@ -92,12 +109,20 @@ async function deleteExpiredSessions() {
     return result;
 }
 
+// Production
 const sessionModel = {
     createSession,
     readSession,
+    readUserSessions,
     deleteSession,
     deleteUserSessions,
     deleteExpiredSessions
 };
 
 export default sessionModel;
+
+// Testing
+export const testing =
+    process.env.NODE_ENV == "test" ?
+    { createSession, readSession, deleteSession, deleteUserSessions, deleteExpiredSessions }
+    : {};

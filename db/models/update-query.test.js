@@ -1,9 +1,12 @@
 "use strict";
 
 // Internal Modules
-import crypt from "../../crypt.js";
 import pool from "../pool.js";
 import { testing } from "./update-query.js";
+
+import {
+    DUMMY_USER_ID, DUMMY_USER_EMAIL, createDummyUser, deleteDummyUser
+} from "./test-helpers.js";
 
 // Setup/Teardown
 afterAll( async () => {
@@ -176,78 +179,72 @@ test("isValidUpdate: Statement Coverage 1", () => {
 
 // Successful update
 test("updateQuery: Statement Coverage 1", async () => {
-    // Ensure entry is available in a state that will update.
-    const id = "updateQueryTC1";
-    const hash = crypt.generateHash("mypassword1");
-    const name = "Update Query TC1";
-    const email = "updateQueryTC1@example.com";
+    // Begin transaction.
+    await pool.query("BEGIN;");
 
-    try {
-        await pool.query("DELETE FROM users WHERE id = $1;", [id]);
-        await pool.query(
-            "INSERT INTO users (id, hash, name, email) VALUES ($1, $2, $3, $4);",
-            [ id, hash, name, email ]
-        );
-    } catch (error) {}
+    // Ensure entry is available in updatable state.
+    await createDummyUser();
 
     // Update entry.
     const tableName = "users";
-    const primaryKey = { id: id };
-    const fields = { name: "newname" };
+    const primaryKey = { id: DUMMY_USER_ID };
+    const fields = { email: DUMMY_USER_EMAIL };
     const result = await testing.updateQuery(tableName, primaryKey, fields);
 
     expect(result.ok).toBe(true);
+
+    // End transaction.
+    await pool.query("ROLLBACK;");
 });
 
 // Non-existent entry
 test("updateQuery: Statement Coverage 2", async () => {
-    // Ensure update will occur on nonexistent entry.
-    const id = "nobody";
+    // Begin transaction.
+    await pool.query("BEGIN;");
 
-    try {
-        pool.query("DELETE FROM users WHERE id = $1;", [id]);
-    } catch (error) {}
+    // Ensure entry is not available.
+    await deleteDummyUser();
 
     // Update entry.
     const tableName = "users";
-    const primaryKey = { id: id };
-    const fields = { email: "nobody@nobody.com" };
+    const primaryKey = { id: DUMMY_USER_ID };
+    const fields = { email: DUMMY_USER_EMAIL };
     const result = await testing.updateQuery(tableName, primaryKey, fields);
 
     expect(result.ok).toBe(false);
     expect(result.message).toBe("Entry does not exist.");
+
+    // End transaction.
+    await pool.query("ROLLBACK;");
 });
 
 // Query failure
 test("updateQuery: Statement Coverage 3", async () => {
-    // Ensure entry is available.
-    const id = "updateQueryTC3";
-    const hash = crypt.generateHash("mypassword111");
-    const name = "Update Query TC3";
-    const email = "updateQueryTC3@example.com";
+    // Begin transaction.
+    await pool.query("BEGIN;");
 
-    try {
-        await pool.query(
-            "INSERT INTO users (id, hash, name, email) VALUES ($1, $2, $3, $4);",
-            [ id, hash, name, email ]);
-    } catch (error) {}
+    // Ensure entry is available.
+    await createDummyUser();
 
     // Update entry with bad field.
     const tableName = "users";
-    const primaryKey = { id: id };
-    const fields = { email: "newemail", fake_field: "something" };
+    const primaryKey = { id: DUMMY_USER_ID };
+    const fields = { email: DUMMY_USER_EMAIL, fake_field: "something" };
     const result = await testing.updateQuery(tableName, primaryKey, fields);
 
     expect(result.ok).toBe(false);
     expect(result.message).toBe("column \"fake_field\" of relation \"users\" does not exist");
+
+    // End transaction.
+    await pool.query("ROLLBACK;");
 });
 
 // Validation failure
 test("updateQuery: Statement Coverage 4", async () => {
     // Should reject based on table name validation. No DB setup needed.
     const tableName = "fake_table";
-    const primaryKey = { id: "nobody" };
-    const fields = { email: "nobody@nobody.com" };
+    const primaryKey = { id: DUMMY_USER_ID };
+    const fields = { email: DUMMY_USER_EMAIL };
     const result = await testing.updateQuery(tableName, primaryKey, fields);
 
     expect(result.ok).toBe(false);
