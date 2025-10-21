@@ -1,19 +1,20 @@
 "use strict";
 
 // Internal Modules
-import "../../../env-config.js";    // Should always be first.
+import "../../../setup.js";    // Should always be first.
 import pool from "../../pool.js";
-import cleanup from "../../../cleanup.js";
 
 // Run
 await deleteSchema();
-await cleanup();
+await pool.end();
 
 // Main Function
 async function deleteSchema() {
     console.log("Attempting to delete database schema:");
     await dropTable("sessions");
+    await dropTable("memberships");
     await dropTable("users");
+    await dropTable("groups");
     console.log();
 }
 

@@ -1,26 +1,28 @@
 "use strict";
 
 // Internal Modules
-import "../../../env-config.js";    // Should always be first.
+import "../../../setup.js";    // Should always be first.
 
 import {
     USER_ID_MAX_LENGTH,
     USER_NAME_MAX_LENGTH,
     USER_EMAIL_MAX_LENGTH,
-} from "../../../../constants.js";
+    GROUP_NAME_MAX_LENGTH
+} from "../../../constants.js";
 
 import pool from "../../pool.js";
-import cleanup from "../../../cleanup.js";
 
 // Run
 await createSchema();
-await cleanup();
+await pool.end();
 
 // Main Function
 async function createSchema() {
     console.log("Attempting to create database schema:");
     await createUsersTable();
     await createSessionsTable();
+    await createGroupsTable();
+    await createMembershipsTable();
     console.log();
 }
 
@@ -35,8 +37,8 @@ async function createUsersTable() {
                 email VARCHAR(${USER_EMAIL_MAX_LENGTH.toString()})
             );
         `);
-    } catch (err) {
-        console.error(`Failed to create table users: ${err.message}`);
+    } catch (error) {
+        console.error(`Failed to create table users: ${error.message}`);
 
         return false;
     }
@@ -51,18 +53,60 @@ async function createSessionsTable() {
         await pool.query(`
             CREATE TABLE sessions (
                 id TEXT PRIMARY KEY,
-                expires DATE,
+                expires TIMESTAMPTZ,
                 user_id VARCHAR(${USER_ID_MAX_LENGTH.toString()})
                     REFERENCES users (id) ON DELETE CASCADE
             );
         `);
-    } catch (err) {
-        console.error(`Failed to create table sessions: ${err.message}`);
+    } catch (error) {
+        console.error(`Failed to create table sessions: ${error.message}`);
 
         return false;
     }
 
     console.log("Table sessions created.");
+
+    return true;
+}
+
+async function createGroupsTable() {
+    try {
+        await pool.query(`
+            CREATE TABLE groups (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(${GROUP_NAME_MAX_LENGTH.toString()})
+            );
+        `);
+    } catch (error) {
+        console.error(`Failed to create table groups: ${error.message}`);
+
+        return false;
+    }
+
+    console.log("Table groups created.");
+
+    return true;
+}
+
+async function createMembershipsTable() {
+    try {
+        await pool.query(`
+            CREATE TABLE memberships (
+                user_id VARCHAR(${USER_ID_MAX_LENGTH.toString()})
+                    REFERENCES users (id) ON DELETE CASCADE,
+                group_id INT
+                    REFERENCES groups (id) ON DELETE CASCADE,
+                admin BOOLEAN,
+                PRIMARY KEY (user_id, group_id)
+            );
+        `);
+    } catch (error) {
+        console.error(`Failed to create table memberships: ${error.message}`);
+
+        return false;
+    }
+
+    console.log("Table memberships created.");
 
     return true;
 }

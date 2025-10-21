@@ -14,3 +14,7 @@ export const SALT_DEFAULT_ROUNDS = 10;
 // Sessions
 export const SESSION_ID_LENGTH_IN_BYTES = 32;
 export const SESSION_ID_ATTEMPTS = 5;
+
+// Groups
+export const GROUP_NAME_MIN_LENGTH = 3;
+export const GROUP_NAME_MAX_LENGTH = 30;

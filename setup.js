@@ -11,8 +11,11 @@ import dotenv from "dotenv";
 import url from "url";
 import path from "path";
 
-// Export
-export default function setup() {
+// Run
+setup();
+
+// Main Function
+function setup() {
     /*
     We need to provide an absolute path, even if this file is in the same directory as .env.
 
