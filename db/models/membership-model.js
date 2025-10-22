@@ -1,12 +1,13 @@
 "use strict";
 
 // Internal Modules
-import Result from "../../error-handling.js";
+import errorHandling from "../../error-handling.js";
 import pool from "../pool.js";
+import updateQuery from "./update-query.js";
 
 // Exports
 async function createMembership(userId, groupId, admin) {
-    let result = new Result();
+    let result = new errorHandling.Result();
 
     try {
         await pool.query(
@@ -24,7 +25,7 @@ async function createMembership(userId, groupId, admin) {
 }
 
 async function readMembership(userId, groupId) {
-    let result = new Result();
+    let result = new errorHandling.Result();
 
     try {
         const queryResult = await pool.query(
@@ -48,7 +49,7 @@ async function readMembership(userId, groupId) {
 }
 
 async function readMembershipsByUserId(userId) {
-    let result = new Result();
+    let result = new errorHandling.Result();
 
     try {
         const queryResult = await pool.query(
@@ -67,7 +68,7 @@ async function readMembershipsByUserId(userId) {
 }
 
 async function readMembershipsByGroupId(groupId) {
-    let result = new Result();
+    let result = new errorHandling.Result();
 
     try {
         const queryResult = await pool.query(
@@ -86,11 +87,13 @@ async function readMembershipsByGroupId(groupId) {
 }
 
 async function updateMembership(userId, groupId, updates) {
-    // Awaiting generic update query builder function.
+    const result = updateQuery("memberships", { userId, groupId }, updates);
+
+    return result;
 }
 
 async function deleteMembership(userId, groupId) {
-    let result = new Result();
+    let result = new errorHandling.Result();
 
     try {
         const queryResult = await pool.query(
@@ -112,13 +115,61 @@ async function deleteMembership(userId, groupId) {
     return result;
 }
 
+async function deleteMembershipsByUserId(userId) {
+    let result = new errorHandling.Result();
+
+    try {
+        const queryResult = pool.query("DELETE FROM memberships WHERE user_id = $1;", [userId]);
+        result.ok = true;
+        result.value = queryResult;
+    } catch (error) {
+        result.ok = false;
+        result.message = error.message;
+    }
+
+    return result;
+}
+
+async function deleteMembershipsByGroupId(groupId) {
+    let result = new errorHandling.Result();
+
+    try {
+        const queryResult = pool.query("DELETE FROM memberships WHERE group_id = $1;", [groupId]);
+        result.ok = true;
+        result.value = queryResult;
+    } catch (error) {
+        result.ok = false;
+        result.message = error.message;
+    }
+
+    return result;
+}
+
+// Production
 const membershipModel = {
     createMembership,
     readMembership,
     readMembershipsByUserId,
     readMembershipsByGroupId,
     updateMembership,
-    deleteMembership
+    deleteMembership,
+    deleteMembershipsByUserId,
+    deleteMembershipsByGroupId
 };
 
 export default membershipModel;
+
+// Testing
+export const testing =
+    process.env.NODE_ENV == "test" ?
+    {
+        createMembership,
+        readMembership,
+        readMembershipsByUserId,
+        readMembershipsByGroupId,
+        updateMembership,
+        deleteMembership,
+        deleteMembershipsByUserId,
+        deleteMembershipsByGroupId
+    }
+    : {};
