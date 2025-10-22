@@ -34,8 +34,6 @@ afterEach( async () => {
 // Test Set
 // Successful creation
 await test("createUser: Statement Coverage 1", async () => {
-    await pool.query("BEGIN;");
-
     // Ensure user does not yet exist.
     await deleteDummyUser();
 
@@ -45,8 +43,6 @@ await test("createUser: Statement Coverage 1", async () => {
     );
 
     expect(result.ok).toBe(true);
-
-    await pool.query("ROLLBACK;");
 });
 
 /*
