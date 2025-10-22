@@ -27,6 +27,8 @@ const date2 = new Date();
 date2.setDate(new Date().getDate() - 7);
 export const DUMMY_SESSION_EXPIRES_2 = date2.toISOString();
 
+export const DUMMY_GROUP_NAME = "dummy_group";
+
 // Functions
 export async function createDummyUser() {
     try {
@@ -67,5 +69,24 @@ export async function createExpiredDummySession() {
 export async function deleteDummySession() {
     try {
         await pool.query("DELETE FROM sessions WHERE id = $1;", [DUMMY_SESSION_ID]);
+    } catch (error) {}
+}
+
+export async function createDummyGroup() {
+    try {
+        const queryResult = await pool.query(
+            "INSERT INTO groups (name) VALUES ($1) RETURNING (id);",
+            [DUMMY_GROUP_NAME]
+        );
+
+        const groupId = queryResult.rows[0].id;
+
+        return groupId;
+    } catch (error) {}
+}
+
+export async function deleteDummyGroup(groupId) {
+    try {
+        await pool.query("DELETE FROM groups WHERE id = $1;", [groupId]);
     } catch (error) {}
 }
