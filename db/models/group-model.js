@@ -1,16 +1,22 @@
 "use strict";
 
 // Internal Modules
-import Result from "../../error-handling.js";
+import errorHandling from "../../error-handling.js";
 import pool from "../pool.js";
+import updateQuery from "./update-query.js";
 
 // Exports
-async function createGroup(id, name) {
-    let result = new Result();
+async function createGroup(name) {
+    let result = new errorHandling.Result();
 
     try {
-        await pool.query("INSERT INTO groups (id, name) VALUES ($1, $2);", [id, name]);
+        const queryResult = await pool.query(
+            "INSERT INTO groups (name) VALUES ($1) RETURNING id;",
+            [name]
+        );
+
         result.ok = true;
+        result.value = queryResult.rows[0].id;  // Need to return assigned ID.
     } catch (error) {
         result.ok = false;
         result.message = error.message;
@@ -20,7 +26,7 @@ async function createGroup(id, name) {
 }
 
 async function readGroup(id) {
-    let result = new Result();
+    let result = new errorHandling.Result();
 
     try {
         const queryResult = await pool.query("SELECT * FROM groups WHERE id = $1;", [id]);
@@ -41,12 +47,13 @@ async function readGroup(id) {
 }
 
 async function updateGroup(id, updates) {
-    // Validate updates.
-    // Rewrite query builder from user-model.js as a separate function for all models.
+    const result = updateQuery("groups", {id}, updates);
+
+    return result;
 }
 
 async function deleteGroup(id) {
-    let result = new Result();
+    let result = new errorHandling.Result();
 
     try {
         const queryResult = await pool.query("DELETE FROM groups WHERE id = $1;", [id]);
@@ -65,5 +72,12 @@ async function deleteGroup(id) {
     return result;
 }
 
+// Production
 const groupModel = { createGroup, readGroup, updateGroup, deleteGroup };
 export default groupModel;
+
+// Testing
+export const testing =
+    process.env.NODE_ENV == "test" ?
+    { createGroup, readGroup, updateGroup, deleteGroup }
+    : {};
