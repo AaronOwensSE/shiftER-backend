@@ -5,17 +5,21 @@ import errorHandling from "../../error-handling.js";
 import pool from "../pool.js";
 import updateQuery from "./update-query.js";
 
+/*
+Update schema diagram: start_time, end_time, active_start_time, active_end_time.
+*/
+
 // Exports
-async function createDraft(start, end, activeStart, activeEnd, turnDuration, paused, groupId) {
+async function createDraft(startTime, endTime, activeStartTime, activeEndTime, turnDuration, paused, groupId) {
 	let result = new errorHandling.Result();
 	
 	try {
 		await pool.query(
 			`INSERT INTO drafts
-                (start, end, active_start, active_end, turn_duration, paused, group_id)
+                (start_time, end_time, active_start_time, active_end_time, turn_duration, paused, group_id)
             VALUES
                 ($1, $2, $3, $4, $5, $6, $7);`,
-			[ start, end, activeStart, activeEnd, turnDuration, paused, groupId ]
+			[ startTime, endTime, activeStartTime, activeEndTime, turnDuration, paused, groupId ]
 		);
 		
 		result.ok = true;
