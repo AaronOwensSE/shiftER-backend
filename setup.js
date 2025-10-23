@@ -11,7 +11,22 @@ import dotenv from "dotenv";
 import url from "url";
 import path from "path";
 
-// Exports
+/*
+Most of our files will import this file, causing the setup function to be called automatically. This
+is important because other imports in our files expect environment variables to be set up, and ESM
+will attempt to run those files before running any code in the importing file. We don't get the
+chance to call setup before environment variables are needed.
+
+However, we also want to export the setup function for use by Jest's globalSetup configuration
+option, which searches for the default export and runs it itself, skipping our explicit call below.
+
+Using both methods allows this file to cover both production use and testing.
+*/
+
+// Run
+setup();
+
+// Main Function
 export default function setup() {
     /*
     We need to provide an absolute path, even if this file is in the same directory as .env.
