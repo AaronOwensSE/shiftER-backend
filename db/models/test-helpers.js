@@ -43,6 +43,10 @@ export const DUMMY_DRAFT_ACTIVE_END_TIME = "NOW()";
 export const DUMMY_DRAFT_TURN_DURATION = "1 hour 30 minutes";
 export const DUMMY_DRAFT_PAUSED = false;
 
+// Participation
+export const DUMMY_PARTICIPATION_TURN_ORDER = 1;
+export const DUMMY_PARTICIPATION_PASSING = false;
+
 // Functions
 export async function createDummyUser() {
     try {
@@ -184,6 +188,34 @@ export async function createDummyDraft() {
 export async function deleteDummyDraft(draftId) {
     try {
         await pool.query("DELETE FROM drafts WHERE id = $1;", [draftId]);
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+export async function createDummyParticipation() {
+    await createDummyUser();
+    const { draftId, groupId } = await createDummyDraft();
+
+    try {
+        await pool.query(
+            `INSERT INTO participation (user_id, draft_id, turn_order, passing)
+            VALUES ($1, $2, $3, $4);`,
+            [ DUMMY_USER_ID, draftId, DUMMY_PARTICIPATION_TURN_ORDER, DUMMY_PARTICIPATION_PASSING ]
+        );
+
+        return draftId;
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+export async function deleteDummyParticipation(draftId) {
+    try {
+        await pool.query(
+            "DELETE FROM participation WHERE user_id = $1 AND draft_id = $2;",
+            [ DUMMY_USER_ID, draftId ]
+        );
     } catch (error) {
         console.log(error.message);
     }

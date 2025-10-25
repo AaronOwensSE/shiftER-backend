@@ -73,7 +73,7 @@ async function readParticipationByDraftId(draftId) {
 	
 	try {
 		const queryResult = await pool.query(
-            "SELECT * FROM participation WHERE draft_id = $2;",
+            "SELECT * FROM participation WHERE draft_id = $1;",
             [draftId]
         );
 
@@ -88,7 +88,9 @@ async function readParticipationByDraftId(draftId) {
 }
 
 async function updateParticipation(userId, draftId, updates) {
-	const result = await updateQuery("participation", { userId, draftId }, updates);
+	const result = await updateQuery(
+        "participation", { user_id: userId, draft_id: draftId }, updates
+    );
 	
 	return result;
 }
