@@ -12,7 +12,7 @@ async function createMembership(userId, groupId, admin) {
     try {
         await pool.query(
             "INSERT INTO memberships (user_id, group_id, admin) VALUES ($1, $2, $3);",
-            [userId, groupId, admin]
+            [ userId, groupId, admin ]
         );
 
         result.ok = true;
@@ -29,8 +29,8 @@ async function readMembership(userId, groupId) {
 
     try {
         const queryResult = await pool.query(
-            "SELECT * FROM memberships WHERE user_id = $1 AND group_id = $2",
-            [userId, groupId]
+            "SELECT * FROM memberships WHERE user_id = $1 AND group_id = $2;",
+            [ userId, groupId ]
         );
 
         if (queryResult.rowCount > 0) {
@@ -87,7 +87,11 @@ async function readMembershipsByGroupId(groupId) {
 }
 
 async function updateMembership(userId, groupId, updates) {
-    const result = updateQuery("memberships", { userId, groupId }, updates);
+    const result = await updateQuery(
+        "memberships",
+        { user_id: userId, group_id: groupId },
+        updates
+    );
 
     return result;
 }
@@ -98,7 +102,7 @@ async function deleteMembership(userId, groupId) {
     try {
         const queryResult = await pool.query(
             "DELETE FROM memberships WHERE user_id = $1 AND group_id = $2;",
-            [userId, groupId]
+            [ userId, groupId ]
         );
 
         if (queryResult.rowCount > 0) {
@@ -119,7 +123,11 @@ async function deleteMembershipsByUserId(userId) {
     let result = new errorHandling.Result();
 
     try {
-        const queryResult = pool.query("DELETE FROM memberships WHERE user_id = $1;", [userId]);
+        const queryResult = await pool.query(
+            "DELETE FROM memberships WHERE user_id = $1;",
+            [userId]
+        );
+
         result.ok = true;
         result.value = queryResult;
     } catch (error) {
@@ -134,7 +142,11 @@ async function deleteMembershipsByGroupId(groupId) {
     let result = new errorHandling.Result();
 
     try {
-        const queryResult = pool.query("DELETE FROM memberships WHERE group_id = $1;", [groupId]);
+        const queryResult = await pool.query(
+            "DELETE FROM memberships WHERE group_id = $1;",
+            [groupId]
+        );
+        
         result.ok = true;
         result.value = queryResult;
     } catch (error) {
