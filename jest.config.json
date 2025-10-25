@@ -1,4 +1,5 @@
 {
     "verbose": true,
-    "globalSetup": "./setup.js"
+    "globalSetup": "./setup.js",
+    "testMatch": [ "<rootDir>/**/participation-model.test.js" ]
 }

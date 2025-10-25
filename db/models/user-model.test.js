@@ -41,7 +41,7 @@ await test("createUser: Statement Coverage 1", async () => {
     const result = await testing.createUser(
         DUMMY_USER_ID, DUMMY_USER_HASH, DUMMY_USER_NAME, DUMMY_USER_EMAIL
     );
-
+    
     expect(result.ok).toBe(true);
 });
 

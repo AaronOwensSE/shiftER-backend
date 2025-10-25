@@ -14,7 +14,12 @@ async function createSchedule(startDate, endDate, groupId, draftId) {
 	let result = new errorHandling.Result();
 	
 	try {
-		const queryResult = await pool.query("INSERT INTO schedules (start_date, end_date, groupId, draftId) VALUES ($1, $2, $3, $4) RETURNING id;", [ startDate, endDate, groupId, draftId ]);
+		const queryResult = await pool.query(
+            `INSERT INTO schedules (start_date, end_date, groupId, draftId)
+            VALUES ($1, $2, $3, $4) RETURNING id;`,
+            [ startDate, endDate, groupId, draftId ]
+        );
+
 		result.ok = true;
 		result.value = queryResult.rows[0].id;
 	} catch (error) {
@@ -50,7 +55,11 @@ async function readSchedulesByGroupId(groupId) {
 	let result = new errorHandling.Result();
 	
 	try {
-		const queryResult = await pool.query("SELECT * FROM schedules WHERE group_id = $1;", [groupId]);
+		const queryResult = await pool.query(
+            "SELECT * FROM schedules WHERE group_id = $1;",
+            [groupId]
+        );
+
 		result.ok = true;
 		result.value = queryResult;
 	} catch (error) {
@@ -65,7 +74,11 @@ async function readSchedulesByDraftId(draftId) {
 	let result = new errorHandling.Result();
 	
 	try {
-		const queryResult = await pool.query("SELECT * FROM schedules WHERE draft_id = $1;", [draftId]);
+		const queryResult = await pool.query(
+            "SELECT * FROM schedules WHERE draft_id = $1;",
+            [draftId]
+        );
+
 		result.ok = true;
 		result.value = queryResult;
 	} catch (error) {
@@ -106,7 +119,11 @@ async function deleteSchedulesByGroupId(groupId) {
 	let result = new errorHandling.Result();
 	
 	try {
-		const queryResult = await pool.query("DELETE FROM schedules WHERE group_id = $1;", [groupId]);
+		const queryResult = await pool.query(
+            "DELETE FROM schedules WHERE group_id = $1;",
+            [groupId]
+        );
+
 		result.ok = true;
 		result.value = queryResult;
 	} catch (error) {
@@ -121,7 +138,11 @@ async function deleteSchedulesByDraftId(draftId) {
 	let result = new errorHandling.Result();
 	
 	try {
-		const queryResult = await pool.query("DELETE FROM schedules WHERE draft_id = $1;", [draftId]);
+		const queryResult = await pool.query(
+            "DELETE FROM schedules WHERE draft_id = $1;",
+            [draftId]
+        );
+
 		result.ok = true
 		result.value = queryResult;
 	} catch (error) {
@@ -133,11 +154,28 @@ async function deleteSchedulesByDraftId(draftId) {
 }
 
 // Production
-const scheduleModel = { createSchedule, readSchedule, readSchedulesByGroupId, readSchedulesByDraftId, updateSchedule, deleteSchedulesByGroupId, deleteSchedulesByDraftId };
+const scheduleModel = {
+    createSchedule,
+    readSchedule,
+    readSchedulesByGroupId,
+    readSchedulesByDraftId,
+    updateSchedule,
+    deleteSchedulesByGroupId,
+    deleteSchedulesByDraftId
+};
+
 export default scheduleModel;
 
 // Testing
 const testing =
 	process.env.NODE_ENV == "test" ?
-	{ createSchedule, readSchedule, readSchedulesByGroupId, readSchedulesByDraftId, updateSchedule, deleteSchedulesByGroupId, deleteSchedulesByDraftId }
+	{
+        createSchedule,
+        readSchedule,
+        readSchedulesByGroupId,
+        readSchedulesByDraftId,
+        updateSchedule,
+        deleteSchedulesByGroupId,
+        deleteSchedulesByDraftId
+    }
 	: {};
