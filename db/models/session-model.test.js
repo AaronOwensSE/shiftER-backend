@@ -100,12 +100,12 @@ test("readSession: Statement Coverage 3", async () => {
 */
 
 // Successful read
-test("readUserSessions: Statement Coverage 1", async () => {
+test("readSessionsByUserId: Statement Coverage 1", async () => {
     // Create dummy session.
     await createDummySession();
 
     // Read session.
-    const result = await testing.readUserSessions(DUMMY_USER_ID);
+    const result = await testing.readSessionsByUserId(DUMMY_USER_ID);
 
     expect(result.ok).toBe(true);
     expect(result.value.rows[0].id).toBe(DUMMY_SESSION_ID);
@@ -116,7 +116,7 @@ pg's implicit type casting makes it difficult to force query failures on text-ba
 primitive types.
 
 // Failed query
-test("readUserSessions: Statement Coverage 2", async () => {
+test("readSessionsByUserId: Statement Coverage 2", async () => {
 });
 */
 
@@ -153,12 +153,12 @@ test("deleteSession: Statement Coverage 3", async () => {
 */
 
 // Successful deletion
-test("deleteUserSessions: Statement Coverage 1", async () => {
+test("deleteSessionsByUserId: Statement Coverage 1", async () => {
     // Create session.
     await createDummySession();
 
     // Delete session.
-    const result = await testing.deleteUserSessions(DUMMY_USER_ID);
+    const result = await testing.deleteSessionsByUserId(DUMMY_USER_ID);
 
     expect(result.ok).toBe(true);
     expect(result.value.rowCount).toBe(1);
@@ -169,7 +169,7 @@ pg's implicit type casting makes it difficult to force query failures on text-ba
 primitive types.
 
 // Failed query
-test("deleteUserSessions: Statement Coverage 2", async () => {
+test("deleteSessionsByUserId: Statement Coverage 2", async () => {
 });
 */
 

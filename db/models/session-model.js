@@ -44,7 +44,7 @@ async function readSession(id) {
     return result;
 }
 
-async function readUserSessions(userId) {
+async function readSessionsByUserId(userId) {
     let result = new errorHandling.Result();
 
     try {
@@ -79,7 +79,7 @@ async function deleteSession(id) {
     return result;
 }
 
-async function deleteUserSessions(userId) {
+async function deleteSessionsByUserId(userId) {
     let result = new errorHandling.Result();
 
     try {
@@ -113,9 +113,9 @@ async function deleteExpiredSessions() {
 const sessionModel = {
     createSession,
     readSession,
-    readUserSessions,
+    readSessionsByUserId: readSessionsByUserId,
     deleteSession,
-    deleteUserSessions,
+    deleteSessionsByUserId: deleteSessionsByUserId,
     deleteExpiredSessions
 };
 
@@ -124,5 +124,5 @@ export default sessionModel;
 // Testing
 export const testing =
     process.env.NODE_ENV == "test" ?
-    { createSession, readSession, deleteSession, deleteUserSessions, deleteExpiredSessions }
+    { createSession, readSession, readUserSessions: readSessionsByUserId, deleteSession, deleteUserSessions: deleteSessionsByUserId, deleteExpiredSessions }
     : {};
