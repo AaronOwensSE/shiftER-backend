@@ -14,11 +14,13 @@ import crypt from "../../crypt.js";
 import pool from "../pool.js";
 
 // Constants
+// Users
 export const DUMMY_USER_ID = "dummy_user";
-export const DUMMY_USER_HASH = crypt.generateHash("dummy_password_1");
+export const DUMMY_USER_HASH = await crypt.generateHash("dummy_password_1");
 export const DUMMY_USER_NAME = "Dummy User";
 export const DUMMY_USER_EMAIL = "dummy_user@example.com";
 
+// Sessions
 export const DUMMY_SESSION_ID = "dummy_session_id_1234";
 const date1 = new Date();
 date1.setDate(new Date().getDate() + 7);
@@ -27,7 +29,19 @@ const date2 = new Date();
 date2.setDate(new Date().getDate() - 7);
 export const DUMMY_SESSION_EXPIRES_2 = date2.toISOString();
 
+// Groups
 export const DUMMY_GROUP_NAME = "dummy_group";
+
+// Memberships
+export const DUMMY_MEMBERSHIP_ADMIN = false;
+
+// Drafts
+export const DUMMY_DRAFT_START_TIME = "NOW()";
+export const DUMMY_DRAFT_END_TIME = "NOW()";
+export const DUMMY_DRAFT_ACTIVE_START_TIME = "NOW()";
+export const DUMMY_DRAFT_ACTIVE_END_TIME = "NOW()";
+export const DUMMY_DRAFT_TURN_DURATION = "1 hour 30 minutes";
+export const DUMMY_DRAFT_PAUSED = false;
 
 // Functions
 export async function createDummyUser() {
@@ -36,40 +50,50 @@ export async function createDummyUser() {
             "INSERT INTO users (id, hash, name, email) VALUES ($1, $2, $3, $4);",
             [ DUMMY_USER_ID, DUMMY_USER_HASH, DUMMY_USER_NAME, DUMMY_USER_EMAIL ]
         );
-    } catch (error) {}
+    } catch (error) {
+        console.log(error.message);
+    }
 }
 
 export async function deleteDummyUser() {
     try {
         await pool.query("DELETE FROM users WHERE id = $1;", [DUMMY_USER_ID]);
-    } catch (error) {}
+    } catch (error) {
+        console.log(error.message);
+    }
 }
 
 export async function createDummySession() {
-    try {
-        await createDummyUser();
+    await createDummyUser();
 
+    try {
         await pool.query(
             "INSERT INTO sessions (id, expires, user_id) VALUES ($1, $2, $3);",
             [ DUMMY_SESSION_ID, DUMMY_SESSION_EXPIRES_1, DUMMY_USER_ID ]
         );
-    } catch (error) {}
+    } catch (error) {
+        console.log(error.message);
+    }
 }
 
 export async function createExpiredDummySession() {
-    try {
-        await createDummyUser();
+    await createDummyUser();
 
+    try {
         await pool.query(
             "INSERT INTO sessions (id, expires, user_id) VALUES ($1, $2, $3);",
             [ DUMMY_SESSION_ID, DUMMY_SESSION_EXPIRES_2, DUMMY_USER_ID ]);
-    } catch (error) {}
+    } catch (error) {
+        console.log(error.message);
+    }
 }
 
 export async function deleteDummySession() {
     try {
         await pool.query("DELETE FROM sessions WHERE id = $1;", [DUMMY_SESSION_ID]);
-    } catch (error) {}
+    } catch (error) {
+        console.log(error.message);
+    }
 }
 
 export async function createDummyGroup() {
@@ -82,11 +106,85 @@ export async function createDummyGroup() {
         const groupId = queryResult.rows[0].id;
 
         return groupId;
-    } catch (error) {}
+    } catch (error) {
+        console.log(error.message);
+    }
 }
 
 export async function deleteDummyGroup(groupId) {
     try {
         await pool.query("DELETE FROM groups WHERE id = $1;", [groupId]);
-    } catch (error) {}
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+export async function createDummyMembership() {
+    await createDummyUser();
+    const groupId = await createDummyGroup();
+
+    try {
+        await pool.query(
+            "INSERT INTO memberships (user_id, group_id, admin) VALUES ($1, $2, $3);",
+            [ DUMMY_USER_ID, groupId, DUMMY_MEMBERSHIP_ADMIN ]
+        );
+
+        return groupId;
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+export async function deleteDummyMembership(groupId) {
+    try {
+        await pool.query(
+            "DELETE FROM memberships WHERE user_id = $1 AND group_id = $2;",
+            [ DUMMY_USER_ID, groupId ]
+        );
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+export async function createDummyDraft() {
+    const groupId = await createDummyGroup();
+
+    try {
+        const queryResult = await pool.query(
+            `INSERT INTO drafts (
+				start_time,
+				end_time,
+				active_start_time,
+				active_end_time,
+				turn_duration,
+				paused,
+				group_id
+			)
+			VALUES ($1, $2, $3, $4, $5, $6, $7)
+            RETURNING (id);`,
+            [
+                DUMMY_DRAFT_START_TIME,
+                DUMMY_DRAFT_END_TIME,
+                DUMMY_DRAFT_ACTIVE_START_TIME,
+                DUMMY_DRAFT_ACTIVE_END_TIME,
+                DUMMY_DRAFT_TURN_DURATION,
+                DUMMY_DRAFT_PAUSED,
+                groupId
+            ]
+        );
+
+        const draftId = queryResult.rows[0].id;
+
+        return { draftId, groupId };
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+export async function deleteDummyDraft(draftId) {
+    try {
+        await pool.query("DELETE FROM drafts WHERE id = $1;", [draftId]);
+    } catch (error) {
+        console.log(error.message);
+    }
 }

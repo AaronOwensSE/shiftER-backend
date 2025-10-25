@@ -10,15 +10,29 @@ Update schema diagram: start_time, end_time, active_start_time, active_end_time.
 */
 
 // Exports
-async function createDraft(startTime, endTime, activeStartTime, activeEndTime, turnDuration, paused, groupId) {
+async function createDraft(
+	startTime,
+	endTime,
+	activeStartTime,
+	activeEndTime,
+	turnDuration,
+	paused,
+	groupId
+) {
 	let result = new errorHandling.Result();
 	
 	try {
-		await pool.query(
-			`INSERT INTO drafts
-                (start_time, end_time, active_start_time, active_end_time, turn_duration, paused, group_id)
-            VALUES
-                ($1, $2, $3, $4, $5, $6, $7);`,
+		await pool.query(`
+			INSERT INTO drafts (
+				start_time,
+				end_time,
+				active_start_time,
+				active_end_time,
+				turn_duration,
+				paused,
+				group_id
+			)
+			VALUES ($1, $2, $3, $4, $5, $6, $7);`,
 			[ startTime, endTime, activeStartTime, activeEndTime, turnDuration, paused, groupId ]
 		);
 		
@@ -101,7 +115,7 @@ async function deleteDraftsByGroupId(groupId) {
 	let result = new errorHandling.Result();
 	
 	try {
-		const queryResult = await pool.query("DELETE FROM drafts WHERE group_id = $1;", [id]);
+		const queryResult = await pool.query("DELETE FROM drafts WHERE group_id = $1;", [groupId]);
 		result.ok = true;
 		result.value = queryResult;
 	} catch (error) {
