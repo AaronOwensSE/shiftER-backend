@@ -1,5 +1,4 @@
 {
     "verbose": true,
-    "globalSetup": "./setup.js",
-    "testMatch": [ "<rootDir>/**/schedule-model.test.js" ]
+    "globalSetup": "./setup.js"
 }

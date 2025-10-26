@@ -8,6 +8,8 @@ import {
     DUMMY_USER_ID,
     DUMMY_PARTICIPATION_TURN_ORDER,
     DUMMY_PARTICIPATION_PASSING,
+    BAD_NUMBER,
+    BAD_NUMBER_ERROR_MESSAGE,
     createDummyUser,
     createDummyDraft,
     createDummyParticipation,
@@ -50,7 +52,7 @@ test("createParticipation: Statement Coverage 1", async () => {
 // Failed query
 test("createParticipation: Statement Coverage 2", async () => {
     // Bad create query
-    const draftId = "not_a_number";
+    const draftId = BAD_NUMBER;
 
     const result = await testing.createParticipation(
         DUMMY_USER_ID,
@@ -60,7 +62,7 @@ test("createParticipation: Statement Coverage 2", async () => {
     );
 
     expect(result.ok).toBe(false);
-    expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+    expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });
 
 // Successful read
@@ -91,11 +93,11 @@ test("readParticipation: Statement Coverage 2", async () => {
 // Failed query
 test("readParticipation: Statement Coverage 3", async () => {
     // Bad read query
-    const draftId = "not_a_number";
+    const draftId = BAD_NUMBER;
     const result = await testing.readParticipation(DUMMY_USER_ID, draftId);
 
     expect(result.ok).toBe(false);
-    expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+    expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });
 
 // Successful read
@@ -133,11 +135,11 @@ test("readParticipationByDraftId: Statement Coverage 1", async () => {
 // Failed query
 test("readParticipationByDraftId: Statement Coverage 2", async () => {
     // Bad read query
-    const draftId = "not_a_number";
+    const draftId = BAD_NUMBER;
     const result = await testing.readParticipationByDraftId(draftId);
 
     expect(result.ok).toBe(false);
-    expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+    expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });
 
 // Successful update
@@ -179,11 +181,11 @@ test("deleteParticipation: Statement Coverage 2", async () => {
 // Failed query
 test("deleteParticipation: Statement Coverage 3", async () => {
     // Bad delete query
-    const draftId = "not_a_number";
+    const draftId = BAD_NUMBER;
     const result = await testing.deleteParticipation(DUMMY_USER_ID, draftId);
 
     expect(result.ok).toBe(false);
-    expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+    expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });
 
 // Successful deletion
@@ -221,9 +223,9 @@ test("deleteParticipationByDraftId: Statement Coverage 1", async () => {
 // Failed query
 test("deleteParticipationByDraftId: Statement Coverage 2", async () => {
     // Bad delete query
-    const draftId = "not_a_number";
+    const draftId = BAD_NUMBER;
     const result = await testing.deleteParticipationByDraftId(draftId);
 
     expect(result.ok).toBe(false);
-    expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+    expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });

@@ -7,6 +7,8 @@ import testing from "./schedule-model.js";
 import {
     DUMMY_SCHEDULE_START_DATE,
     DUMMY_SCHEDULE_END_DATE,
+    BAD_NUMBER,
+    BAD_NUMBER_ERROR_MESSAGE,
     createDummyDraft,
     createDummySchedule,
     deleteDummySchedule
@@ -45,14 +47,14 @@ test("createSchedule: Statement Coverage 1", async () => {
 // Failed query
 test("createSchedule: Statement Coverage 2", async () => {
     // Bad create query
-    const draftId = "not_a_number";
-    const groupId = "not_a_number";
+    const draftId = BAD_NUMBER;
+    const groupId = BAD_NUMBER;
     const result = await testing.createSchedule(
         DUMMY_SCHEDULE_START_DATE, DUMMY_SCHEDULE_END_DATE, groupId, draftId
     );
 
     expect(result.ok).toBe(false);
-    expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+    expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });
 
 // Successful read
@@ -83,11 +85,11 @@ test("readSchedule: Statement Coverage 2", async () => {
 // Failed query
 test("readSchedule: Statement Coverage 3", async () => {
     // Bad read query
-    const scheduleId = "not_a_number";
+    const scheduleId = BAD_NUMBER;
     const result = await testing.readSchedule(scheduleId);
 
     expect(result.ok).toBe(false);
-    expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+    expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });
 
 // Successful read
@@ -105,11 +107,11 @@ test("readSchedulesByGroupId: Statement Coverage 1", async () => {
 // Failed query
 test("readSchedulesByGroupId: Statement Coverage 2", async () => {
     // Bad read query
-    const groupId = "not_a_number";
+    const groupId = BAD_NUMBER;
     const result = await testing.readSchedulesByGroupId(groupId);
 
     expect(result.ok).toBe(false);
-    expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+    expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });
 
 // Successful read
@@ -127,11 +129,11 @@ test("readSchedulesByDraftId: Statement Coverage 1", async () => {
 // Failed query
 test("readSchedulesByDraftId: Statement Coverage 2", async () => {
     // Bad read query
-    const draftId = "not_a_number";
+    const draftId = BAD_NUMBER;
     const result = await testing.readSchedulesByDraftId(draftId);
 
     expect(result.ok).toBe(false);
-    expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+    expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });
 
 // Successful update
@@ -173,11 +175,11 @@ test("deleteSchedule: Statement Coverage 2", async () => {
 // Failed query
 test("deleteSchedule: Statement Coverage 3", async () => {
     // Bad delete query
-    const scheduleId = "not_a_number";
+    const scheduleId = BAD_NUMBER;
     const result = await testing.deleteSchedule(scheduleId);
 
     expect(result.ok).toBe(false);
-    expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+    expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });
 
 // Successful deletion
@@ -195,11 +197,11 @@ test("deleteSchedulesByGroupId: Statement Coverage 1", async () => {
 // Failed query
 test("deleteSchedulesByGroupId: Statement Coverage 2", async () => {
     // Bad delete query
-    const groupId = "not_a_number";
+    const groupId = BAD_NUMBER;
     const result = await testing.deleteSchedulesByGroupId(groupId);
 
     expect(result.ok).toBe(false);
-    expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+    expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });
 
 // Successful deletion
@@ -217,9 +219,9 @@ test("deleteSchedulesByDraftId: Statement Coverage 1", async () => {
 // Failed query
 test("deleteSchedulesByDraftId: Statement Coverage 2", async () => {
     // Bad delete query
-    const draftId = "not_a_number";
+    const draftId = BAD_NUMBER;
     const result = await testing.deleteSchedulesByDraftId(draftId);
 
     expect(result.ok).toBe(false);
-    expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+    expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });

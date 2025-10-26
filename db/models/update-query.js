@@ -101,8 +101,8 @@ function isValidFieldSet(tableName, fields) {
             return Boolean(fields.start_date || fields.end_date || fields.group_id || fields.draft_id);
         case "shifts":
             return Boolean(
-                fields.start_date
-                || fields.end_date
+                fields.start_time
+                || fields.end_time
                 || fields.schedule_id
                 || fields.user_id
                 || fields.draft_id

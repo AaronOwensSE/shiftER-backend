@@ -22,7 +22,7 @@ async function createShift(startTime, endTime, scheduleId) {	// user_id not know
 	try {
 		const queryResult = await pool.query(
             `INSERT INTO shifts (start_time, end_time, schedule_id)
-            VALUES ($1, $2, $3) RETURNING id;`,
+            VALUES ($1, $2, $3) RETURNING (id);`,
             [ startTime, endTime, scheduleId ]
         );
 
@@ -42,7 +42,7 @@ async function readShift(id) {
 	try {
 		const queryResult = await pool.query("SELECT * FROM shifts WHERE id = $1;", [id]);
 		
-		if (result.rowCount > 0) {
+		if (queryResult.rowCount > 0) {
 			result.ok = true;
 			result.value = queryResult;
 		} else {
@@ -92,7 +92,7 @@ async function readShiftsByUserId(userId) {
 }
 
 async function updateShift(id, updates) {
-	const result = updateQuery("shifts", {id}, updates);
+	const result = await updateQuery("shifts", {id}, updates);
 	
 	return result;
 }

@@ -11,6 +11,8 @@ import {
     DUMMY_DRAFT_ACTIVE_END_TIME,
     DUMMY_DRAFT_TURN_DURATION,
     DUMMY_DRAFT_PAUSED,
+    BAD_NUMBER,
+    BAD_NUMBER_ERROR_MESSAGE,
     createDummyGroup,
     createDummyDraft,
     deleteDummyDraft
@@ -53,7 +55,7 @@ test("createDraft: Statement Coverage 1", async () => {
 // Failed query
 test("createDraft: Statement Coverage 2", async () => {
     // Bad create query.
-    const groupId = "not_a_number";
+    const groupId = BAD_NUMBER;
     const result = await testing.createDraft(
         DUMMY_DRAFT_START_TIME,
         DUMMY_DRAFT_END_TIME,
@@ -65,7 +67,7 @@ test("createDraft: Statement Coverage 2", async () => {
     );
 
     expect(result.ok).toBe(false);
-    expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+    expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });
 
 // Successful read
@@ -96,11 +98,11 @@ test("readDraft: Statement Coverage 2", async () => {
 // Failed query
 test("readDraft: Statement Coverage 3", async () => {
     // Bad read query.
-    const draftId = "not_a_number";
+    const draftId = BAD_NUMBER;
     const result = await testing.readDraft(draftId);
 
     expect(result.ok).toBe(false);
-    expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+    expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });
 
 // Successful read
@@ -118,11 +120,11 @@ test("readDraftsByGroupId: Statement Coverage 1", async () => {
 // Failed query
 test("readDraftsByGroupId: Statement Coverage 2", async () => {
     // Bad read query.
-    const groupId = "not_a_number";
+    const groupId = BAD_NUMBER;
     const result = await testing.readDraftsByGroupId(groupId);
     
     expect(result.ok).toBe(false);
-    expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+    expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });
 
 // Successful update
@@ -164,11 +166,11 @@ test("deleteDraft: Statement Coverage 2", async () => {
 // Failed query
 test("deleteDraft: Statement Coverage 3", async () => {
     // Bad delete query
-    const draftId = "not_a_number";
+    const draftId = BAD_NUMBER;
     const result = await testing.deleteDraft(draftId);
 
     expect(result.ok).toBe(false);
-    expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+    expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });
 
 // Successful deletion
@@ -185,9 +187,9 @@ test("deleteDraftsByGroupId: Statement Coverage 1", async () => {
 
 // Failed query
 test("deleteDraftsByGroupId: Statement Coverage 2", async () => {
-    const groupId = "not_a_number";
+    const groupId = BAD_NUMBER;
     const result = await testing.deleteDraftsByGroupId(groupId);
 
     expect(result.ok).toBe(false);
-    expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+    expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });

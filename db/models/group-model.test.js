@@ -3,7 +3,14 @@
 // Internal Modules
 import pool from "../pool.js";
 import testing from "./group-model.js";
-import { DUMMY_GROUP_NAME, createDummyGroup, deleteDummyGroup } from "./test-helpers.js";
+
+import {
+    DUMMY_GROUP_NAME,
+    BAD_NUMBER,
+    BAD_NUMBER_ERROR_MESSAGE,
+    createDummyGroup,
+    deleteDummyGroup
+} from "./test-helpers.js";
 
 // Setup/Teardown
 afterAll( async () => {
@@ -65,11 +72,11 @@ test("readGroup: Statement Coverage 2", async () => {
 
 // Failed query
 test("readGroup: Statement Coverage 3", async () => {
-    const groupId = "not_a_number";
+    const groupId = BAD_NUMBER;
     const result = await testing.readGroup(groupId);
 
     expect(result.ok).toBe(false);
-    expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+    expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });
 
 // Successful update
@@ -111,9 +118,9 @@ test("deleteGroup: Statement Coverage 2", async () => {
 
 // Failed query
 test("deleteGroup: Statement Coverage 3", async () => {
-    const groupId = "not_a_number";
+    const groupId = BAD_NUMBER;
     const result = await testing.deleteGroup(groupId);
 
     expect(result.ok).toBe(false);
-    expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+    expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });

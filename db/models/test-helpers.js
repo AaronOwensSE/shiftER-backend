@@ -51,6 +51,14 @@ export const DUMMY_PARTICIPATION_PASSING = false;
 export const DUMMY_SCHEDULE_START_DATE = "NOW()";
 export const DUMMY_SCHEDULE_END_DATE = "NOW()";
 
+// Shifts
+export const DUMMY_SHIFT_START_TIME = "NOW()";
+export const DUMMY_SHIFT_END_TIME = "NOW()";
+
+// Failed Queries
+export const BAD_NUMBER = "not_a_number";
+export const BAD_NUMBER_ERROR_MESSAGE = `invalid input syntax for type integer: \"${BAD_NUMBER}\"`;
+
 // Functions
 export async function createDummyUser() {
     try {
@@ -231,7 +239,8 @@ export async function createDummySchedule() {
     try {
 		const queryResult = await pool.query(
             `INSERT INTO schedules (start_date, end_date, group_id, draft_id)
-            VALUES ($1, $2, $3, $4) RETURNING (id);`,
+            VALUES ($1, $2, $3, $4)
+            RETURNING (id);`,
             [ DUMMY_SCHEDULE_START_DATE, DUMMY_SCHEDULE_END_DATE, groupId, draftId ]
         );
 
@@ -246,6 +255,34 @@ export async function createDummySchedule() {
 export async function deleteDummySchedule(scheduleId) {
     try {
         await pool.query("DELETE FROM schedules WHERE id = $1;", [scheduleId]);
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+export async function createDummyShift() {
+    const { scheduleId, draftId, groupId } = await createDummySchedule();
+    await createDummyUser();
+
+    try {
+        const queryResult = await pool.query(
+            `INSERT INTO shifts (start_time, end_time, schedule_id, user_id)
+            VALUES ($1, $2, $3, $4)
+            RETURNING (id);`,
+            [ DUMMY_SHIFT_START_TIME, DUMMY_SHIFT_END_TIME, scheduleId, DUMMY_USER_ID ]
+        );
+
+        const shiftId = queryResult.rows[0].id;
+
+        return { shiftId, scheduleId };
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+export async function deleteDummyShift(shiftId) {
+    try {
+        await pool.query("DELETE FROM shifts WHERE id = $1;", [shiftId]);
     } catch (error) {
         console.log(error.message);
     }

@@ -7,6 +7,8 @@ import testing from "./membership-model.js";
 import {
     DUMMY_USER_ID,
     DUMMY_MEMBERSHIP_ADMIN,
+	BAD_NUMBER,
+	BAD_NUMBER_ERROR_MESSAGE,
     createDummyUser,
     createDummyGroup,
     createDummyMembership,
@@ -85,11 +87,11 @@ test("readMembership: Statement Coverage 2", async () => {
 // Failed query
 test("readMembership: Statement Coverage 3", async () => {
     // Bad read query.
-	const groupId = "not_a_number";
+	const groupId = BAD_NUMBER;
 	const result = await testing.readMembership(DUMMY_USER_ID, groupId);
 	
 	expect(result.ok).toBe(false);
-	expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+	expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });
 
 // Successful read
@@ -125,11 +127,11 @@ test("readMembershipsByGroupId: Statement Coverage 1", async () => {
 // Failed query
 test("readMembershipsByGroupId: Statement Coverage 2", async () => {
     // Bad read query.
-	const groupId = "not_a_number";
+	const groupId = BAD_NUMBER;
 	const result = await testing.readMembershipsByGroupId(groupId);
 	
 	expect(result.ok).toBe(false);
-	expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+	expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });
 
 // Successful update
@@ -171,11 +173,11 @@ test("deleteMembership: Statement Coverage 2", async () => {
 // Failed query
 test("deleteMembership: Statement Coverage 3", async () => {
     // Bad delete query.
-	const groupId = "not_a_number";
+	const groupId = BAD_NUMBER;
 	const result = await testing.deleteMembership(DUMMY_USER_ID, groupId);
 	
 	expect(result.ok).toBe(false);
-	expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+	expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });
 
 // Successful deletion
@@ -211,9 +213,9 @@ test("deleteMembershipsByGroupId: Statement Coverage 1", async () => {
 // Failed query
 test("deleteMembershipsByGroupId: Statement Coverage 2", async () => {
     // Bad delete query.
-	const groupId = "not_a_number";
+	const groupId = BAD_NUMBER;
 	const result = await testing.deleteMembershipsByGroupId(groupId);
 	
 	expect(result.ok).toBe(false);
-	expect(result.message).toBe("invalid input syntax for type integer: \"not_a_number\"");
+	expect(result.message).toBe(BAD_NUMBER_ERROR_MESSAGE);
 });
