@@ -15,8 +15,8 @@ async function createSchedule(startDate, endDate, groupId, draftId) {
 	
 	try {
 		const queryResult = await pool.query(
-            `INSERT INTO schedules (start_date, end_date, groupId, draftId)
-            VALUES ($1, $2, $3, $4) RETURNING id;`,
+            `INSERT INTO schedules (start_date, end_date, group_id, draft_id)
+            VALUES ($1, $2, $3, $4) RETURNING (id);`,
             [ startDate, endDate, groupId, draftId ]
         );
 
@@ -90,7 +90,7 @@ async function readSchedulesByDraftId(draftId) {
 }
 
 async function updateSchedule(id, updates) {
-	const result = updateQuery("schedules", {id}, updates);
+	const result = await updateQuery("schedules", {id}, updates);
 	
 	return result;
 }
@@ -160,6 +160,7 @@ const scheduleModel = {
     readSchedulesByGroupId,
     readSchedulesByDraftId,
     updateSchedule,
+    deleteSchedule,
     deleteSchedulesByGroupId,
     deleteSchedulesByDraftId
 };
@@ -175,6 +176,7 @@ const testing =
         readSchedulesByGroupId,
         readSchedulesByDraftId,
         updateSchedule,
+        deleteSchedule,
         deleteSchedulesByGroupId,
         deleteSchedulesByDraftId
     }

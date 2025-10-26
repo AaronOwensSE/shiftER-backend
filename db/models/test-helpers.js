@@ -47,6 +47,10 @@ export const DUMMY_DRAFT_PAUSED = false;
 export const DUMMY_PARTICIPATION_TURN_ORDER = 1;
 export const DUMMY_PARTICIPATION_PASSING = false;
 
+// Schedules
+export const DUMMY_SCHEDULE_START_DATE = "NOW()";
+export const DUMMY_SCHEDULE_END_DATE = "NOW()";
+
 // Functions
 export async function createDummyUser() {
     try {
@@ -216,6 +220,32 @@ export async function deleteDummyParticipation(draftId) {
             "DELETE FROM participation WHERE user_id = $1 AND draft_id = $2;",
             [ DUMMY_USER_ID, draftId ]
         );
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+export async function createDummySchedule() {
+    const { draftId, groupId } = await createDummyDraft();
+
+    try {
+		const queryResult = await pool.query(
+            `INSERT INTO schedules (start_date, end_date, group_id, draft_id)
+            VALUES ($1, $2, $3, $4) RETURNING (id);`,
+            [ DUMMY_SCHEDULE_START_DATE, DUMMY_SCHEDULE_END_DATE, groupId, draftId ]
+        );
+
+        const scheduleId = queryResult.rows[0].id;
+
+        return { scheduleId, groupId, draftId };
+	} catch (error) {
+		console.log(error.message);
+	}
+}
+
+export async function deleteDummySchedule(scheduleId) {
+    try {
+        await pool.query("DELETE FROM schedules WHERE id = $1;", [scheduleId]);
     } catch (error) {
         console.log(error.message);
     }

@@ -89,20 +89,20 @@ function isValidFieldSet(tableName, fields) {
             return Boolean(fields.name);
         case "drafts":
             return Boolean(
-                fields.start
-                || fields.end
-                || fields.active_start
-                || fields.active_end
+                fields.start_time
+                || fields.end_time
+                || fields.active_start_time
+                || fields.active_end_time
                 || fields.turn_duration
                 || fields.paused
                 || fields.group_id
             );
         case "schedules":
-            return Boolean(fields.date || fields.group_id || fields.draft_id);
+            return Boolean(fields.start_date || fields.end_date || fields.group_id || fields.draft_id);
         case "shifts":
             return Boolean(
-                fields.start
-                || fields.end
+                fields.start_date
+                || fields.end_date
                 || fields.schedule_id
                 || fields.user_id
                 || fields.draft_id
