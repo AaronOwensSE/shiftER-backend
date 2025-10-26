@@ -47,6 +47,7 @@ test("createDraft: Statement Coverage 1", async () => {
     );
 
     expect(result.ok).toBe(true);
+    expect(typeof result.value).toBe("number");
 });
 
 // Failed query

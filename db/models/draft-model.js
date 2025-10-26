@@ -22,7 +22,7 @@ async function createDraft(
 	let result = new errorHandling.Result();
 	
 	try {
-		await pool.query(`
+		const queryResult = await pool.query(`
 			INSERT INTO drafts (
 				start_time,
 				end_time,
@@ -32,11 +32,13 @@ async function createDraft(
 				paused,
 				group_id
 			)
-			VALUES ($1, $2, $3, $4, $5, $6, $7);`,
+			VALUES ($1, $2, $3, $4, $5, $6, $7)
+			RETURNING (id);`,
 			[ startTime, endTime, activeStartTime, activeEndTime, turnDuration, paused, groupId ]
 		);
 		
 		result.ok = true;
+		result.value = queryResult.rows[0].id;
 	} catch (error) {
 		result.ok = false;
 		result.message = error.message;
