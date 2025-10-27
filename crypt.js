@@ -14,4 +14,5 @@ async function generateHash(password) {
     return hash;
 }
 
-export default crypt = { generateHash };
+const crypt = { generateHash };
+export default crypt;

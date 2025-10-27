@@ -1,20 +1,24 @@
 "use strict";
 
 // Internal Modules
-import "../../../env-config.js";    // Should always be first.
+import "../../../setup.js";    // Must be first.
 import pool from "../../pool.js";
-import cleanup from "../../cleanup.js";
 
 // Run
 await deleteData();
-await cleanup();
+await pool.end();
 
 // Main Function
 async function deleteData() {
     console.log("Attempting to delete data:");
     await deleteTableData("sessions");
+    await deleteTableData("memberships");
+    await deleteTableData("participation");
+    await deleteTableData("shifts");
     await deleteTableData("users");
-    console.log();
+    await deleteTableData("schedules");
+    await deleteTableData("drafts");
+    await deleteTableData("groups");
 }
 
 // Helper Functions
@@ -22,12 +26,8 @@ async function deleteTableData(tableName) {
     try {
         await pool.query(`DELETE FROM ${tableName};`);
     } catch (err) {
-        console.error(`Data deletion from table ${tableName} failed: ${err.message}`);
-
-        return false;
+        console.log(`Data deletion from table ${tableName} failed: ${err.message}`);
     }
 
     console.log(`Data deleted from table ${tableName}.`);
-
-    return true;
 }
