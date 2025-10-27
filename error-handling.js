@@ -1,7 +1,7 @@
 "use strict";
 
 class Result {
-    constructor( { ok, value, message } ) {
+    constructor(ok = undefined, value = undefined, message = undefined) {
         this.ok = ok;
         this.value = value;
         this.message = message;

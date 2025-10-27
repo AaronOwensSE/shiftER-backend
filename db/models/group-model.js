@@ -6,16 +6,17 @@ import pool from "../pool.js";
 import updateQuery from "./update-query.js";
 
 // Exports
-async function createUser(id, hash, name, email) {
+async function createGroup(name) {
     let result = new errorHandling.Result();
 
     try {
-        await pool.query(
-            "INSERT INTO users (id, hash, name, email) VALUES ($1, $2, $3, $4);",
-            [id, hash, name, email]
+        const queryResult = await pool.query(
+            "INSERT INTO groups (name) VALUES ($1) RETURNING id;",
+            [name]
         );
 
         result.ok = true;
+        result.value = queryResult.rows[0].id;  // Need to return assigned ID.
     } catch (error) {
         result.ok = false;
         result.message = error.message;
@@ -24,18 +25,18 @@ async function createUser(id, hash, name, email) {
     return result;
 }
 
-async function readUser(id) {
+async function readGroup(id) {
     let result = new errorHandling.Result();
 
     try {
-        const queryResult = await pool.query("SELECT * FROM users WHERE id = $1;", [id]);
+        const queryResult = await pool.query("SELECT * FROM groups WHERE id = $1;", [id]);
 
         if (queryResult.rowCount > 0) {
             result.ok = true;
             result.value = queryResult;
         } else {
             result.ok = false;
-            result.message = "User does not exist.";
+            result.message = "Group does not exist.";
         }
     } catch (error) {
         result.ok = false;
@@ -45,23 +46,23 @@ async function readUser(id) {
     return result;
 }
 
-async function updateUser(id, updates) {
-    const result = updateQuery("users", { id }, updates);
+async function updateGroup(id, updates) {
+    const result = updateQuery("groups", {id}, updates);
 
     return result;
 }
 
-async function deleteUser(id) {
+async function deleteGroup(id) {
     let result = new errorHandling.Result();
 
     try {
-        const queryResult = await pool.query("DELETE FROM users WHERE id = $1;", [id]);
+        const queryResult = await pool.query("DELETE FROM groups WHERE id = $1;", [id]);
 
         if (queryResult.rowCount > 0) {
             result.ok = true;
         } else {
             result.ok = false;
-            result.message = "User does not exist.";
+            result.message = "Group does not exist.";
         }
     } catch (error) {
         result.ok = false;
@@ -72,11 +73,11 @@ async function deleteUser(id) {
 }
 
 // Production
-const userModel = { createUser, readUser, updateUser, deleteUser };
-export default userModel;
+const groupModel = { createGroup, readGroup, updateGroup, deleteGroup };
+export default groupModel;
 
 // Testing
 export const testing =
-    process.env.NODE_ENV === "test" ?
-    { createUser, readUser, updateUser, deleteUser }
+    process.env.NODE_ENV == "test" ?
+    { createGroup, readGroup, updateGroup, deleteGroup }
     : {};
