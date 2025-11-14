@@ -6,7 +6,7 @@ import {
     USER_NAME_MAX_LENGTH,
     USER_EMAIL_MAX_LENGTH,
     GROUP_NAME_MAX_LENGTH
-} from "../../../constants.js";
+} from "../../../../shared/constants.js";
 
 import pool from "../../pool.js";
 
