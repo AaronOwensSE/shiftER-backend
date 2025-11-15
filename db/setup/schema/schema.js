@@ -1,13 +1,7 @@
 "use strict";
 
 // Internal Modules
-import {
-    USER_ID_MAX_LENGTH,
-    USER_NAME_MAX_LENGTH,
-    USER_EMAIL_MAX_LENGTH,
-    GROUP_NAME_MAX_LENGTH
-} from "../../../../shared/constants.js";
-
+import constants from "../../../../shared/constants.js";
 import pool from "../../pool.js";
 
 // Exports
@@ -64,10 +58,10 @@ async function createUsersTable() {
     try {
         await pool.query(`
             CREATE TABLE users (
-                id VARCHAR(${USER_ID_MAX_LENGTH.toString()}) PRIMARY KEY,
+                id VARCHAR(${constants.USER_ID_MAX_LENGTH.toString()}) PRIMARY KEY,
                 hash TEXT,
-                name VARCHAR(${USER_NAME_MAX_LENGTH.toString()}),
-                email VARCHAR(${USER_EMAIL_MAX_LENGTH.toString()})
+                name VARCHAR(${constants.USER_NAME_MAX_LENGTH.toString()}),
+                email VARCHAR(${constants.USER_EMAIL_MAX_LENGTH.toString()})
             );
         `);
     } catch (error) {
@@ -87,7 +81,7 @@ async function createSessionsTable() {
             CREATE TABLE sessions (
                 id TEXT PRIMARY KEY,
                 expires TIMESTAMPTZ,
-                user_id VARCHAR(${USER_ID_MAX_LENGTH.toString()})
+                user_id VARCHAR(${constants.USER_ID_MAX_LENGTH.toString()})
                     REFERENCES users (id) ON DELETE CASCADE
             );
         `);
@@ -107,7 +101,7 @@ async function createGroupsTable() {
         await pool.query(`
             CREATE TABLE groups (
                 id SERIAL PRIMARY KEY,
-                name VARCHAR(${GROUP_NAME_MAX_LENGTH.toString()})
+                name VARCHAR(${constants.GROUP_NAME_MAX_LENGTH.toString()})
             );
         `);
     } catch (error) {
@@ -125,7 +119,7 @@ async function createMembershipsTable() {
     try {
         await pool.query(`
             CREATE TABLE memberships (
-                user_id VARCHAR(${USER_ID_MAX_LENGTH.toString()})
+                user_id VARCHAR(${constants.USER_ID_MAX_LENGTH.toString()})
                     REFERENCES users (id) ON DELETE CASCADE,
                 group_id INT
                     REFERENCES groups (id) ON DELETE CASCADE,
@@ -174,7 +168,7 @@ async function createParticipationTable() {
     try {
         await pool.query(`
             CREATE TABLE participation (
-                user_id VARCHAR(${USER_ID_MAX_LENGTH})
+                user_id VARCHAR(${constants.USER_ID_MAX_LENGTH})
                     REFERENCES users (id) ON DELETE CASCADE,
                 draft_id INT
                     REFERENCES drafts (id) ON DELETE CASCADE,
@@ -227,7 +221,7 @@ async function createShiftsTable() {
                 end_time TIMESTAMPTZ,
                 schedule_id INT
                     REFERENCES schedules (id),
-                user_id VARCHAR(${USER_ID_MAX_LENGTH})
+                user_id VARCHAR(${constants.USER_ID_MAX_LENGTH})
                     REFERENCES users (id)
             );
         `);

@@ -1,8 +1,17 @@
 "use strict";
 
 // Users
-export const SALT_DEFAULT_ROUNDS = 10;
+const SALT_DEFAULT_ROUNDS = 10;
 
 // Sessions
-export const SESSION_ID_LENGTH_IN_BYTES = 32;
-export const SESSION_ID_ATTEMPTS = 5;
+const SESSION_ID_LENGTH_IN_BYTES = 32;
+const SESSION_ID_ATTEMPTS = 5;
+
+const constants = {
+    SALT_DEFAULT_ROUNDS,
+
+    SESSION_ID_LENGTH_IN_BYTES,
+    SESSION_ID_ATTEMPTS
+};
+
+export default constants;
