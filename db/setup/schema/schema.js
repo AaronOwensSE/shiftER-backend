@@ -1,7 +1,7 @@
 "use strict";
 
 // Internal Modules
-import constants from "../../../../shared/constants.js";
+import constants from "../../../constants.js";
 import pool from "../../pool.js";
 
 // Exports
