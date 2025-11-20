@@ -72,7 +72,10 @@ test("isValidUser: Condition Coverage 1", () => {
     const userPassword = "12345678901234567890";
     const userName = "User One";
     const userEmail = "user1@example.com";
-    const userValid = testing.isValidUser(userId, userPassword, userName, userEmail);
+    
+    const userValid = testing.isValidUser({
+        id: userId, password: userPassword, name: userName, email: userEmail
+    });
 
     expect(userValid).toBe(true);
 });
@@ -83,7 +86,10 @@ test("isValidUser: Condition Coverage 2", () => {
     const userPassword = 2;
     const userName = 3;
     const userEmail = 4;
-    const userValid = testing.isValidUser(userId, userPassword, userName, userEmail);
+
+    const userValid = testing.isValidUser({
+        id: userId, password: userPassword, name: userName, email: userEmail
+    });
 
     expect(userValid).toBe(false);
 });

@@ -4,7 +4,7 @@
 import constants from "./constants.js";
 
 // Exports
-export function isValidUser(id, password, name, email) {
+export function isValidUser({ id, password, name, email }) {
     return isValidUserId(id)
         && isValidUserPassword(password)
         && isValidUserName(name)
