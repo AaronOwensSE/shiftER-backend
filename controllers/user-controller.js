@@ -1,77 +1,43 @@
 "use strict";
 
-// External Dependencies
-//import bcrypt from "bcrypt";
-
 // Internal Modules
-import crypt from "crypt.js";
-import { isValidUser } from "../validation.js";
+import crypt from "../crypt.js";
+import errorHandling from "../error-handling.js";
+import validation from "../validation.js";
 import userModel from "../db/models/user-model.js";
 
 // Exports
-async function createUser(id, password, name, email) {
-    console.log(`Create user: ${id}, ${password}, ${name}, ${email}`);
+async function createUser({ id, password, name, email }) {
+    const result = new errorHandling.Result();
 
-    if (!isValidUser(id, password, name, email)) {
-        console.error("Create user failed: Invalid user.");
+    if (!validation.isValidUser({ id, password, name, email} )) {
+        result.ok = false;
+        result.message = "Invalid user.";
 
-        return false;
+        return result;
     }
 
-    try {
-        if (await userExists(id)) {
-            console.error("Create user failed: User already exists.");
+    const readUserResult = await userModel.readUser(id);
 
-            return false;
-        }
-    } catch (error) {
-        console.error(`Create user failed: ${error.message}`);
+    if (readUserResult.ok) {
+        result.ok = false;
+        result.message = "User already exists.";
 
-        return false;
+        return result;
     }
 
     const hash = await crypt.generateHash(password);
-    const userCreated = await userModel.createUser(id, hash, name, email);
+    const createUserResult = await userModel.createUser({ id, hash, name, email });
 
-    if (userCreated) {
-        console.log("Create user succeeded.");
+    if (createUserResult.ok) {
+        result.ok = true;
     } else {
-        console.error("Create user failed.");
+        result.ok = false;
+        result.message = "Create user failed.";
     }
 
-    return userCreated;
+    return result;
 }
 
 const userController = { createUser };
 export default userController;
-
-// Helper Functions
-async function userExists(id) {
-    console.log(`User ${id} exists?`);
-
-    try {
-        const result = await userModel.readUser(id);
-        const userFound = result.rowCount > 0;
-
-        if (userFound) {
-            console.log(`User ${id} exists.`);
-        } else {
-            console.log(`User ${id} does not exist.`);
-        }
-
-        return userFound;
-    } catch (error) {
-        console.error(`User ${id} exists? failed: ${error.message}`);
-
-        throw error;    // Propagate
-    }
-}
-
-/* moved to crypt.js
-async function generateHash(password) {
-    const salt = await bcrypt.genSalt(SALT_DEFAULT_ROUNDS);
-    const hash = await bcrypt.hash(password, salt);
-
-    return hash;
-}
-*/
