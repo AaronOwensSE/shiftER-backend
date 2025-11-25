@@ -17,6 +17,8 @@ async function createUser({ id, password, name, email }) {
         return result;
     }
 
+    // User model's createUser function handles an exception and returns false if user already
+    // exists, but we can confirm to produce a better error message.
     const readUserResult = await userModel.readUser(id);
 
     if (readUserResult.ok) {
@@ -41,3 +43,8 @@ async function createUser({ id, password, name, email }) {
 
 const userController = { createUser };
 export default userController;
+
+export const testing =
+    process.env.NODE_ENV === "test" ?
+    { createUser }
+    : {};
