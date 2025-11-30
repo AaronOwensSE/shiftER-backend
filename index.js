@@ -22,8 +22,8 @@ app.post("/create-user", async (req, res) => {
 });
 
 app.post("/log-in", async (req, res) => {
-    const { userId, password } = req.body;
-    const result = await authenticationController.logIn(userId, password);
+    const { id, password } = req.body;
+    const result = await authenticationController.logIn(id, password);
     const resultJson = JSON.stringify(result);
 
     res.send(resultJson);

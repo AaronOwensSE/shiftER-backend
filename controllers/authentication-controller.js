@@ -11,11 +11,11 @@ import sessionModel from "../db/models/session-model.js";
 import userModel from "../db/models/user-model.js";
 
 // Exports
-async function logIn(userId, password) {
+async function logIn(id, password) {
     const result = new errorHandling.Result();
     const genericMessage = "Unable to log in.";
 
-    const credentialsValid = await authenticateCredentials(userId, password);
+    const credentialsValid = await authenticateCredentials(id, password);
 
     if (!credentialsValid) {
         result.ok = false;
@@ -24,7 +24,7 @@ async function logIn(userId, password) {
         return result;
     }
 
-    const deleteSessionsByUserIdResult = await sessionModel.deleteSessionsByUserId(userId);
+    const deleteSessionsByUserIdResult = await sessionModel.deleteSessionsByUserId(id);
 
     if (!deleteSessionsByUserIdResult.ok) {
         result.ok = false;
@@ -33,7 +33,7 @@ async function logIn(userId, password) {
         return result;
     }
 
-    const getSessionIdResult = await getSessionId(userId);
+    const getSessionIdResult = await getSessionId(id);
 
     if (!getSessionIdResult.ok) {
         result.ok = false;
