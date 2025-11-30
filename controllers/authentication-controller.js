@@ -2,12 +2,13 @@
 
 // External Dependencies
 import bcrypt from "bcrypt";
-import "crypto";
+import crypto from "crypto";
 
 // Internal Modules
 import constants from "../constants.js";
 import errorHandling from "../error-handling.js";
 import sessionModel from "../db/models/session-model.js";
+import userModel from "../db/models/user-model.js";
 
 // Exports
 async function logIn(userId, password) {
@@ -76,8 +77,8 @@ async function getSessionId(userId) {
     const expires = new Date(Date.now() + constants.SESSION_EXPIRATION);
 
     for (let i = 0, sessionId, createSessionResult; i < constants.SESSION_ID_ATTEMPTS; i++) {
-        sessionId = crypto.randomBytes(SESSION_ID_LENGTH_IN_BYTES).toString("hex");
-        createSessionResult = await createSession(sessionId, userId, expires);
+        sessionId = crypto.randomBytes(constants.SESSION_ID_LENGTH_IN_BYTES).toString("hex");
+        createSessionResult = await sessionModel.createSession(sessionId, userId, expires);
 
         if (createSessionResult.ok) {
             result.ok = true;

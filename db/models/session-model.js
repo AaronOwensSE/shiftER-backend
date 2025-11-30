@@ -113,9 +113,9 @@ async function deleteExpiredSessions() {
 const sessionModel = {
     createSession,
     readSession,
-    readSessionsByUserId: readSessionsByUserId,
+    readSessionsByUserId,
     deleteSession,
-    deleteSessionsByUserId: deleteSessionsByUserId,
+    deleteSessionsByUserId,
     deleteExpiredSessions
 };
 
@@ -124,5 +124,12 @@ export default sessionModel;
 // Testing
 export const testing =
     process.env.NODE_ENV == "test" ?
-    { createSession, readSession, readUserSessions: readSessionsByUserId, deleteSession, deleteUserSessions: deleteSessionsByUserId, deleteExpiredSessions }
+    {
+        createSession,
+        readSession,
+        readSessionsByUserId,
+        deleteSession,
+        deleteSessionsByUserId,
+        deleteExpiredSessions
+    }
     : {};
