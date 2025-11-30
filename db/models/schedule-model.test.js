@@ -40,8 +40,6 @@ test("createSchedule: Statement Coverage 1", async () => {
 
     expect(result.ok).toBe(true);
     expect(typeof result.value).toBe("number");
-
-    console.log(result.message);
 });
 
 // Failed query
