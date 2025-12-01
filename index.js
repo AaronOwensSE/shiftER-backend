@@ -29,6 +29,14 @@ app.post("/log-in", async (req, res) => {
     res.send(resultJson);
 });
 
+app.post("/authenticate-session", async (req, res) => {
+    const id = req.body;
+    const result = await authenticationController.authenticateSession(id);
+    const resultJson = JSON.stringify(result);
+
+    res.send(resultJson);
+});
+
 app.listen(process.env.HTTP_PORT);  // App blocks here.
 
 // This will never get called. We need to hook into shutdown signals for cleanup functions.

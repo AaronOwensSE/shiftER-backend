@@ -49,12 +49,26 @@ async function logIn(id, password) {
     return result;
 }
 
-const authenticationController = { logIn };
+async function authenticateSession(id) {
+    const result = new errorHandling.Result();
+    const readSessionResult = await sessionModel.readSession(id);
+
+    if (readSessionResult.ok) {
+        result.ok = true;
+    } else {
+        result.ok = false;
+        result.message = "Unable to authenticate session.";
+    }
+
+    return result;
+}
+
+const authenticationController = { logIn, authenticateSession };
 export default authenticationController;
 
 export const testing =
     process.env.NODE_ENV === "test" ?
-    { logIn, authenticateCredentials, getSessionId }
+    { logIn, authenticateSession, authenticateCredentials, getSessionId }
     : {};
 
 // Helper Functions
