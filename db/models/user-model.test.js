@@ -38,9 +38,9 @@ await test("createUser: Statement Coverage 1", async () => {
     await deleteDummyUser();
 
     // Create user.
-    const result = await testing.createUser(
-        DUMMY_USER_ID, DUMMY_USER_HASH, DUMMY_USER_NAME, DUMMY_USER_EMAIL
-    );
+    const result = await testing.createUser({
+        id: DUMMY_USER_ID, hash: DUMMY_USER_HASH, name: DUMMY_USER_NAME, email: DUMMY_USER_EMAIL
+    });
     
     expect(result.ok).toBe(true);
 });
@@ -52,12 +52,12 @@ primitive types.
 // Failed query
 test("createUser: Statement Coverage 2", async () => {
     const id = null;
-    const result = await testing.createUser(
+    const result = await testing.createUser({
         id,
         DUMMY_USER_HASH,
         DUMMY_USER_NAME,
         DUMMY_USER_EMAIL
-    );
+    });
 
     expect(result.ok).toBe(false);
     expect(result.message).toBe();

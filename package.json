@@ -1,7 +1,6 @@
 {
-  "name": "shifter-backend",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "Backend for an app that enables groups of professionals to compete for work shifts in the style of a fantasy sports draft.",
   "main": "index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js"

@@ -2,116 +2,105 @@
 
 // External Dependencies
 import bcrypt from "bcrypt";
-import "crypto";
+import crypto from "crypto";
 
 // Internal Modules
-import "../constants.js";
+import constants from "../constants.js";
+import errorHandling from "../error-handling.js";
 import sessionModel from "../db/models/session-model.js";
-
-// Be mindful not to pass detailed backend error outputs on to frontend. A user should not be able
-// to gain information about the system or credentials by observing error messages. Consider
-// removing even backend error details after testing. Research best practices.
+import userModel from "../db/models/user-model.js";
 
 // Exports
-async function logIn(userId, password) {
-    console.log(`Log in: ${userId, password}`);
+async function logIn(id, password) {
+    const result = new errorHandling.Result();
+    const genericMessage = "Unable to log in.";
 
-    if (!authenticateCredentials(userId, password)) {
-        console.error("Unable to log in: Invalid credentials.");
+    const credentialsValid = await authenticateCredentials(id, password);
 
-        return false;
+    if (!credentialsValid) {
+        result.ok = false;
+        result.message = genericMessage;
+
+        return result;
     }
 
-    if (!sessionModel.deleteUserSessions(userId)) {
-        console.error("Unable to log in: Unable to delete prior user sessions.");
+    const deleteSessionsByUserIdResult = await sessionModel.deleteSessionsByUserId(id);
 
-        return false;
+    if (!deleteSessionsByUserIdResult.ok) {
+        result.ok = false;
+        result.message = genericMessage;
+
+        return result;
     }
-    
-    const sessionId = await getUniqueSessionId();
 
-    if (!sessionId) {
-        console.error("Unable to log in: Unable to acquire unique session ID.");
+    const getSessionIdResult = await getSessionId(id);
 
-        return false;
+    if (!getSessionIdResult.ok) {
+        result.ok = false;
+        result.message = genericMessage;
+
+        return result;
     }
-    
-    // insert session id to db
-    // set cookie containing session ID with same expiration
-    // return true/false
+
+    const sessionId = getSessionIdResult.value;
+    result.ok = true;
+    result.value = sessionId;
+
+    return result;
 }
 
-const authenticationController = { logIn };
+async function authenticateSession(id) {
+    const result = new errorHandling.Result();
+    const readSessionResult = await sessionModel.readSession(id);
+
+    if (readSessionResult.ok) {
+        result.ok = true;
+    } else {
+        result.ok = false;
+        result.message = "Unable to authenticate session.";
+    }
+
+    return result;
+}
+
+const authenticationController = { logIn, authenticateSession };
 export default authenticationController;
+
+export const testing =
+    process.env.NODE_ENV === "test" ?
+    { logIn, authenticateSession, authenticateCredentials, getSessionId }
+    : {};
 
 // Helper Functions
 async function authenticateCredentials(userId, password) {
-    console.log(`Authenticate credentials: ${userId}`);
+    const result = await userModel.readUser(userId);
 
-    try {
-        const result = await sessionModel.readUser(userId);
-
-        if (result.rowCount <= 0) {
-            console.error("Authenticate credentials failed: User does not exist.");
-
-            return false;
-        }
-
-        const credentialsValid = await bcrypt.compare(password, result.rows[0].hash);
-
-        if (credentialsValid) {
-            console.log("Authenticate credentials succeeded.");
-
-            return true;
-        } else {
-            console.error("Authenticate credentials failed: Incorrect password.");
-
-            return false;
-        }
-    } catch (error) {
-        console.error(`Authenticate user failed: ${error.message}`);
-
+    if (!result.ok) {
         return false;
     }
+
+    const credentialsValid = await bcrypt.compare(password, result.value.rows[0].hash);
+
+    return credentialsValid;
 }
 
-async function getUniqueSessionId() {
-    console.log("Get unique session ID.");
+async function getSessionId(userId) {
+    const result = new errorHandling.Result();
+    result.ok = false;
 
-    let sessionId;
+    const expires = new Date(Date.now() + constants.SESSION_EXPIRATION);
 
-    for (let i = 0; i < SESSION_ID_ATTEMPTS; i++) {
-        sessionId = crypto.randomBytes(SESSION_ID_LENGTH_IN_BYTES).toString("hex");
+    for (let i = 0, sessionId, createSessionResult; i < constants.SESSION_ID_ATTEMPTS; i++) {
+        sessionId = crypto.randomBytes(constants.SESSION_ID_LENGTH_IN_BYTES).toString("hex");
+        createSessionResult = await sessionModel.createSession(sessionId, userId, expires);
 
-        try {
-            if (!(await sessionIdExists(sessionId))) {
-                return sessionId;
-            }
-        } catch (error) {
-            console.error(`Get unique session ID failed: ${error.message}`);
+        if (createSessionResult.ok) {
+            result.ok = true;
+            result.value = sessionId;
 
-            return false;
+            break;
         }
     }
 
-    console.error(
-        `Get unique session ID failed: 
-        Unable to acquire unique session ID in ${SESSION_ID_ATTEMPTS} attempts.`
-    );
-
-    return false;
-}
-
-async function sessionIdExists(id) {
-    console.log("Session ID exists?");
-
-    try {
-        const result = await readSession(id);
-
-        return result.rowCount > 0;
-    } catch (error) {
-        console.error(`Session ID exists? failed: ${error.message}`);
-
-        throw Error("Read session failed.");
-    }
+    return result;
 }

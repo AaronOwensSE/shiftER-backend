@@ -6,7 +6,7 @@ import pool from "../pool.js";
 import updateQuery from "./update-query.js";
 
 // Exports
-async function createUser(id, hash, name, email) {
+async function createUser({ id, hash, name, email }) {
     let result = new errorHandling.Result();
 
     try {
