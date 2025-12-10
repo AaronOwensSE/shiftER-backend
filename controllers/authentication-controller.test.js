@@ -122,6 +122,7 @@ test("authenticateSession: Statement Coverage 1", async () => {
     expect(result.ok).toBe(true);
 });
 
+// Failure
 test("authenticateSession: Statement Coverage 2", async () => {
     const sessionId = false;
     const result = await testing.authenticateSession(sessionId);
