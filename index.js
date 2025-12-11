@@ -30,7 +30,7 @@ app.post("/log-in", async (req, res) => {
 });
 
 app.post("/authenticate-session", async (req, res) => {
-    const id = req.body;
+    const { id } = req.body;
     const result = await authenticationController.authenticateSession(id);
     const resultJson = JSON.stringify(result);
 
