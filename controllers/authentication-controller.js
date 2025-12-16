@@ -24,6 +24,10 @@ async function logIn(id, password) {
         return result;
     }
 
+    /*
+    This code cleans up session IDs as part of login but will prevent simultaneous sessions on
+    multiple devices.
+
     const deleteSessionsByUserIdResult = await sessionModel.deleteSessionsByUserId(id);
 
     if (!deleteSessionsByUserIdResult.ok) {
@@ -32,6 +36,7 @@ async function logIn(id, password) {
 
         return result;
     }
+    */
 
     const getSessionIdResult = await getSessionId(id);
 
@@ -63,12 +68,30 @@ async function authenticateSession(id) {
     return result;
 }
 
-const authenticationController = { logIn, authenticateSession };
+async function logOut(id) {
+    const result = new errorHandling.Result();
+
+    // We could delete all sessions here, but that would log out on all devices. We may wish to have
+    // a separate function for that.
+
+    const deleteSessionResult = await sessionModel.deleteSession(id);
+
+    if (deleteSessionResult.ok) {
+        result.ok = true;
+    } else {
+        result.ok = false;
+        result.message = "Unable to log out.";
+    }
+
+    return result;
+}
+
+const authenticationController = { logIn, authenticateSession, logOut };
 export default authenticationController;
 
 export const testing =
     process.env.NODE_ENV === "test" ?
-    { logIn, authenticateSession, authenticateCredentials, getSessionId }
+    { logIn, authenticateSession, logOut, authenticateCredentials, getSessionId }
     : {};
 
 // Helper Functions
