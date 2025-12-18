@@ -2,7 +2,7 @@
 
 // Internal Modules
 import pool from "../pool.js";
-import testing from "./shift-model.js";
+import { testing } from "./shift-model.js";
 
 import {
     DUMMY_USER_ID,

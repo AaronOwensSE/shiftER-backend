@@ -168,7 +168,7 @@ const scheduleModel = {
 export default scheduleModel;
 
 // Testing
-const testing =
+export const testing =
 	process.env.NODE_ENV == "test" ?
 	{
         createSchedule,

@@ -1,7 +1,7 @@
 "use strict";
 
 import pool from "../pool.js";
-import testing from "./session-model.js";
+import { testing } from "./session-model.js";
 
 import {
     DUMMY_USER_ID,

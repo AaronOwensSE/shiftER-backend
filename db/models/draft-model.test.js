@@ -2,7 +2,7 @@
 
 // Internal Modules
 import pool from "../pool.js";
-import testing from "./draft-model.js";
+import { testing } from "./draft-model.js";
 
 import {
     DUMMY_DRAFT_START_TIME,
