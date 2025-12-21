@@ -166,7 +166,7 @@ const shiftModel = {
 export default shiftModel;
 
 // Testing
-const testing =
+export const testing =
 	process.env.NODE_ENV == "test" ?
 	{
         createShift,

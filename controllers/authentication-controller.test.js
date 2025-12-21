@@ -122,10 +122,37 @@ test("authenticateSession: Statement Coverage 1", async () => {
     expect(result.ok).toBe(true);
 });
 
+// Failure
 test("authenticateSession: Statement Coverage 2", async () => {
     const sessionId = false;
     const result = await testing.authenticateSession(sessionId);
 
     expect(result.ok).toBe(false);
     expect(result.message).toBe("Unable to authenticate session.");
+});
+
+test("logOut: Statement Coverage 1", async () => {
+    const userId = "logoutTestUser";
+    const password = "12345678901234567890";
+    const hash = await crypt.generateHash(password);
+    const name = "Logout Test User";
+    const email = "logouttestuser@example.com";
+    const user = { id: userId, hash: hash, name: name, email: email };
+    await userModel.createUser(user);
+
+    const sessionId = crypto.randomBytes(constants.SESSION_ID_LENGTH_IN_BYTES).toString("hex");
+    const expires = new Date(Date.now() + constants.SESSION_EXPIRATION);
+    await sessionModel.createSession(sessionId, userId, expires);
+
+    const result = await testing.logOut(sessionId);
+
+    expect(result.ok).toBe(true);
+});
+
+test("logOut: Statement Coverage 2", async () => {
+    const sessionId = false;
+    const result = await testing.logOut(sessionId);
+
+    expect(result.ok).toBe(false);
+    expect(result.message).toBe("Unable to log out.");
 });

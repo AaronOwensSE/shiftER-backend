@@ -2,7 +2,7 @@
 
 // Internal Modules
 import pool from "../pool.js";
-import testing from "./group-model.js";
+import { testing } from "./group-model.js";
 
 import {
     DUMMY_GROUP_NAME,

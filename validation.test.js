@@ -1,6 +1,6 @@
 "use strict";
 
-import testing from "./validation.js";
+import { testing } from "./validation.js";
 
 // Valid
 test("isValidUserId: Condition Coverage 1", () => {
