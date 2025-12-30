@@ -1,10 +1,12 @@
-"use strict";
-
-// Internal Modules
+// =================================================================================================
+// Internal Dependencies
+// =================================================================================================
 import errorHandling from "../../error-handling.js";
 import pool from "../pool.js";
 
-// Exports
+// =================================================================================================
+// Public API
+// =================================================================================================
 async function updateQuery(tableName, primaryKey, fields) {
     let result = new errorHandling.Result();
 
@@ -35,11 +37,8 @@ async function updateQuery(tableName, primaryKey, fields) {
     return result;
 }
 
-// Production
 export default updateQuery;
 
-// Testing
-// We can't conditionally export, but we can conditionally build the object being exported.
 export const testing =
     process.env.NODE_ENV === "test" ?
     {
@@ -56,7 +55,9 @@ export const testing =
     }
     : {};
 
+// =================================================================================================
 // Helper Functions
+// =================================================================================================
 function isValidUpdate(tableName, primaryKey, fields) {
     return isValidPrimaryKey(tableName, primaryKey) && isValidFieldSet(tableName, fields);
 }

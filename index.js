@@ -1,14 +1,19 @@
-"use strict";
-
+// =================================================================================================
 // External Dependencies
+// =================================================================================================
 import "dotenv/config";
 import express from "express";
 
-// Internal Modules
+// =================================================================================================
+// Internal Dependencies
+// =================================================================================================
 import pool from "./db/pool.js";
 import userController from "./controllers/user-controller.js";
 import authenticationController from "./controllers/authentication-controller.js";
 
+// =================================================================================================
+// Commands
+// =================================================================================================
 const app = express();
 
 app.use(express.json());    // Required to access req.body.

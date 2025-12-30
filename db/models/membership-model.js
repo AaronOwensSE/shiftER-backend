@@ -1,11 +1,13 @@
-"use strict";
-
-// Internal Modules
+// =================================================================================================
+// Internal Dependencies
+// =================================================================================================
 import errorHandling from "../../error-handling.js";
 import pool from "../pool.js";
 import updateQuery from "./update-query.js";
 
-// Exports
+// =================================================================================================
+// Public API
+// =================================================================================================
 async function createMembership(userId, groupId, admin) {
     let result = new errorHandling.Result();
 
@@ -57,7 +59,7 @@ async function readMembershipsByUserId(userId) {
             [userId]
         );
 
-        result.ok = true;   // 0 results OK for queries that may return many results.
+        result.ok = true;
         result.value = queryResult;
     } catch (error) {
         result.ok = false;
@@ -76,7 +78,7 @@ async function readMembershipsByGroupId(groupId) {
             [groupId]
         );
 
-        result.ok = true;   // 0 results OK for queries that may return many results.
+        result.ok = true;
         result.value = queryResult;
     } catch (error) {
         result.ok = false;
@@ -157,7 +159,6 @@ async function deleteMembershipsByGroupId(groupId) {
     return result;
 }
 
-// Production
 const membershipModel = {
     createMembership,
     readMembership,
@@ -171,7 +172,6 @@ const membershipModel = {
 
 export default membershipModel;
 
-// Testing
 export const testing =
     process.env.NODE_ENV == "test" ?
     {

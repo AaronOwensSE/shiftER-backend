@@ -1,15 +1,13 @@
-"use strict";
-
-// Internal Modules
+// =================================================================================================
+// Internal Dependencies
+// =================================================================================================
 import errorHandling from "../../error-handling.js";
 import pool from "../pool.js";
 import updateQuery from "./update-query.js";
 
-/*
-Fix schema diagram: start_date, end_date
-*/
-
-// Exports
+// =================================================================================================
+// Public API
+// =================================================================================================
 async function createSchedule(startDate, endDate, groupId, draftId) {
 	let result = new errorHandling.Result();
 	
@@ -153,7 +151,6 @@ async function deleteSchedulesByDraftId(draftId) {
 	return result;
 }
 
-// Production
 const scheduleModel = {
     createSchedule,
     readSchedule,
@@ -167,7 +164,6 @@ const scheduleModel = {
 
 export default scheduleModel;
 
-// Testing
 export const testing =
 	process.env.NODE_ENV == "test" ?
 	{

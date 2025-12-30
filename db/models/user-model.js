@@ -1,11 +1,13 @@
-"use strict";
-
-// Internal Modules
+// =================================================================================================
+// Internal Dependencies
+// =================================================================================================
 import errorHandling from "../../error-handling.js";
 import pool from "../pool.js";
 import updateQuery from "./update-query.js";
 
-// Exports
+// =================================================================================================
+// Public API
+// =================================================================================================
 async function createUser({ id, hash, name, email }) {
     let result = new errorHandling.Result();
 
@@ -71,11 +73,9 @@ async function deleteUser(id) {
     return result;
 }
 
-// Production
 const userModel = { createUser, readUser, updateUser, deleteUser };
 export default userModel;
 
-// Testing
 export const testing =
     process.env.NODE_ENV === "test" ?
     { createUser, readUser, updateUser, deleteUser }

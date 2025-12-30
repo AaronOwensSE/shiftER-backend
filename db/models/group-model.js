@@ -1,11 +1,13 @@
-"use strict";
-
-// Internal Modules
+// =================================================================================================
+// Internal Dependencies
+// =================================================================================================
 import errorHandling from "../../error-handling.js";
 import pool from "../pool.js";
 import updateQuery from "./update-query.js";
 
-// Exports
+// =================================================================================================
+// Public API
+// =================================================================================================
 async function createGroup(name) {
     let result = new errorHandling.Result();
 
@@ -16,7 +18,7 @@ async function createGroup(name) {
         );
 
         result.ok = true;
-        result.value = queryResult.rows[0].id;  // Need to return assigned ID.
+        result.value = queryResult.rows[0].id;
     } catch (error) {
         result.ok = false;
         result.message = error.message;
@@ -72,11 +74,9 @@ async function deleteGroup(id) {
     return result;
 }
 
-// Production
 const groupModel = { createGroup, readGroup, updateGroup, deleteGroup };
 export default groupModel;
 
-// Testing
 export const testing =
     process.env.NODE_ENV == "test" ?
     { createGroup, readGroup, updateGroup, deleteGroup }

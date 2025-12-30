@@ -1,10 +1,12 @@
-"use strict";
-
-// Internal Modules
+// =================================================================================================
+// Internal Dependencies
+// =================================================================================================
 import errorHandling from "../../error-handling.js";
 import pool from "../pool.js";
 
-// Exports
+// =================================================================================================
+// Public API
+// =================================================================================================
 async function createSession(id, userId, expires) {
     let result = new errorHandling.Result();
 
@@ -48,7 +50,10 @@ async function readSessionsByUserId(userId) {
     let result = new errorHandling.Result();
 
     try {
-        const queryResult = await pool.query("SELECT * FROM sessions WHERE user_id = $1;", [userId]);
+        const queryResult = await pool.query(
+            "SELECT * FROM sessions WHERE user_id = $1;", [userId]
+        );
+
         result.ok = true;
         result.value = queryResult;
     } catch (error) {
@@ -109,7 +114,6 @@ async function deleteExpiredSessions() {
     return result;
 }
 
-// Production
 const sessionModel = {
     createSession,
     readSession,
@@ -121,7 +125,6 @@ const sessionModel = {
 
 export default sessionModel;
 
-// Testing
 export const testing =
     process.env.NODE_ENV == "test" ?
     {

@@ -1,11 +1,13 @@
-"use strict";
-
-// Internal Modules
+// =================================================================================================
+// Internal Dependencies
+// =================================================================================================
 import errorHandling from "../../error-handling.js";
 import pool from "../pool.js";
 import updateQuery from "./update-query.js";
 
-// Exports
+// =================================================================================================
+// Public API
+// =================================================================================================
 async function createParticipation(userId, draftId, turnOrder, passing) {
 	let result = new errorHandling.Result();
 	
@@ -156,7 +158,6 @@ async function deleteParticipationByDraftId(draftId) {
 	return result;
 }
 
-// Production
 const participationModel = {
     createParticipation,
     readParticipation,
@@ -170,7 +171,6 @@ const participationModel = {
 
 export default participationModel;
 
-// Testing
 export const testing =
 	process.env.NODE_ENV == "test" ?
 	{

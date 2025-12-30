@@ -1,15 +1,32 @@
-"use strict";
-
 /*
-This file is an informal test of backend API endpoints. It is edited for each test and is not an
+This file is an informal mockup of frontend requests. It is edited for each test and is not an
 automated test set.
 */
 
+// =================================================================================================
 // Constants
+// =================================================================================================
 const HTTP_HOST = "localhost";
 const HTTP_PORT = 3000;
 
+// =================================================================================================
+// Commands
+// =================================================================================================
+const user = {
+    id: "user101",
+    password: "12345678901234",
+    name: "User 101",
+    email: "user101@example.com",
+};
+
+//await createUser(user);
+//await logIn(user.id, user.password);
+//await restoreSession("aaf2a23b9407627dfc88f6837955ebb5d39d7a4b0b4c485583f28ae74911dc85");
+await logOut("47096924cb5e165aefdf2494d3b6fa631dc273a4dae63d3d8f689a30291211ff");
+
+// =================================================================================================
 // Test Functions
+// =================================================================================================
 async function createUser(user) {
     const route = "/create-user";
     const url = getUrl(HTTP_HOST, HTTP_PORT, route);
@@ -96,20 +113,9 @@ async function logOut(sessionId) {
     }
 }
 
-// Run
-const user = {
-    id: "user101",
-    password: "12345678901234",
-    name: "User 101",
-    email: "user101@example.com",
-};
-
-//await createUser(user);
-//await logIn(user.id, user.password);
-//await restoreSession("aaf2a23b9407627dfc88f6837955ebb5d39d7a4b0b4c485583f28ae74911dc85");
-await logOut("47096924cb5e165aefdf2494d3b6fa631dc273a4dae63d3d8f689a30291211ff");
-
+// =================================================================================================
 // Helper Functions
+// =================================================================================================
 function getUrl(host, port, route) {
     const urlParts = [ "http://", host, ":", port, route ];
     const url = urlParts.join("");

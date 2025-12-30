@@ -1,12 +1,14 @@
-"use strict";
-
-// Internal Modules
+// =================================================================================================
+// Internal Dependencies
+// =================================================================================================
 import crypt from "../crypt.js";
 import errorHandling from "../error-handling.js";
 import validation from "../validation.js";
 import userModel from "../db/models/user-model.js";
 
-// Exports
+// =================================================================================================
+// Public API
+// =================================================================================================
 async function createUser({ id, password, name, email }) {
     const result = new errorHandling.Result();
 
@@ -17,8 +19,6 @@ async function createUser({ id, password, name, email }) {
         return result;
     }
 
-    // User model's createUser function handles an exception and returns false if user already
-    // exists, but we can confirm to produce a better error message.
     const readUserResult = await userModel.readUser(id);
 
     if (readUserResult.ok) {

@@ -1,22 +1,14 @@
-"use strict";
-
-// Internal Modules
+// =================================================================================================
+// Internal Dependencies
+// =================================================================================================
 import errorHandling from "../../error-handling.js";
 import pool from "../pool.js";
 import updateQuery from "./update-query.js";
 
-/*
-
-!!! Cut FK draft_id from database schema. It should not be necessary. Not writing functions for it.
-Update diagrams. !!!
-
-start_time
-end_time
-
-*/
-
-// Exports
-async function createShift(startTime, endTime, scheduleId) {	// user_id not known at creation.
+// =================================================================================================
+// Public API
+// =================================================================================================
+async function createShift(startTime, endTime, scheduleId) {
 	let result = new errorHandling.Result();
 	
 	try {
@@ -151,7 +143,6 @@ async function deleteShiftsByUserId(userId) {
 	return result;
 }
 
-// Production
 const shiftModel = {
     createShift,
     readShift,
@@ -165,7 +156,6 @@ const shiftModel = {
 
 export default shiftModel;
 
-// Testing
 export const testing =
 	process.env.NODE_ENV == "test" ?
 	{

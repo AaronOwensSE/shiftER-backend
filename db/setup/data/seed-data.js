@@ -1,5 +1,3 @@
-"use strict";
-
 /*
 A minimum set of seed data should have:
 
@@ -49,7 +47,9 @@ Shifts: -> 3 shifts, 2 active users, 1 schedule
     7 shifts
 */
 
-// Internal Modules
+// =================================================================================================
+// Internal Dependencies
+// =================================================================================================
 import "../../../setup.js"; // Must be first.
 import crypt from "../../../crypt.js";
 import userModel from "../../models/user-model.js";
@@ -62,7 +62,9 @@ import scheduleModel from "../../models/schedule-model.js";
 import shiftModel from "../../models/shift-model.js";
 import pool from "../../pool.js";
 
+// =================================================================================================
 // Constants
+// =================================================================================================
 const msPerHour = 60 * 60 * 1000;
 const msPerDay = 24 * msPerHour;
 const date = new Date();
@@ -81,11 +83,15 @@ const SHIFT_ONE_END = new Date(date.getTime() + 7 * msPerDay + 2 * msPerHour);
 const SHIFT_TWO_START = new Date(date.getTime() + 7 * msPerDay + 2 * msPerHour);
 const SHIFT_TWO_END = new Date(date.getTime() + 7 * msPerDay + 3 * msPerHour);
 
-// Run
+// =================================================================================================
+// Commands
+// =================================================================================================
 await seedData();
 await pool.end();
 
+// =================================================================================================
 // Main Function
+// =================================================================================================
 async function seedData() {
     console.log("Attempting to seed data:");
     console.log();
@@ -281,7 +287,9 @@ async function seedData() {
     await seedShifts(shifts);
 }
 
+// =================================================================================================
 // Helper Functions
+// =================================================================================================
 async function seedUsers(users) {
     console.log("Attempting to seed users:");
 

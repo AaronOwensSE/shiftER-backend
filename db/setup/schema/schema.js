@@ -1,10 +1,12 @@
-"use strict";
-
-// Internal Modules
+// =================================================================================================
+// Internal Dependencies
+// =================================================================================================
 import constants from "../../../constants.js";
 import pool from "../../pool.js";
 
-// Exports
+// =================================================================================================
+// Public API
+// =================================================================================================
 async function createSchema() {
     console.log("Attempting to create database schema:");
     await createUsersTable();
@@ -31,11 +33,9 @@ async function deleteSchema() {
     console.log();
 }
 
-// Production
 const schema = { createSchema, deleteSchema };
 export default schema;
 
-// Testing
 export const testing =
     process.env.NODE_ENV == "test" ?
     {
@@ -53,7 +53,9 @@ export const testing =
     }
     : {};
 
+// =================================================================================================
 // Helper Functions
+// =================================================================================================
 async function createUsersTable() {
     try {
         await pool.query(`

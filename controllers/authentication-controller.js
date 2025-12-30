@@ -1,16 +1,20 @@
-"use strict";
-
+// =================================================================================================
 // External Dependencies
+// =================================================================================================
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 
-// Internal Modules
+// =================================================================================================
+// Internal Dependencies
+// =================================================================================================
 import constants from "../constants.js";
 import errorHandling from "../error-handling.js";
 import sessionModel from "../db/models/session-model.js";
 import userModel from "../db/models/user-model.js";
 
-// Exports
+// =================================================================================================
+// Public API
+// =================================================================================================
 async function logIn(id, password) {
     const result = new errorHandling.Result();
     const genericMessage = "Unable to log in.";
@@ -23,20 +27,6 @@ async function logIn(id, password) {
 
         return result;
     }
-
-    /*
-    This code cleans up session IDs as part of login but will prevent simultaneous sessions on
-    multiple devices.
-
-    const deleteSessionsByUserIdResult = await sessionModel.deleteSessionsByUserId(id);
-
-    if (!deleteSessionsByUserIdResult.ok) {
-        result.ok = false;
-        result.message = genericMessage;
-
-        return result;
-    }
-    */
 
     const getSessionIdResult = await getSessionId(id);
 
@@ -70,10 +60,6 @@ async function authenticateSession(id) {
 
 async function logOut(id) {
     const result = new errorHandling.Result();
-
-    // We could delete all sessions here, but that would log out on all devices. We may wish to have
-    // a separate function for that.
-
     const deleteSessionResult = await sessionModel.deleteSession(id);
 
     if (deleteSessionResult.ok) {
@@ -94,7 +80,9 @@ export const testing =
     { logIn, authenticateSession, logOut, authenticateCredentials, getSessionId }
     : {};
 
+// =================================================================================================
 // Helper Functions
+// =================================================================================================
 async function authenticateCredentials(userId, password) {
     const result = await userModel.readUser(userId);
 

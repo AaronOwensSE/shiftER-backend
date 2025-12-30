@@ -1,15 +1,13 @@
-"use strict";
-
-// Internal Modules
+// =================================================================================================
+// Internal Dependencies
+// =================================================================================================
 import errorHandling from "../../error-handling.js";
 import pool from "../pool.js";
 import updateQuery from "./update-query.js";
 
-/*
-Update schema diagram: start_time, end_time, active_start_time, active_end_time.
-*/
-
-// Exports
+// =================================================================================================
+// Public API
+// =================================================================================================
 async function createDraft(
 	startTime,
 	endTime,
@@ -128,7 +126,6 @@ async function deleteDraftsByGroupId(groupId) {
 	return result;
 }
 
-// Production
 const draftModel = {
     createDraft,
     readDraft,
@@ -140,7 +137,6 @@ const draftModel = {
 
 export default draftModel;
 
-// Testing
 export const testing =
 	process.env.NODE_ENV == "test" ?
 	{

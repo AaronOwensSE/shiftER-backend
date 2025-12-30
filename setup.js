@@ -2,16 +2,7 @@
 We are placing environment variable configuration in its own file to decouple it from the main
 process of the project. Database setup, testing, and potentially other functions are not part of
 that process but still need access to environment variables.
-*/
 
-"use strict";
-
-// External Dependencies
-import dotenv from "dotenv";
-import url from "url";
-import path from "path";
-
-/*
 Most of our files will import this file, causing the setup function to be called automatically. This
 is important because other imports in our files expect environment variables to be set up, and ESM
 will attempt to run those files before running any code in the importing file. We don't get the
@@ -23,10 +14,21 @@ option, which searches for the default export and runs it itself, skipping our e
 Using both methods allows this file to cover both production use and testing.
 */
 
-// Run
+// =================================================================================================
+// External Dependencies
+// =================================================================================================
+import dotenv from "dotenv";
+import url from "url";
+import path from "path";
+
+// =================================================================================================
+// Commands
+// =================================================================================================
 setup();
 
-// Main Function
+// =================================================================================================
+// Public API
+// =================================================================================================
 export default function setup() {
     /*
     We need to provide an absolute path, even if this file is in the same directory as .env.

@@ -1,5 +1,3 @@
-"use strict";
-
 /*
 These are primarily database setup functions for use by individual test cases. We want to avoid
 calling functions that are currently under test to perform setup, so we write the interactions
@@ -9,11 +7,18 @@ As with our test cases, we want to keep these as simple as possible so that we d
 trap of having to perform further testing on our testing code.
 */
 
-// Internal Modules
+// =================================================================================================
+// Internal Dependencies
+// =================================================================================================
 import crypt from "../../crypt.js";
 import pool from "../pool.js";
 
+// =================================================================================================
+// Public API
+// =================================================================================================
+
 // Constants
+
 // Users
 export const DUMMY_USER_ID = "dummy_user";
 export const DUMMY_USER_HASH = await crypt.generateHash("dummy_password_1");
@@ -59,7 +64,6 @@ export const DUMMY_SHIFT_END_TIME = "NOW()";
 export const BAD_NUMBER = "not_a_number";
 export const BAD_NUMBER_ERROR_MESSAGE = `invalid input syntax for type integer: \"${BAD_NUMBER}\"`;
 
-// Functions
 export async function createDummyUser() {
     try {
         await pool.query(
