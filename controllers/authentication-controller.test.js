@@ -122,13 +122,32 @@ test("authenticateSession: Statement Coverage 1", async () => {
     expect(result.ok).toBe(true);
 });
 
-// Failure
+// Bad session ID failure
 test("authenticateSession: Statement Coverage 2", async () => {
     const sessionId = false;
     const result = await testing.authenticateSession(sessionId);
 
     expect(result.ok).toBe(false);
     expect(result.message).toBe("Unable to authenticate session.");
+});
+
+// Expired session failure
+test("authenticateSession: Statement Coverage 3", async () => {
+    const userId = "authenticateSessionTestUser";
+    const password = "12345678901234567890";
+    const hash = await crypt.generateHash(password);
+    const name = "Authenticate Session Test User";
+    const email = "authenticatesessiontestuser@example.com";
+    const user = { id: userId, hash: hash, name: name, email: email };
+    await userModel.createUser(user);
+
+    const sessionId = crypto.randomBytes(constants.SESSION_ID_LENGTH_IN_BYTES).toString("hex");
+    const expires = new Date(Date.now() - constants.SESSION_EXPIRATION);
+    await sessionModel.createSession(sessionId, userId, expires);
+
+    const result = await testing.authenticateSession(sessionId);
+
+    expect(result.ok).toBe(false);
 });
 
 test("logOut: Statement Coverage 1", async () => {
