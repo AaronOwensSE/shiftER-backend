@@ -47,12 +47,31 @@ async function logIn(id, password) {
 async function authenticateSession(id) {
     const result = new errorHandling.Result();
     const readSessionResult = await sessionModel.readSession(id);
+    const genericMessage = "Unable to authenticate session.";
 
     if (readSessionResult.ok) {
-        result.ok = true;
+        const now = new Date();
+        /*
+        
+        Separation of concerns:
+
+        This layer of the app should not know what DB rows are. They should have been packaged into
+        a simple JS object before reaching here.
+
+        */
+        const expires = new Date(readSessionResult.value.rows[0].expires);
+
+        if (expires > now) {
+            result.ok = true;
+        } else {
+            sessionModel.deleteSession(id);
+
+            result.ok = false;
+            result.message = genericMessage;
+        }
     } else {
         result.ok = false;
-        result.message = "Unable to authenticate session.";
+        result.message = genericMessage;
     }
 
     return result;

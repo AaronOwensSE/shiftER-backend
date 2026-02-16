@@ -50,6 +50,14 @@ app.delete("/log-out", async (req, res) => {
     res.send(resultJson);
 });
 
+app.get("/get-user-profile", async (req, res) => {
+    const { sessionId } = req.body;
+    const result = await userController.getUserProfile(sessionId);
+    const resultJson = JSON.stringify(result);
+
+    res.send(resultJson);
+});
+
 app.listen(process.env.HTTP_PORT);  // App blocks here.
 
 // This will never get called. We need to hook into shutdown signals for cleanup functions.
