@@ -5,7 +5,7 @@
 - Git
 - GitHub
 
-## Backend
+## Development
 
 - JavaScript
 - Node.js
