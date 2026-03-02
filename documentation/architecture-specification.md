@@ -18,7 +18,7 @@ Simple dependency arrows are used instead of UML "lollipops" for cleaner visual 
 
 ### ER Diagram
 
-![ER Diagram](./er-diagram.png)
+![ER diagram](./er-diagram.png)
 
 ### Schema
 
