@@ -50,6 +50,7 @@
 | Repurpose Database Seeding Scripts | 2 | (-) Familiar |
 | Repurpose Database Teardown Scripts | 2 | (-) Familiar |
 | Rewrite Account Creation | 5 | (+) New architecture, (+) Reestablish dependencies, (-) Familiar |
+| Obstacle: Learn Postman | 3 |  |
 | Account Creation Testing | 5 | (+) New architecture, (+) Reestablish dependencies, (-) Familiar |
 | Rewrite Login Authentication | 3 | (+) New architecture, (-) Familiar |
 | Login Authentication Testing | 3 | (+) New architecture, (-) Familiar |
@@ -62,10 +63,9 @@
 
 | To Do | Doing | Done | Failed |
 |---|---|---|---|
-| Rewrite Account Creation | Repurpose Database Setup Scripts |  |  |
-| Account Creation Testing | Repurpose Database Seeding Scripts |  |  |
-| Rewrite Login Authentication | Repurpose Database Teardown Scripts |  |  |
-| Login Authentication Testing |  |  |  |
+| Account Creation Testing | Repurpose Database Setup Scripts | Rewrite Account Creation |  |
+| Rewrite Login Authentication | Repurpose Database Seeding Scripts |  | Obstacle: Learn Postman |
+| Login Authentication Testing | Repurpose Database Teardown Scripts |  |  |
 | Rewrite Session Authentication |  |  |  |
 | Session Authentication Testing |  |  |  |
 | Rewrite Logout |  |  |  |

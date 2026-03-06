@@ -17,6 +17,7 @@
 
 ## Testing
 
+- Postman
 - Jest
 
 ## Deployment

@@ -1,29 +1,26 @@
 {
-  "name": "backend",
+  "name": "shifter-backend",
   "version": "1.0.0",
+  "description": "The backend API for a group scheduling app that enables professionals to claim their preferred work shifts using a snake draft (or serpentine draft).",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AaronOwensSE/shifter.git"
+    "url": "git+https://github.com/AaronOwensSE/shiftER-backend.git"
   },
-  "author": "Aaron Owens",
+  "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/AaronOwensSE/shifter/issues"
+    "url": "https://github.com/AaronOwensSE/shiftER-backend/issues"
   },
-  "homepage": "https://github.com/AaronOwensSE/shifter#readme",
-  "type": "module",
+  "homepage": "https://github.com/AaronOwensSE/shiftER-backend#readme",
   "dependencies": {
     "bcrypt": "^6.0.0",
-    "dotenv": "^17.2.0",
-    "express": "^5.1.0",
-    "pg": "^8.16.3"
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "pg": "^8.18.0"
   },
-  "devDependencies": {
-    "cross-env": "^10.1.0",
-    "jest": "^30.2.0"
-  }
+  "type": "module"
 }

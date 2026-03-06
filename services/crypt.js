@@ -1,25 +1,22 @@
 // =================================================================================================
 // External Dependencies
 // =================================================================================================
-import "dotenv/config"; // Can this be separated to a setup file?
-import express from "express";
+import bcrypt from "bcrypt";
 
 // =================================================================================================
 // Internal Dependencies
 // =================================================================================================
-import userController from "./controllers/user-controller.js";
+import constants from "./constants.js";
 
 // =================================================================================================
-// Commands
+// Public API
 // =================================================================================================
-const app = express();
-app.use(express.json());    // Required to access req.body.
+async function generateHash(password) {
+    const salt = await bcrypt.genSalt(constants.SALT_DEFAULT_ROUNDS);
+    const hash = await bcrypt.hash(password, salt);
 
-app.post("/create-user", userController.createUser);
+    return hash;
+}
 
-app.listen(process.env.HTTP_PORT);  // App blocks here.
-
-// This will never get called. We need to hook into shutdown signals for cleanup functions.
-// After redesign, this also shouldn't appear in this layer. Service layer needs to expose a
-// shutdown function which in turn can call on database layer to shut down.
-//pool.end();
+const crypt = { generateHash };
+export default crypt;
