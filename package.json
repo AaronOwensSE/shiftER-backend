@@ -4,6 +4,8 @@
   "description": "The backend API for a group scheduling app that enables professionals to claim their preferred work shifts using a snake draft (or serpentine draft).",
   "main": "index.js",
   "scripts": {
+    "cschema": "node ./database/setup/create-schema.js",
+    "dschema": "node ./database/setup/delete-schema.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
