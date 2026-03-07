@@ -58,6 +58,7 @@
 | Session Authentication Testing | 3 | (+) New architecture, (-) Familiar |
 | Rewrite Logout | 3 | (+) New architecture, (-) Familiar |
 | Logout Testing | 3 | (+) New architecture, (-) Familiar |
+| Obstacle: Learn Render | 3 |  |
 | Deployment Setup | 5 | (+) Unfamiliar |
 | Deployment Testing | 5 | (+) Unfamiliar |
 
@@ -65,12 +66,11 @@
 |---|---|---|---|
 | Account Creation Testing | Repurpose Database Setup Scripts | Rewrite Account Creation |  |
 | Rewrite Login Authentication | Repurpose Database Seeding Scripts | Obstacle: Learn Postman |  |
-| Login Authentication Testing | Repurpose Database Teardown Scripts |  |  |
-| Rewrite Session Authentication |  |  |  |
+| Login Authentication Testing | Repurpose Database Teardown Scripts | Obstacle: Learn Render |  |
+| Rewrite Session Authentication |  | Deployment Setup |  |
 | Session Authentication Testing |  |  |  |
 | Rewrite Logout |  |  |  |
 | Logout Testing |  |  |  |
-| Deployment Setup |  |  |  |
 | Deployment Testing |  |  |  |
 
 ---
