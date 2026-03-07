@@ -17,7 +17,7 @@ app.use(express.json());    // Required to access req.body.
 
 app.post("/create-user", userController.createUser);
 
-app.listen(process.env.HTTP_PORT);  // App blocks here.
+app.listen(process.env.PORT);  // App blocks here.
 
 // This will never get called. We need to hook into shutdown signals for cleanup functions.
 // After redesign, this also shouldn't appear in this layer. Service layer needs to expose a
