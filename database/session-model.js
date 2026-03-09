@@ -7,11 +7,11 @@ import pool from "./pool.js";
 // =================================================================================================
 // Public API
 // =================================================================================================
-async function createUser({ id, hash, name, email }) {
+async function createSession(id, userId, expires) {
     try {
         await pool.query(
-            "INSERT INTO users (id, hash, name, email) VALUES ($1, $2, $3, $4);",
-            [ id, hash, name, email ]
+            "INSERT INTO sessions (id, user_id, expires) VALUES ($1, $2, $3);",
+            [id, userId, expires]
         );
     } catch (error) {
         if (error.code === "23505") {   // Unique constraint violation
@@ -24,17 +24,5 @@ async function createUser({ id, hash, name, email }) {
     return id;
 }
 
-async function readUser(id) {
-    const result = await pool.query("SELECT * FROM users WHERE id = $1;", [id]);
-    
-    if (result.rowCount === 0) {
-        throw new errors.ResourceDoesNotExistError();
-    }
-
-    const user = result.rows[0];
-
-    return user;
-}
-
-const userModel = { createUser, readUser };
-export default userModel;
+const sessionModel = { createSession };
+export default sessionModel;

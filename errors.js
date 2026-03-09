@@ -10,6 +10,13 @@ class ValidationError extends Error {
     }
 }
 
+class InvalidCredentialsError extends Error {
+    constructor(message = "") {
+        super(message);
+        this.name = "InvalidCredentialsError";
+    }
+}
+
 // Database Layer ==================================================================================
 class ResourceAlreadyExistsError extends Error {
     constructor(message = "") {
@@ -18,6 +25,19 @@ class ResourceAlreadyExistsError extends Error {
     }
 }
 
+class ResourceDoesNotExistError extends Error {
+    constructor(message = "") {
+        super(message);
+        this.name = "ResourceDoesNotExistError";
+    }
+}
+
 // Export ==========================================================================================
-const errors = { ValidationError, ResourceAlreadyExistsError };
+const errors = {
+    ValidationError,
+    InvalidCredentialsError,
+    ResourceAlreadyExistsError,
+    ResourceDoesNotExistError
+};
+
 export default errors;

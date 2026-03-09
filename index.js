@@ -1,13 +1,14 @@
 // =================================================================================================
 // External Dependencies
 // =================================================================================================
-import "dotenv/config"; // Can this be separated to a setup file?
+import "dotenv/config";
 import express from "express";
 
 // =================================================================================================
 // Internal Dependencies
 // =================================================================================================
 import userController from "./controllers/user-controller.js";
+import authenticationController from "./controllers/authentication-controller.js";
 
 // =================================================================================================
 // Commands
@@ -16,10 +17,15 @@ const app = express();
 app.use(express.json());    // Required to access req.body.
 
 app.post("/create-user", userController.createUser);
+app.post("/log-in", authenticationController.logIn);
 
-app.listen(process.env.PORT);  // App blocks here.
+const server = app.listen(process.env.PORT);  // App blocks here.
 
-// This will never get called. We need to hook into shutdown signals for cleanup functions.
-// After redesign, this also shouldn't appear in this layer. Service layer needs to expose a
-// shutdown function which in turn can call on database layer to shut down.
-//pool.end();
+/*
+Need to create a brief shutdown procedure that handles server.close() and pool.end() in that order.
+But pool is at the database layer and should not be called directly. Shutdown endpoints are needed
+for database and service layers.
+
+process.on("SIGINT", shutdown);     // Ctrl+C
+process.on("SIGTERM", shutdown);    // Shutdown signal (such as from Render)
+*/

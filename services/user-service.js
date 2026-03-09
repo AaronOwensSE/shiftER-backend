@@ -17,7 +17,8 @@ async function createUser(user) {
     const { id, password, name, email } = user;
     const hash = await crypt.generateHash(password);
     const dbReadyUser = { id: id, hash: hash, name: name, email: email };
-    await database.createUser(dbReadyUser);
+
+    return await database.createUser(dbReadyUser);
 }
 
 const userServices = { createUser };
