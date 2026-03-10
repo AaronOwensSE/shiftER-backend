@@ -24,7 +24,7 @@ async function logIn(userId, password) {
         throw new errors.InvalidCredentialsError();
     }
     
-    const sessionId = await getSessionId(userId)
+    const sessionId = await getNewSessionId(userId);
 
     return sessionId;
 }
@@ -53,7 +53,7 @@ async function authenticateCredentials(userId, password) {
     return credentialsValid;
 }
 
-async function getSessionId(userId) {
+async function getNewSessionId(userId) {
     const expires = new Date(Date.now() + constants.SESSION_EXPIRATION);
     
     for (let i = 0, sessionId, createSessionResult; i < constants.SESSION_ID_ATTEMPTS; i++) {
@@ -71,4 +71,6 @@ async function getSessionId(userId) {
 
         return createSessionResult;
     }
+
+    throw new errors.TooManyAttemptsError();
 }

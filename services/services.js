@@ -11,8 +11,8 @@ async function createUser(user) {
     return await userService.createUser(user);
 }
 
-async function logIn(id, password) {
-    return await authenticationService.logIn(id, password);
+async function logIn(userId, password) {
+    return await authenticationService.logIn(userId, password);
 }
 
 const services = { createUser, logIn };

@@ -11,11 +11,11 @@ async function createUser(req, res) {
     const user = req.body;
 
     try {
-        const body = await services.createUser(user);
-        const jsonBody = JSON.stringify(body);
+        const responseBody = await services.createUser(user);
+        const responseBodyJson = JSON.stringify(responseBody);
 
         res.status(200);    // 200 OK
-        res.send(jsonBody);
+        res.send(responseBodyJson);
     } catch (error) {
         if (error instanceof errors.ValidationError) {
             res.sendStatus(400);    // 400 Bad Request

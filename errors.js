@@ -1,23 +1,6 @@
 // =================================================================================================
 // Public API
 // =================================================================================================
-
-// Service Layer ===================================================================================
-class ValidationError extends Error {
-    constructor(message = "") {
-        super(message);
-        this.name = "ValidationError";
-    }
-}
-
-class InvalidCredentialsError extends Error {
-    constructor(message = "") {
-        super(message);
-        this.name = "InvalidCredentialsError";
-    }
-}
-
-// Database Layer ==================================================================================
 class ResourceAlreadyExistsError extends Error {
     constructor(message = "") {
         super(message);
@@ -32,12 +15,33 @@ class ResourceDoesNotExistError extends Error {
     }
 }
 
-// Export ==========================================================================================
+class TooManyAttemptsError extends Error {
+    constructor(message = "") {
+        super(message);
+        this.name = "InternalServerError";
+    }
+}
+
+class InvalidCredentialsError extends Error {
+    constructor(message = "") {
+        super(message);
+        this.name = "InvalidCredentialsError";
+    }
+}
+
+class ValidationError extends Error {
+    constructor(message = "") {
+        super(message);
+        this.name = "ValidationError";
+    }
+}
+
 const errors = {
-    ValidationError,
-    InvalidCredentialsError,
     ResourceAlreadyExistsError,
-    ResourceDoesNotExistError
+    ResourceDoesNotExistError,
+    InvalidCredentialsError,
+    TooManyAttemptsError,
+    ValidationError
 };
 
 export default errors;

@@ -7,11 +7,11 @@ import pool from "./pool.js";
 // =================================================================================================
 // Public API
 // =================================================================================================
-async function createSession(id, userId, expires) {
+async function createSession(sessionId, userId, expires) {
     try {
         await pool.query(
             "INSERT INTO sessions (id, user_id, expires) VALUES ($1, $2, $3);",
-            [id, userId, expires]
+            [sessionId, userId, expires]
         );
     } catch (error) {
         if (error.code === "23505") {   // Unique constraint violation
@@ -21,7 +21,7 @@ async function createSession(id, userId, expires) {
         }
     }
 
-    return id;
+    return sessionId;
 }
 
 const sessionModel = { createSession };

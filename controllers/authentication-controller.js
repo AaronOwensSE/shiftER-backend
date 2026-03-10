@@ -8,17 +8,19 @@ import services from "../services/services.js";
 // Public API
 // =================================================================================================
 async function logIn(req, res) {
-    const { id, password } = req.body;
+    const { userId, password } = req.body;
 
     try {
-        const body = await services.logIn(id, password);
-        const jsonBody = JSON.stringify(body);
+        const responseBody = await services.logIn(userId, password);
+        const responseBodyJson = JSON.stringify(responseBody);
 
         res.status(200);
-        res.send(jsonBody);
+        res.send(responseBodyJson);
     } catch (error) {
         if (error instanceof errors.ValidationError) {
             res.sendStatus(400);    // 400 Bad Request
+        } else if (error instanceof errors.TooManyAttemptsError) {
+            res.sendStatus(500);    // Internal Server Error
         } else if (error instanceof errors.InvalidCredentialsError) {
             res.sendStatus(401);    // 401 Unauthorized
         } else {
