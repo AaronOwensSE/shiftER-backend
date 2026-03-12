@@ -29,7 +29,17 @@ async function logIn(userId, password) {
     return sessionId;
 }
 
-const authenticationService = { logIn };
+async function authenticateSession(sessionId) {
+    if (!validation.isValidSessionId(sessionId)) {
+        throw new errors.ValidationError();
+    }
+
+    const userId = await database.readUserIdFromActiveSession(sessionId);
+
+    return userId;
+}
+
+const authenticationService = { logIn, authenticateSession };
 export default authenticationService;
 
 // =================================================================================================

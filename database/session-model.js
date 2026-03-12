@@ -24,5 +24,21 @@ async function createSession(sessionId, userId, expires) {
     return sessionId;
 }
 
-const sessionModel = { createSession };
+async function readUserIdFromActiveSession(sessionId) {
+    const now = new Date(Date.now());
+
+    const result = await pool.query(
+        "SELECT user_id FROM sessions WHERE id = $1 AND expires > $2;", [sessionId, now]
+    );
+
+    if (result.rowCount === 0) {
+        throw new errors.ResourceDoesNotExistError();
+    }
+
+    const userId = result.rows[0].user_id;
+
+    return userId;
+}
+
+const sessionModel = { createSession, readUserIdFromActiveSession };
 export default sessionModel;
