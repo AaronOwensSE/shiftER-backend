@@ -16,10 +16,17 @@ import authenticationController from "./controllers/authentication-controller.js
 const app = express();
 app.use(express.json());    // Required to access req.body.
 
-app.post("/create-user", userController.createUser);
-app.post("/log-in", authenticationController.logIn);
-app.post("/authenticate-session", authenticationController.authenticateSession);
-app.delete("/log-out", authenticationController.logOut);
+// Post user -> Create user
+app.post("/users", userController.postUser);
+
+// Post session -> Log in
+app.post("/sessions", authenticationController.postSession);
+
+// Get session (current) -> Authenticate session
+app.get("/sessions/current", authenticationController.getSession);
+
+// Delete session (current) -> Log out
+app.delete("/sessions/current", authenticationController.deleteSession);
 
 const server = app.listen(process.env.PORT);  // App blocks here.
 

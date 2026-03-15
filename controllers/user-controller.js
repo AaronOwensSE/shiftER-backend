@@ -7,7 +7,7 @@ import services from "../services/services.js";
 // =================================================================================================
 // Public API
 // =================================================================================================
-async function createUser(req, res) {
+async function postUser(req, res) {
     const user = req.body;
 
     try {
@@ -27,5 +27,5 @@ async function createUser(req, res) {
     }
 }
 
-const userController = { createUser };
+const userController = { postUser };
 export default userController;

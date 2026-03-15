@@ -7,7 +7,7 @@ import services from "../services/services.js";
 // =================================================================================================
 // Public API
 // =================================================================================================
-async function logIn(req, res) {
+async function postSession(req, res) {
     const { userId, password } = req.body;
 
     try {
@@ -29,8 +29,10 @@ async function logIn(req, res) {
     }
 }
 
-async function authenticateSession(req, res) {
-    const { sessionId } = req.body;
+async function getSession(req, res) {
+    const bearerTokenHeader = req.header("Authorization");  // Format: "Bearer sessionID"
+    const bearerTokenWords = bearerTokenHeader.split(" ");
+    const sessionId = bearerTokenWords[1];
 
     try {
         const responseBody = await services.authenticateSession(sessionId);
@@ -49,11 +51,14 @@ async function authenticateSession(req, res) {
     }
 }
 
-async function logOut(req, res) {
-    const { sessionId } = req.body;
+async function deleteSession(req, res) {
+    const bearerTokenHeader = req.header("Authorization");  // Format: "Bearer sessionID"
+    const bearerTokenWords = bearerTokenHeader.split(" ");
+    const sessionId = bearerTokenWords[1];
 
     try {
         await services.logOut(sessionId);
+
         res.sendStatus(200);    // 200 OK
     } catch (error) {
         if (error instanceof errors.ValidationError) {
@@ -66,5 +71,5 @@ async function logOut(req, res) {
     }
 }
 
-const authenticationController = { logIn, authenticateSession, logOut };
+const authenticationController = { postSession, getSession, deleteSession };
 export default authenticationController;
