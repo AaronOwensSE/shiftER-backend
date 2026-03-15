@@ -48,5 +48,19 @@ async function deleteSession(sessionId) {
     }
 }
 
-const sessionModel = { createSession, readUserIdFromActiveSession, deleteSession };
+async function deleteSessionsByUserId(userId) {
+    const result = await pool.query("DELETE FROM sessions WHERE user_id = $1;", [userId]);
+
+    if (result.rowCount === 0) {
+        throw new errors.ResourceDoesNotExistError();
+    }
+}
+
+const sessionModel = {
+    createSession,
+    readUserIdFromActiveSession,
+    deleteSession,
+    deleteSessionsByUserId
+};
+
 export default sessionModel;

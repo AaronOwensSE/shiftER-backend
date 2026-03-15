@@ -27,12 +27,17 @@ async function deleteSession(sessionId) {
     await sessionModel.deleteSession(sessionId);
 }
 
+async function deleteSessionsByUserId(userId) {
+    await sessionModel.deleteSessionsByUserId(userId);
+}
+
 const database = {
     createUser,
     readUser,
     createSession,
     readUserIdFromActiveSession,
-    deleteSession
+    deleteSession,
+    deleteSessionsByUserId
 };
 
 export default database;

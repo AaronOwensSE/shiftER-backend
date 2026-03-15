@@ -24,6 +24,14 @@ async function logIn(userId, password) {
         throw new errors.InvalidCredentialsError();
     }
     
+    try {
+        await database.deleteSessionsByUserId(userId);
+    } catch (error) {
+        if (!(error instanceof errors.ResourceDoesNotExistError)) { // Recoverable
+            throw error;
+        }
+    }
+
     const sessionId = await getNewSessionId(userId);
 
     return sessionId;
