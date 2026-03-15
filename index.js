@@ -19,6 +19,7 @@ app.use(express.json());    // Required to access req.body.
 app.post("/create-user", userController.createUser);
 app.post("/log-in", authenticationController.logIn);
 app.post("/authenticate-session", authenticationController.authenticateSession);
+app.delete("/log-out", authenticationController.logOut);
 
 const server = app.listen(process.env.PORT);  // App blocks here.
 

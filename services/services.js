@@ -19,5 +19,9 @@ async function authenticateSession(sessionId) {
     return await authenticationService.authenticateSession(sessionId);
 }
 
-const services = { createUser, logIn, authenticateSession };
+async function logOut(sessionId) {
+    await authenticationService.logOut(sessionId);
+}
+
+const services = { createUser, logIn, authenticateSession, logOut };
 export default services;

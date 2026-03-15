@@ -23,5 +23,16 @@ async function readUserIdFromActiveSession(sessionId) {
     return await sessionModel.readUserIdFromActiveSession(sessionId);
 }
 
-const database = { createUser, readUser, createSession, readUserIdFromActiveSession };
+async function deleteSession(sessionId) {
+    await sessionModel.deleteSession(sessionId);
+}
+
+const database = {
+    createUser,
+    readUser,
+    createSession,
+    readUserIdFromActiveSession,
+    deleteSession
+};
+
 export default database;

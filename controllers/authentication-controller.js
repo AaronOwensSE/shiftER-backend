@@ -40,14 +40,31 @@ async function authenticateSession(req, res) {
         res.send(responseBodyJson);
     } catch (error) {
         if (error instanceof errors.ValidationError) {
-            res.send(400);  // 400 Bad Request
+            res.sendStatus(400);  // 400 Bad Request
         } else if (error instanceof errors.ResourceDoesNotExistError) {
-            res.send(401);  // 401 Unauthorized
+            res.sendStatus(401);  // 401 Unauthorized
         } else {
             res.sendStatus(500);    // 500 Internal Server Error
         }
     }
 }
 
-const authenticationController = { logIn, authenticateSession };
+async function logOut(req, res) {
+    const { sessionId } = req.body;
+
+    try {
+        await services.logOut(sessionId);
+        res.sendStatus(200);    // 200 OK
+    } catch (error) {
+        if (error instanceof errors.ValidationError) {
+            res.sendStatus(400);    // 400 Bad Request
+        } else if (error instanceof errors.ResourceDoesNotExistError) {
+            res.sendStatus(401);    // 401 Unauthorized
+        } else {
+            res.sendStatus(500);    // 500 Internal Server Error
+        }
+    }
+}
+
+const authenticationController = { logIn, authenticateSession, logOut };
 export default authenticationController;

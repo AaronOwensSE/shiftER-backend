@@ -39,7 +39,15 @@ async function authenticateSession(sessionId) {
     return userId;
 }
 
-const authenticationService = { logIn, authenticateSession };
+async function logOut(sessionId) {
+    if (!validation.isValidSessionId(sessionId)) {
+        throw new errors.ValidationError();
+    }
+
+    await database.deleteSession(sessionId);
+}
+
+const authenticationService = { logIn, authenticateSession, logOut };
 export default authenticationService;
 
 // =================================================================================================
