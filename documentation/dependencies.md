@@ -57,7 +57,7 @@ Manually create jest.config.js in the backend root:
 ```
 export default {
     testEnvironment: "node",
-    setupFiles: ["dotenv/config"],
+    setupFiles: [ "dotenv/config" ],
     "verbose": true
 };
 ```
