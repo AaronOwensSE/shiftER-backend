@@ -6,7 +6,7 @@
   "scripts": {
     "cschema": "node ./database/setup/create-schema.js",
     "dschema": "node ./database/setup/delete-schema.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "repository": {
     "type": "git",
@@ -24,5 +24,8 @@
     "express": "^5.2.1",
     "pg": "^8.18.0"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "jest": "^30.3.0"
+  }
 }
