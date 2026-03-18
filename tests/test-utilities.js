@@ -5,9 +5,9 @@ function generateRandomStringId(length) {
     let randomString = "";
 
     while (randomString.length < length) {
-        const randomDecimal = Math.random();    // Between 0 and 1
-        const base36DecimalString = randomDecimal.toString(36); // 10 numerals + 26 letters
-        const alphanumericString = base36DecimalString.slice(2);
+        const randomDecimal = Math.random();                        // Between 0 and 1
+        const base36DecimalString = randomDecimal.toString(36);     // 10 numerals + 26 letters
+        const alphanumericString = base36DecimalString.slice(2);    // Removes "0.".
 
         randomString += alphanumericString;
     }
