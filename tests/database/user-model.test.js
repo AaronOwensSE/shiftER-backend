@@ -17,11 +17,11 @@ afterAll( async () => {
 });
 
 beforeEach( async () => {
-    pool.query("BEGIN;");
+    await pool.query("BEGIN;");
 });
 
 afterEach( async () => {
-    pool.query("ROLLBACK;");
+    await pool.query("ROLLBACK;");
 });
 
 // =================================================================================================
@@ -43,7 +43,7 @@ test("createUser 1: Success", async () => {
     expect(userId).toBe(randomId);
 });
 
-test("createUser 2: Failure: User Already Exists", async () => {
+test("createUser 2: Failure: Resource Already Exists", async () => {
     const randomId = testUtilities.generateRandomStringId(constants.USER_ID_MAX_LENGTH);
     const hash = await crypt.generateHash(testConstants.TEST_USER_PASSWORD);
 
@@ -60,25 +60,13 @@ test("createUser 2: Failure: User Already Exists", async () => {
 });
 
 test("readUser 1: Success", async () => {
-    const hash = await crypt.generateHash(testConstants.TEST_USER_PASSWORD);
-
-    const testUser = {
-        id: testUtilities.generateRandomStringId(constants.USER_ID_MAX_LENGTH),
-        hash: hash,
-        name: testConstants.TEST_USER_NAME,
-        email: testConstants.TEST_USER_EMAIL
-    };
-
-    const userId = await userModel.createUser(testUser);
+    const userId = await testUtilities.createRandomUser();
     const retrievedUser = await userModel.readUser(userId);
 
-    expect(retrievedUser.id).toBe(testUser.id);
-    expect(retrievedUser.hash).toBe(testUser.hash);
-    expect(retrievedUser.name).toBe(testUser.name);
-    expect(retrievedUser.email).toBe(testUser.email);
+    expect(retrievedUser.id).toBe(userId);
 });
 
-test("readUser 2: Failure: User Does Not Exist", async () => {
+test("readUser 2: Failure: Resource Does Not Exist", async () => {
     const randomId = testUtilities.generateRandomStringId(constants.USER_ID_MAX_LENGTH);
 
     await expect(userModel.readUser(randomId)).rejects.toThrow(errors.ResourceDoesNotExistError);

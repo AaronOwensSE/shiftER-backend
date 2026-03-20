@@ -46,6 +46,8 @@ async function deleteSession(sessionId) {
     if (result.rowCount === 0) {
         throw new errors.ResourceDoesNotExistError();
     }
+
+    return true;    // Useful for testing.
 }
 
 async function deleteSessionsByUserId(userId) {
@@ -54,6 +56,8 @@ async function deleteSessionsByUserId(userId) {
     if (result.rowCount === 0) {
         throw new errors.ResourceDoesNotExistError();
     }
+
+    return true;    // Useful for testing.
 }
 
 const sessionModel = {
