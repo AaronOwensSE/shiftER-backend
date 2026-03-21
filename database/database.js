@@ -24,11 +24,11 @@ async function readUserIdFromActiveSession(sessionId) {
 }
 
 async function deleteSession(sessionId) {
-    await sessionModel.deleteSession(sessionId);
+    return await sessionModel.deleteSession(sessionId);
 }
 
 async function deleteSessionsByUserId(userId) {
-    await sessionModel.deleteSessionsByUserId(userId);
+    return await sessionModel.deleteSessionsByUserId(userId);
 }
 
 const database = {

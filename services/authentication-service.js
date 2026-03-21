@@ -52,7 +52,7 @@ async function logOut(sessionId) {
         throw new errors.ValidationError();
     }
 
-    await database.deleteSession(sessionId);
+    return await database.deleteSession(sessionId);
 }
 
 const authenticationService = { logIn, authenticateSession, logOut };
