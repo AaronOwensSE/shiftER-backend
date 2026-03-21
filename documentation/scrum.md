@@ -64,15 +64,19 @@
 
 | To Do | Doing | Done | Failed |
 |---|---|---|---|
-| Repurpose Database Seeding Scripts | Account Creation Testing | Rewrite Account Creation |  |
-|  | Login Authentication Testing | Obstacle: Learn Postman |  |
-|  | Session Authentication Testing | Obstacle: Learn Render |  |
-|  | Logout Testing | Deployment Setup |  |
-|  | Deployment Testing | Repurpose Database Setup Scripts |  |
+|  | Deployment Testing | Rewrite Account Creation | Repurpose Database Seeding Scripts |
+|  |  | Obstacle: Learn Postman |  |
+|  |  | Obstacle: Learn Render |  |
+|  |  | Deployment Setup |  |
+|  |  | Repurpose Database Setup Scripts |  |
 |  |  | Repurpose Database Teardown Scripts |  |
 |  |  | Rewrite Login Authentication |  |
 |  |  | Rewrite Session Authentication |  |
 |  |  | Rewrite Logout |  |
+|  |  | Account Creation Testing |  |
+|  |  | Login Authentication Testing |  |
+|  |  | Session Authentication Testing |  |
+|  |  | Logout Testing |  |
 
 ---
 
