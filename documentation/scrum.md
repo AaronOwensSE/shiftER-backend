@@ -24,12 +24,12 @@
 
 | To Do | Doing | Done |
 |---|---|---|
-| CI/CD Setup | Database Setup |  |
-| Basic User Functionality | Deployment Setup |  |
-| Basic Group Functionality | Account Creation |  |
-| Basic Draft and Schedule Functionality | Login Authentication |  |
-| Fine-Grained User Functionality | Session Authentication |  |
-| Fine-Grained Group Functionality | Logout |  |
+| CI/CD Setup |  | Database Setup |
+| Basic User Functionality |  | Deployment Setup |
+| Basic Group Functionality |  | Account Creation |
+| Basic Draft and Schedule Functionality |  | Login Authentication |
+| Fine-Grained User Functionality |  | Session Authentication |
+| Fine-Grained Group Functionality |  | Logout |
 | Fine-Grained Draft and Schedule Functionality |  |  |
 | Password Recovery |  |  |
 | Rate Limiting |  |  |
@@ -40,7 +40,7 @@
 
 ### Sprint 1: Adapting to New Architecture
 
-#### Velocity: 
+#### Velocity: 48
 
 #### Backlog
 
@@ -64,7 +64,7 @@
 
 | To Do | Doing | Done | Failed |
 |---|---|---|---|
-|  | Deployment Testing | Rewrite Account Creation | Repurpose Database Seeding Scripts |
+|  |  | Rewrite Account Creation | Repurpose Database Seeding Scripts |
 |  |  | Obstacle: Learn Postman |  |
 |  |  | Obstacle: Learn Render |  |
 |  |  | Deployment Setup |  |
@@ -77,6 +77,7 @@
 |  |  | Login Authentication Testing |  |
 |  |  | Session Authentication Testing |  |
 |  |  | Logout Testing |  |
+|  |  | Deployment Testing |  |
 
 ---
 
