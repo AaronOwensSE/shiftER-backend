@@ -24,19 +24,56 @@
 
 | To Do | Doing | Done |
 |---|---|---|
-| CI/CD Setup |  | Database Setup |
-| Basic User Functionality |  | Deployment Setup |
-| Basic Group Functionality |  | Account Creation |
-| Basic Draft and Schedule Functionality |  | Login Authentication |
-| Fine-Grained User Functionality |  | Session Authentication |
-| Fine-Grained Group Functionality |  | Logout |
-| Fine-Grained Draft and Schedule Functionality |  |  |
+| CI/CD Setup | Basic User Functionality | Database Setup |
+| Basic Group Functionality |  | Deployment Setup |
+| Basic Draft and Schedule Functionality |  | Account Creation |
+| Fine-Grained User Functionality |  | Login Authentication |
+| Fine-Grained Group Functionality |  | Session Authentication |
+| Fine-Grained Draft and Schedule Functionality |  | Logout |
 | Password Recovery |  |  |
 | Rate Limiting |  |  |
 | Excel Integration |  |  |
 | Qgenda Integration |  |  |
 
 ## Sprints
+
+### Sprint 2: Refactoring, Demoing, and Basic User Functionality
+
+#### Velocity: 
+
+#### Backlog
+
+| Feature | Points | Rationale |
+|---|---|---|
+| Service Layer Architecture Adjustment | 3 |  |
+| Service Layer Refactoring | 5 | (+) Volume |
+| Service Layer Testing | 5 | (+) Volume |
+| NODE_ENV Support | 2 | (-) Brief |
+| Authentication Demo | 5 | (+) Editing |
+| Render Link | 2 | (-) Brief |
+| User Profile Retrieval | 3 |  |
+| User Profile Retrieval Testing | 3 |  |
+| User Profile Update | 3 |  |
+| User Profile Update Testing | 3 |  |
+| User Deletion | 3 |  |
+| User Deletion Testing | 3 |  |
+| User Profile Demo | 5 | (+) Editing |
+
+| To Do | Doing | Done | Failed |
+|---|---|---|---|
+| Service Layer Architecture Adjustment |  |  |  |
+| Service Layer Refactoring |  |  |  |
+| Service Layer Testing |  |  |  |
+| NODE_ENV Support |  |  |  |
+| Authentication Demo |  |  |  |
+| Render Link |  |  |  |
+| User Profile Retrieval |  |  |  |
+| User Profile Retrieval Testing |  |  |  |
+| User Profile Update |  |  |  |
+| User Profile Update Testing |  |  |  |
+| User Deletion |  |  |  |
+| User Deletion Testing |  |  |  |
+| User Profile Demo |  |  |  |
 
 ### Sprint 1: Adapting to New Architecture
 
