@@ -1,10 +1,10 @@
 // =================================================================================================
 // Internal Dependencies
 // =================================================================================================
-import errors from "../errors.js";
-import crypt from "./crypt.js";
-import validation from "./validation.js";
-import database from "../database/database.js";
+import errors from "../../errors.js";
+import crypt from "../crypt.js";
+import validation from "../validation.js";
+import database from "../../database/database.js";
 
 // =================================================================================================
 // Public API
@@ -21,5 +21,5 @@ async function createUser(user) {
     return await database.createUser(dbReadyUser);
 }
 
-const userServices = { createUser };
-export default userServices;
+const userService = { createUser };
+export default userService;

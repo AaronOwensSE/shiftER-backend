@@ -1,8 +1,8 @@
 // =================================================================================================
 // Internal Dependencies
 // =================================================================================================
-import errors from "../errors.js";
-import pool from "./pool.js";
+import errors from "../../errors.js";
+import pool from "../pool.js";
 
 // =================================================================================================
 // Public API
@@ -36,5 +36,5 @@ async function readUser(id) {
     return user;
 }
 
-const userModel = { createUser, readUser };
-export default userModel;
+const userRepository = { createUser, readUser };
+export default userRepository;

@@ -2,7 +2,7 @@
 // Internal Dependencies
 // =================================================================================================
 import errors from "../errors.js";
-import services from "../services/services.js";
+import service from "../service/service.js";
 
 // =================================================================================================
 // Public API
@@ -11,7 +11,7 @@ async function postUser(req, res) {
     const user = req.body;
 
     try {
-        const responseBody = await services.createUser(user);
+        const responseBody = await service.createUser(user);
         const responseBodyJson = JSON.stringify(responseBody);
 
         res.status(200);    // 200 OK

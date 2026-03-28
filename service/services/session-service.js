@@ -7,10 +7,10 @@ import crypto from "crypto";
 // =================================================================================================
 // Internal Dependencies
 // =================================================================================================
-import constants from "../constants.js";
-import errors from "../errors.js";
-import validation from "./validation.js";
-import database from "../database/database.js";
+import constants from "../../constants.js";
+import errors from "../../errors.js";
+import validation from "../validation.js";
+import database from "../../database/database.js";
 
 // =================================================================================================
 // Public API
@@ -55,8 +55,8 @@ async function logOut(sessionId) {
     return await database.deleteSession(sessionId);
 }
 
-const authenticationService = { logIn, authenticateSession, logOut };
-export default authenticationService;
+const sessionService = { logIn, authenticateSession, logOut };
+export default sessionService;
 
 // =================================================================================================
 // Helper Functions

@@ -18,7 +18,7 @@ class ResourceDoesNotExistError extends Error {
 class TooManyAttemptsError extends Error {
     constructor(message = "") {
         super(message);
-        this.name = "InternalServerError";
+        this.name = "TooManyAttemptsError";
     }
 }
 

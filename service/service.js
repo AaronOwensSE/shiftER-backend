@@ -1,8 +1,8 @@
 // =================================================================================================
 // Internal Dependencies
 // =================================================================================================
-import userService from "./user-service.js";
-import authenticationService from "./authentication-service.js";
+import userService from "./services/user-service.js";
+import sessionService from "./services/session-service.js";
 
 // =================================================================================================
 // Public API
@@ -12,16 +12,16 @@ async function createUser(user) {
 }
 
 async function logIn(userId, password) {
-    return await authenticationService.logIn(userId, password);
+    return await sessionService.logIn(userId, password);
 }
 
 async function authenticateSession(sessionId) {
-    return await authenticationService.authenticateSession(sessionId);
+    return await sessionService.authenticateSession(sessionId);
 }
 
 async function logOut(sessionId) {
-    await authenticationService.logOut(sessionId);
+    await sessionService.logOut(sessionId);
 }
 
-const services = { createUser, logIn, authenticateSession, logOut };
-export default services;
+const service = { createUser, logIn, authenticateSession, logOut };
+export default service;

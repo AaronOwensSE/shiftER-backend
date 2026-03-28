@@ -1,8 +1,8 @@
 // =================================================================================================
 // Internal Dependencies
 // =================================================================================================
-import errors from "../errors.js";
-import pool from "./pool.js";
+import errors from "../../errors.js";
+import pool from "../pool.js";
 
 // =================================================================================================
 // Public API
@@ -60,11 +60,11 @@ async function deleteSessionsByUserId(userId) {
     return true;    // Useful for testing.
 }
 
-const sessionModel = {
+const sessionRepository = {
     createSession,
     readUserIdFromActiveSession,
     deleteSession,
     deleteSessionsByUserId
 };
 
-export default sessionModel;
+export default sessionRepository;

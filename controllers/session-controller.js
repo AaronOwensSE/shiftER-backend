@@ -2,7 +2,7 @@
 // Internal Dependencies
 // =================================================================================================
 import errors from "../errors.js";
-import services from "../services/services.js";
+import service from "../service/service.js";
 
 // =================================================================================================
 // Public API
@@ -11,7 +11,7 @@ async function postSession(req, res) {
     const { userId, password } = req.body;
 
     try {
-        const responseBody = await services.logIn(userId, password);
+        const responseBody = await service.logIn(userId, password);
         const responseBodyJson = JSON.stringify(responseBody);
 
         res.status(200);    // 200 OK
@@ -35,7 +35,7 @@ async function getSession(req, res) {
     const sessionId = bearerTokenWords[1];
 
     try {
-        const responseBody = await services.authenticateSession(sessionId);
+        const responseBody = await service.authenticateSession(sessionId);
         const responseBodyJson = JSON.stringify(responseBody);
 
         res.status(200);    // 200 OK
@@ -57,7 +57,7 @@ async function deleteSession(req, res) {
     const sessionId = bearerTokenWords[1];
 
     try {
-        await services.logOut(sessionId);
+        await service.logOut(sessionId);
 
         res.sendStatus(200);    // 200 OK
     } catch (error) {
@@ -71,5 +71,5 @@ async function deleteSession(req, res) {
     }
 }
 
-const authenticationController = { postSession, getSession, deleteSession };
-export default authenticationController;
+const sessionController = { postSession, getSession, deleteSession };
+export default sessionController;
