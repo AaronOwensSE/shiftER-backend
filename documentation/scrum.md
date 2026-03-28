@@ -61,18 +61,12 @@
 
 | To Do | Doing | Done | Failed |
 |---|---|---|---|
-| Service Layer Architecture Adjustment |  |  |  |
-| Service Layer Refactoring |  |  |  |
-| Service Layer Testing |  |  |  |
-| NODE_ENV Support |  |  |  |
-| Authentication Demo |  |  |  |
-| Render Link |  |  |  |
-| User Profile Retrieval |  |  |  |
-| User Profile Retrieval Testing |  |  |  |
-| User Profile Update |  |  |  |
-| User Profile Update Testing |  |  |  |
-| User Deletion |  |  |  |
-| User Deletion Testing |  |  |  |
+| User Profile Retrieval | Service Layer Architecture Adjustment |  |  |
+| User Profile Retrieval Testing | Service Layer Refactoring |  |  |
+| User Profile Update | Service Layer Testing |  |  |
+| User Profile Update Testing | NODE_ENV Support |  |  |
+| User Deletion | Authentication Demo |  |  |
+| User Deletion Testing | Render Link |  |  |
 | User Profile Demo |  |  |  |
 
 ### Sprint 1: Adapting to New Architecture
