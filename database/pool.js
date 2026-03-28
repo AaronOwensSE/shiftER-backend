@@ -12,7 +12,10 @@ const pool = new pg.Pool({
     host:       process.env.DB_HOST,
     port:       process.env.DB_PORT,
     database:   process.env.DB_NAME,
-    ssl:        { rejectUnauthorized: false }  // Required for Render
+    ssl:
+        process.env.NODE_ENV === "production" ?
+            { rejectUnauthorized: false }   // Required for Render
+            : false
 });
 
 export default pool;
