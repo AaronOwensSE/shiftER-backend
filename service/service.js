@@ -15,13 +15,13 @@ async function logIn(userId, password) {
     return await sessionService.logIn(userId, password);
 }
 
-async function authenticateSession(sessionId) {
-    return await sessionService.authenticateSession(sessionId);
+async function resumeSession(sessionId) {
+    return await sessionService.resumeSession(sessionId);
 }
 
 async function logOut(sessionId) {
     await sessionService.logOut(sessionId);
 }
 
-const service = { createUser, logIn, authenticateSession, logOut };
+const service = { createUser, logIn, resumeSession, logOut };
 export default service;

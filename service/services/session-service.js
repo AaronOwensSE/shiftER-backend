@@ -1,7 +1,6 @@
 // =================================================================================================
 // External Dependencies
 // =================================================================================================
-import bcrypt from "bcrypt";
 import crypto from "crypto";
 
 // =================================================================================================
@@ -9,6 +8,7 @@ import crypto from "crypto";
 // =================================================================================================
 import constants from "../../constants.js";
 import errors from "../../errors.js";
+import authentication from "../authentication.js";
 import validation from "../validation.js";
 import database from "../../database/database.js";
 
@@ -20,7 +20,7 @@ async function logIn(userId, password) {
         throw new errors.ValidationError();
     }
     
-    if (!await authenticateCredentials(userId, password)) {
+    if (!await authentication.authenticateCredentials(userId, password)) {
         throw new errors.InvalidCredentialsError();
     }
     
@@ -37,12 +37,12 @@ async function logIn(userId, password) {
     return sessionId;
 }
 
-async function authenticateSession(sessionId) {
+async function resumeSession(sessionId) {
     if (!validation.isValidSessionId(sessionId)) {
         throw new errors.ValidationError();
     }
 
-    const userId = await database.readUserIdFromActiveSession(sessionId);
+    const userId = await authentication.authenticateSessionId(sessionId);
 
     return userId;
 }
@@ -55,30 +55,12 @@ async function logOut(sessionId) {
     return await database.deleteSession(sessionId);
 }
 
-const sessionService = { logIn, authenticateSession, logOut };
+const sessionService = { logIn, resumeSession, logOut };
 export default sessionService;
 
 // =================================================================================================
 // Helper Functions
 // =================================================================================================
-async function authenticateCredentials(userId, password) {
-    let user;
-
-    try {
-        user = await database.readUser(userId);
-    } catch (error) {
-        if (error instanceof errors.ResourceDoesNotExistError) {
-            return false;
-        } else {
-            throw error;
-        }
-    }
-
-    const credentialsValid = await bcrypt.compare(password, user.hash);
-    
-    return credentialsValid;
-}
-
 async function getNewSessionId(userId) {
     const expires = new Date(Date.now() + constants.SESSION_EXPIRATION);
     

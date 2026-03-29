@@ -35,7 +35,7 @@ async function getSession(req, res) {
     const sessionId = bearerTokenWords[1];
 
     try {
-        const responseBody = await service.authenticateSession(sessionId);
+        const responseBody = await service.resumeSession(sessionId);
         const responseBodyJson = JSON.stringify(responseBody);
 
         res.status(200);    // 200 OK
