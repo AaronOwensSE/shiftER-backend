@@ -61,10 +61,10 @@
 
 | To Do | Doing | Done | Failed |
 |---|---|---|---|
-| User Profile Retrieval | Authentication Demo | Service Layer Architecture Adjustment |  |
-| User Profile Retrieval Testing | Render Link | Service Layer Refactoring |  |
-| User Profile Update |  | Service Layer Testing |  |
-| User Profile Update Testing |  | NODE_ENV Support |  |
+| User Profile Retrieval | Authentication Demo | NODE_ENV Support |  |
+| User Profile Retrieval Testing | Render Link | Service Layer Architecture Adjustment |  |
+| User Profile Update |  | Service Layer Refactoring |  |
+| User Profile Update Testing |  | Service Layer Testing |  |
 | User Deletion |  |  |  |
 | User Deletion Testing |  |  |  |
 | User Profile Demo |  |  |  |
