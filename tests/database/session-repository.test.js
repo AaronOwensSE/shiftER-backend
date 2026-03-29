@@ -5,7 +5,7 @@ import constants from "../../constants.js";
 import errors from "../../errors.js";
 import testUtilities from "../test-utilities.js";
 import pool from "../../database/pool.js";
-import sessionModel from "../../database/session-model.js";
+import sessionRepository from "../../database/repositories/session-repository.js";
 
 // =================================================================================================
 // Setup/Teardown
@@ -29,7 +29,7 @@ test("createSession 1: Success", async () => {
     const userId = await testUtilities.createRandomUser();
     const sessionId = testUtilities.generateRandomStringId(constants.SESSION_ID_HEX_STRING_LENGTH);
     const expires = new Date(Date.now() + constants.SESSION_EXPIRATION);
-    const returnedSessionId = await sessionModel.createSession(sessionId, userId, expires);
+    const returnedSessionId = await sessionRepository.createSession(sessionId, userId, expires);
 
     expect(returnedSessionId).toBe(sessionId);
 });
@@ -39,7 +39,7 @@ test("createSession 2: Resource Already Exists", async () => {
     const sessionId = await testUtilities.createRandomSession(userId);
     const expires = new Date(Date.now() + constants.SESSION_EXPIRATION);
 
-    await expect(sessionModel.createSession(sessionId, userId, expires))
+    await expect(sessionRepository.createSession(sessionId, userId, expires))
         .rejects
         .toThrow(errors.ResourceAlreadyExistsError);
 });
@@ -47,7 +47,7 @@ test("createSession 2: Resource Already Exists", async () => {
 test("readUserIdFromActiveSession 1: Success", async () => {
     const userId = await testUtilities.createRandomUser();
     const sessionId = await testUtilities.createRandomSession(userId);
-    const returnedUserId = await sessionModel.readUserIdFromActiveSession(sessionId);
+    const returnedUserId = await sessionRepository.readUserIdFromActiveSession(sessionId);
 
     expect(returnedUserId).toBe(userId);
 });
@@ -55,7 +55,7 @@ test("readUserIdFromActiveSession 1: Success", async () => {
 test("readUserIdFromActiveSession 2: Resource Does Not Exist", async () => {
     const sessionId = testUtilities.generateRandomStringId(constants.SESSION_ID_HEX_STRING_LENGTH);
 
-    await expect(sessionModel.readUserIdFromActiveSession(sessionId))
+    await expect(sessionRepository.readUserIdFromActiveSession(sessionId))
         .rejects
         .toThrow(errors.ResourceDoesNotExistError);
 });
@@ -63,7 +63,7 @@ test("readUserIdFromActiveSession 2: Resource Does Not Exist", async () => {
 test("deleteSession 1: Success", async () => {
     const userId = await testUtilities.createRandomUser();
     const sessionId = await testUtilities.createRandomSession(userId);
-    const success = await sessionModel.deleteSession(sessionId);
+    const success = await sessionRepository.deleteSession(sessionId);
 
     expect(success).toBe(true);
 });
@@ -71,7 +71,7 @@ test("deleteSession 1: Success", async () => {
 test("deleteSession 2: Resource Does Not Exist", async () => {
     const sessionId = testUtilities.generateRandomStringId(constants.SESSION_ID_HEX_STRING_LENGTH);
 
-    await expect(sessionModel.deleteSession(sessionId))
+    await expect(sessionRepository.deleteSession(sessionId))
         .rejects
         .toThrow(errors.ResourceDoesNotExistError);
 });
@@ -80,7 +80,7 @@ test("deleteSessionsByUserId 1: Success", async () => {
     const userId = await testUtilities.createRandomUser();
     await testUtilities.createRandomSession(userId);
     await testUtilities.createRandomSession(userId);
-    const success = await sessionModel.deleteSessionsByUserId(userId);
+    const success = await sessionRepository.deleteSessionsByUserId(userId);
 
     expect(success).toBe(true);
 });
@@ -88,7 +88,7 @@ test("deleteSessionsByUserId 1: Success", async () => {
 test("deleteSessionsByUserId 2: Resource Does Not Exist", async () => {
     const userId = testUtilities.generateRandomStringId(constants.USER_ID_MAX_LENGTH);
 
-    await expect(sessionModel.deleteSessionsByUserId(userId))
+    await expect(sessionRepository.deleteSessionsByUserId(userId))
         .rejects
         .toThrow(errors.ResourceDoesNotExistError);
 });

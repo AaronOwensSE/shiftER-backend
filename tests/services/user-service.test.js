@@ -6,7 +6,7 @@ import errors from "../../errors.js";
 import testConstants from "../test-constants.js";
 import testUtilities from "../test-utilities.js";
 import pool from "../../database/pool.js";
-import userService from "../../services/user-service.js";
+import userService from "../../service/services/user-service.js";
 
 // =================================================================================================
 // Setup/Teardown

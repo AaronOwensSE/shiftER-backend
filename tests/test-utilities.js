@@ -3,9 +3,9 @@
 // =================================================================================================
 import constants from "../constants.js";
 import testConstants from "./test-constants.js";
-import crypt from "../services/crypt.js";
-import sessionModel from "../database/session-model.js";
-import userModel from "../database/user-model.js";
+import crypt from "../service/crypt.js";
+import sessionRepository from "../database/repositories/session-repository.js";
+import userRepository from "../database/repositories/user-repository.js";
 
 // =================================================================================================
 // Public API
@@ -37,7 +37,7 @@ async function createRandomUser() {
         email: testConstants.TEST_USER_EMAIL
     };
     
-    await userModel.createUser(user);
+    await userRepository.createUser(user);
 
     return userId;
 }
@@ -45,7 +45,7 @@ async function createRandomUser() {
 async function createRandomSession(userId) {
     const sessionId = generateRandomStringId(constants.SESSION_ID_HEX_STRING_LENGTH);
     const expires = new Date(Date.now() + constants.SESSION_EXPIRATION);
-    await sessionModel.createSession(sessionId, userId, expires);
+    await sessionRepository.createSession(sessionId, userId, expires);
 
     return sessionId;
 }

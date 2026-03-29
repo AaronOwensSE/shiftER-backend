@@ -5,9 +5,9 @@ import constants from "../../constants.js";
 import errors from "../../errors.js";
 import testConstants from "../test-constants.js";
 import testUtilities from "../test-utilities.js";
-import crypt from "../../services/crypt.js";
+import crypt from "../../service/crypt.js";
 import pool from "../../database/pool.js";
-import userModel from "../../database/user-model.js";
+import userRepository from "../../database/repositories/user-repository.js";
 
 // =================================================================================================
 // Setup/Teardown
@@ -38,7 +38,7 @@ test("createUser 1: Success", async () => {
         email: testConstants.TEST_USER_EMAIL
     };
 
-    const userId = await userModel.createUser(testUser);
+    const userId = await userRepository.createUser(testUser);
 
     expect(userId).toBe(randomId);
 });
@@ -54,14 +54,14 @@ test("createUser 2: Failure: Resource Already Exists", async () => {
         email: testConstants.TEST_USER_EMAIL
     };
 
-    await userModel.createUser(testUser);
+    await userRepository.createUser(testUser);
 
-    await expect(userModel.createUser(testUser)).rejects.toThrow(errors.ResourceAlreadyExistsError);
+    await expect(userRepository.createUser(testUser)).rejects.toThrow(errors.ResourceAlreadyExistsError);
 });
 
 test("readUser 1: Success", async () => {
     const userId = await testUtilities.createRandomUser();
-    const retrievedUser = await userModel.readUser(userId);
+    const retrievedUser = await userRepository.readUser(userId);
 
     expect(retrievedUser.id).toBe(userId);
 });
@@ -69,5 +69,5 @@ test("readUser 1: Success", async () => {
 test("readUser 2: Failure: Resource Does Not Exist", async () => {
     const randomId = testUtilities.generateRandomStringId(constants.USER_ID_MAX_LENGTH);
 
-    await expect(userModel.readUser(randomId)).rejects.toThrow(errors.ResourceDoesNotExistError);
+    await expect(userRepository.readUser(randomId)).rejects.toThrow(errors.ResourceDoesNotExistError);
 });

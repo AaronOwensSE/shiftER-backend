@@ -5,7 +5,7 @@ import constants from "../../constants.js";
 import errors from "../../errors.js";
 import testConstants from "../test-constants.js";
 import testUtilities from "../test-utilities.js";
-import authenticationService from "../../services/authentication-service.js";
+import sessionService from "../../service/services/session-service.js";
 import pool from "../../database/pool.js";
 
 // =================================================================================================
@@ -28,7 +28,7 @@ afterEach( async () => {
 // =================================================================================================
 test("logIn 1: Success", async () => {
     const userId = await testUtilities.createRandomUser();
-    const sessionId = await authenticationService.logIn(userId, testConstants.TEST_USER_PASSWORD);
+    const sessionId = await sessionService.logIn(userId, testConstants.TEST_USER_PASSWORD);
 
     expect(typeof sessionId).toBe("string");
 });
@@ -37,7 +37,7 @@ test("logIn 2: Validation Error", async () => {
     const userId = false;
     const password = 5;
 
-    await expect(authenticationService.logIn(userId, password))
+    await expect(sessionService.logIn(userId, password))
         .rejects
         .toThrow(errors.ValidationError);
 });
@@ -46,23 +46,23 @@ test("logIn 3: Invalid Credentials", async () => {
     await testUtilities.createRandomUser();
     const userId = await testUtilities.generateRandomStringId(constants.USER_ID_MAX_LENGTH);
     
-    await expect(authenticationService.logIn(userId, testConstants.TEST_USER_PASSWORD))
+    await expect(sessionService.logIn(userId, testConstants.TEST_USER_PASSWORD))
         .rejects
         .toThrow(errors.InvalidCredentialsError);
 });
 
-test("authenticateSession 1: Success", async () => {
+test("resumeSession 1: Success", async () => {
     const userId = await testUtilities.createRandomUser();
     const sessionId = await testUtilities.createRandomSession(userId);
-    const returnedUserId = await authenticationService.authenticateSession(sessionId);
+    const returnedUserId = await sessionService.resumeSession(sessionId);
 
     expect(returnedUserId).toBe(userId);
 });
 
-test("authenticateSession 2: Validation Error", async () => {
+test("resumeSession 2: Validation Error", async () => {
     const sessionId = false;
 
-    await expect(authenticationService.authenticateSession(sessionId))
+    await expect(sessionService.resumeSession(sessionId))
         .rejects
         .toThrow(errors.ValidationError);
 });
@@ -70,7 +70,7 @@ test("authenticateSession 2: Validation Error", async () => {
 test("logOut 1: Success", async () => {
     const userId = await testUtilities.createRandomUser();
     const sessionId = await testUtilities.createRandomSession(userId);
-    const success = await authenticationService.logOut(sessionId);
+    const success = await sessionService.logOut(sessionId);
 
     expect(success).toBe(true);
 });
@@ -78,5 +78,5 @@ test("logOut 1: Success", async () => {
 test("logOut 2: Validation Error", async () => {
     const sessionId = 5;
 
-    await expect(authenticationService.logOut(sessionId)).rejects.toThrow(errors.ValidationError);
+    await expect(sessionService.logOut(sessionId)).rejects.toThrow(errors.ValidationError);
 });
