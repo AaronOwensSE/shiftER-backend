@@ -1,6 +1,6 @@
 # shiftER-backend
 
-A RESTful API backend for a group scheduling service that enables professionals to claim their preferred work shifts using a snake draft (or serpentine draft).
+A RESTful API backend for a group scheduling service that enables professionals to coordinate work schedules using a snake draft (or serpentine draft).
 
 ## Documentation
 
