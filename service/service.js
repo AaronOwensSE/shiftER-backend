@@ -11,6 +11,10 @@ async function createUser(user) {
     return await userService.createUser(user);
 }
 
+async function retrieveUserProfile(sessionId, userId) {
+    return await userService.retrieveUserProfile(sessionId, userId);
+}
+
 async function logIn(userId, password) {
     return await sessionService.logIn(userId, password);
 }
@@ -23,5 +27,5 @@ async function logOut(sessionId) {
     await sessionService.logOut(sessionId);
 }
 
-const service = { createUser, logIn, resumeSession, logOut };
+const service = { createUser, retrieveUserProfile, logIn, resumeSession, logOut };
 export default service;

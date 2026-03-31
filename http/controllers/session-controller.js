@@ -1,8 +1,9 @@
 // =================================================================================================
 // Internal Dependencies
 // =================================================================================================
-import errors from "../errors.js";
-import service from "../service/service.js";
+import errors from "../../errors.js";
+import httpTools from "../http-tools.js";
+import service from "../../service/service.js";
 
 // =================================================================================================
 // Public API
@@ -30,9 +31,7 @@ async function postSession(req, res) {
 }
 
 async function getSession(req, res) {
-    const bearerTokenHeader = req.header("Authorization");  // Format: "Bearer sessionID"
-    const bearerTokenWords = bearerTokenHeader.split(" ");
-    const sessionId = bearerTokenWords[1];
+    const sessionId = httpTools.getBearerToken(req);
 
     try {
         const responseBody = await service.resumeSession(sessionId);
@@ -52,9 +51,7 @@ async function getSession(req, res) {
 }
 
 async function deleteSession(req, res) {
-    const bearerTokenHeader = req.header("Authorization");  // Format: "Bearer sessionID"
-    const bearerTokenWords = bearerTokenHeader.split(" ");
-    const sessionId = bearerTokenWords[1];
+    const sessionId = httpTools.getBearerToken(req);
 
     try {
         await service.logOut(sessionId);

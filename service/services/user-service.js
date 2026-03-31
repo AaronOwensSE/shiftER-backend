@@ -2,6 +2,7 @@
 // Internal Dependencies
 // =================================================================================================
 import errors from "../../errors.js";
+import authentication from "../authentication.js";
 import crypt from "../crypt.js";
 import validation from "../validation.js";
 import database from "../../database/database.js";
@@ -21,5 +22,22 @@ async function createUser(user) {
     return await database.createUser(dbReadyUser);
 }
 
-const userService = { createUser };
+async function retrieveUserProfile(sessionId, userId) {
+    if (!validation.isValidSessionId(sessionId) || !validation.isValidUserId(userId)) {
+        throw new errors.ValidationError();
+    }
+
+    const authenticatedUserId = await authentication.authenticateSessionId(sessionId);
+
+    if (userId !== authenticatedUserId) {
+        throw new errors.UnauthorizedAccessError();
+    }
+
+    const user = await database.readUser(userId);
+    const userProfile = { userId: user.id, userName: user.name, userEmail: user.email };
+
+    return userProfile;
+}
+
+const userService = { createUser, retrieveUserProfile };
 export default userService;

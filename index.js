@@ -7,8 +7,8 @@ import express from "express";
 // =================================================================================================
 // Internal Dependencies
 // =================================================================================================
-import userController from "./controllers/user-controller.js";
-import sessionController from "./controllers/session-controller.js";
+import userController from "./http/controllers/user-controller.js";
+import sessionController from "./http/controllers/session-controller.js";
 
 // =================================================================================================
 // Commands
@@ -19,10 +19,13 @@ app.use(express.json());    // Required to access req.body.
 // Post user -> Create user
 app.post("/users", userController.postUser);
 
+// Get user -> Retrieve user profile
+app.get("/users/:userId", userController.getUser);
+
 // Post session -> Log in
 app.post("/sessions", sessionController.postSession);
 
-// Get session (current) -> Authenticate session
+// Get session (current) -> Resume session
 app.get("/sessions/current", sessionController.getSession);
 
 // Delete session (current) -> Log out

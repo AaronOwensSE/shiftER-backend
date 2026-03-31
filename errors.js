@@ -1,6 +1,13 @@
 // =================================================================================================
 // Public API
 // =================================================================================================
+class InvalidCredentialsError extends Error {
+    constructor(message = "") {
+        super(message);
+        this.name = "InvalidCredentialsError";
+    }
+}
+
 class ResourceAlreadyExistsError extends Error {
     constructor(message = "") {
         super(message);
@@ -22,10 +29,10 @@ class TooManyAttemptsError extends Error {
     }
 }
 
-class InvalidCredentialsError extends Error {
+class UnauthorizedAccessError extends Error {
     constructor(message = "") {
         super(message);
-        this.name = "InvalidCredentialsError";
+        this.name = "UnauthorizedAccessError";
     }
 }
 
@@ -37,10 +44,11 @@ class ValidationError extends Error {
 }
 
 const errors = {
+    InvalidCredentialsError,
     ResourceAlreadyExistsError,
     ResourceDoesNotExistError,
-    InvalidCredentialsError,
     TooManyAttemptsError,
+    UnauthorizedAccessError,
     ValidationError
 };
 
