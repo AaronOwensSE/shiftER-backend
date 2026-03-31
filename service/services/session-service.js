@@ -1,14 +1,10 @@
 // =================================================================================================
-// External Dependencies
-// =================================================================================================
-import crypto from "crypto";
-
-// =================================================================================================
 // Internal Dependencies
 // =================================================================================================
 import constants from "../../constants.js";
 import errors from "../../errors.js";
 import authentication from "../authentication.js";
+import crypt from "../crypt.js";
 import validation from "../validation.js";
 import database from "../../database/database.js";
 
@@ -63,9 +59,11 @@ export default sessionService;
 // =================================================================================================
 async function getNewSessionId(userId) {
     const expires = new Date(Date.now() + constants.SESSION_EXPIRATION);
+    let randomBytes, sessionId, createSessionResult;
     
-    for (let i = 0, sessionId, createSessionResult; i < constants.SESSION_ID_ATTEMPTS; i++) {
-        sessionId = crypto.randomBytes(constants.SESSION_ID_LENGTH_IN_BYTES).toString("hex");
+    for (let i = 0; i < constants.SESSION_ID_ATTEMPTS; i++) {
+        randomBytes = crypt.generateRandomBytes(constants.SESSION_ID_LENGTH_IN_BYTES);
+        sessionId = randomBytes.toString("hex");
 
         try {
             createSessionResult = await database.createSession(sessionId, userId, expires);

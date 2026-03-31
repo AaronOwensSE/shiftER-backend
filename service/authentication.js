@@ -1,12 +1,8 @@
 // =================================================================================================
-// External Dependencies
-// =================================================================================================
-import bcrypt from "bcrypt";
-
-// =================================================================================================
 // Internal Dependencies
 // =================================================================================================
 import errors from "../errors.js";
+import crypt from "./crypt.js";
 import database from "../database/database.js";
 
 // =================================================================================================
@@ -25,7 +21,7 @@ async function authenticateCredentials(userId, password) {
         }
     }
 
-    const credentialsValid = await bcrypt.compare(password, user.hash);
+    const credentialsValid = await crypt.passwordMatchesHash(password, user.hash);
     
     return credentialsValid;
 }

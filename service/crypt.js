@@ -2,6 +2,7 @@
 // External Dependencies
 // =================================================================================================
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 
 // =================================================================================================
 // Internal Dependencies
@@ -18,5 +19,17 @@ async function generateHash(password) {
     return hash;
 }
 
-const crypt = { generateHash };
+async function passwordMatchesHash(password, hash) {
+    const passwordMatchesHash = await bcrypt.compare(password, hash);
+
+    return passwordMatchesHash;
+}
+
+function generateRandomBytes(numBytes) {
+    const randomBytes = crypto.randomBytes(numBytes);
+
+    return randomBytes;
+}
+
+const crypt = { generateHash, passwordMatchesHash, generateRandomBytes };
 export default crypt;
