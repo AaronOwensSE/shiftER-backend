@@ -63,11 +63,12 @@
 | To Do | Doing | Done | Failed |
 |---|---|---|---|
 | User Profile Update | User Profile Retrieval Testing | NODE_ENV Support |  |
-| User Profile Update Testing | Authentication Demo | Service Layer Architecture Adjustment |  |
-| User Deletion | Render Link | Service Layer Refactoring |  |
-| User Deletion Testing |  | Service Layer Testing |  |
-| User Profile Demo |  | User Profile Retrieval |  |
+| User Profile Update Testing | User Deletion Testing | Service Layer Architecture Adjustment |  |
+| User Profile Demo | Authentication Demo | Service Layer Refactoring |  |
+|  | Render Link | Service Layer Testing |  |
+|  |  | User Profile Retrieval |  |
 |  |  | Decouple Cryptography Libraries from Service Layer |  |
+|  |  | User Deletion |  |
 
 ### Sprint 1: Adapting to New Architecture
 
