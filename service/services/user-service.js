@@ -39,5 +39,22 @@ async function retrieveUserProfile(sessionId, userId) {
     return userProfile;
 }
 
-const userService = { createUser, retrieveUserProfile };
+async function deleteUser(sessionId, userId) {
+    if (!validation.isValidSessionId(sessionId) || !validation.isValidUserId(userId)) {
+        throw new errors.ValidationError();
+    }
+
+    const authenticatedUserId = await authentication.authenticateSessionId(sessionId);
+
+    if (userId !== authenticatedUserId) {
+        throw new errors.UnauthorizedAccessError();
+    }
+
+    await database.deleteSessionsByUserId(userId);
+    // Manually cascade further? DB should be set to cascade, but redundancy might be a good idea.
+
+    return await database.deleteUser(userId);
+}
+
+const userService = { createUser, retrieveUserProfile, deleteUser };
 export default userService;

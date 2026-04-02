@@ -15,6 +15,10 @@ async function retrieveUserProfile(sessionId, userId) {
     return await userService.retrieveUserProfile(sessionId, userId);
 }
 
+async function deleteUser(sessionId, userId) {
+    return await userService.deleteUser(sessionId, userId);
+}
+
 async function logIn(userId, password) {
     return await sessionService.logIn(userId, password);
 }
@@ -24,8 +28,8 @@ async function resumeSession(sessionId) {
 }
 
 async function logOut(sessionId) {
-    await sessionService.logOut(sessionId);
+    return await sessionService.logOut(sessionId);
 }
 
-const service = { createUser, retrieveUserProfile, logIn, resumeSession, logOut };
+const service = { createUser, retrieveUserProfile, deleteUser, logIn, resumeSession, logOut };
 export default service;

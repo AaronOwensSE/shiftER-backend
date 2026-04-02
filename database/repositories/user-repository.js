@@ -36,5 +36,15 @@ async function readUser(id) {
     return user;
 }
 
-const userRepository = { createUser, readUser };
+async function deleteUser(id) {
+    const result = await pool.query("DELETE FROM users WHERE id = $1;", [id]);
+
+    if (result.rowCount === 0) {
+        throw new errors.ResourceDoesNotExistError();
+    }
+
+    return true;    // Useful for testing.
+}
+
+const userRepository = { createUser, readUser, deleteUser };
 export default userRepository;

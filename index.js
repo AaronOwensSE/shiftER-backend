@@ -22,6 +22,9 @@ app.post("/users", userController.postUser);
 // Get user -> Retrieve user profile
 app.get("/users/:userId", userController.getUser);
 
+// Delete user -> Delete user
+app.delete("/users/:userId", userController.deleteUser);
+
 // Post session -> Log in
 app.post("/sessions", sessionController.postSession);
 

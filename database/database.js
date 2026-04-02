@@ -15,6 +15,10 @@ async function readUser(id) {
     return await userRepository.readUser(id);
 }
 
+async function deleteUser(id) {
+    return await userRepository.deleteUser(id);
+}
+
 async function createSession(sessionId, userId, expires) {
     return await sessionRepository.createSession(sessionId, userId, expires);
 }
@@ -34,6 +38,7 @@ async function deleteSessionsByUserId(userId) {
 const database = {
     createUser,
     readUser,
+    deleteUser,
     createSession,
     readUserIdFromActiveSession,
     deleteSession,

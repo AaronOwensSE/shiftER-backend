@@ -36,7 +36,7 @@ async function getUser(req, res) {
         const responseBody = await service.retrieveUserProfile(sessionId, userId);
         const responseBodyJson = JSON.stringify(responseBody);
 
-        res.status(200);
+        res.status(200);    // 200 OK
         res.send(responseBodyJson);
     } catch (error) {
         if (error instanceof errors.ValidationError) {
@@ -51,5 +51,28 @@ async function getUser(req, res) {
     }
 }
 
-const userController = { postUser, getUser };
+async function deleteUser(req, res) {
+    const sessionId = httpTools.getBearerToken(req);
+    const userId = req.params.userId;
+
+    try {
+        await service.deleteUser(sessionId, userId);
+
+        res.sendStatus(200);    // 200 OK
+    } catch (error) {
+        if (error instanceof errors.ValidationError) {
+            res.sendStatus(400);    // 400 Bad Request
+        } else if (error instanceof errors.ResourceDoesNotExistError) {
+            // Could be 400 in the case of userId lookup failing.
+            // Consider more granularity / layer awareness.
+            res.sendStatus(401);    // 401 Unauthorized
+        } else if (error instanceof errors.UnauthorizedAccessError) {
+            res.sendStatus(403);    // 403 Forbidden
+        } else {
+            res.sendStatus(500);    // 500 Internal Server Error
+        }
+    }
+}
+
+const userController = { postUser, getUser, deleteUser };
 export default userController;
