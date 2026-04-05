@@ -11,6 +11,10 @@ import databaseErrors from "../../database/database-errors.js";
 // =================================================================================================
 // Public API
 // =================================================================================================
+/**
+ * @throws {InvalidInputError}
+ * @throws {ResourceAlreadyExistsError}
+ */
 async function createUser(user) {
     if (!validation.isValidUser(user)) {
         throw new serviceErrors.InvalidInputError();
@@ -31,6 +35,12 @@ async function createUser(user) {
     }
 }
 
+/**
+ * @throws {InvalidInputError}
+ * @throws {UnableToAuthenticateError}
+ * @throws {UnauthorizedAccessError}
+ * @throws {ResourceDoesNotExistError}
+ */
 async function retrieveUserProfile(sessionId, userId) {
     if (!validation.isValidSessionId(sessionId) || !validation.isValidUserId(userId)) {
         throw new serviceErrors.InvalidInputError();
@@ -59,6 +69,12 @@ async function retrieveUserProfile(sessionId, userId) {
     return userProfile;
 }
 
+/**
+ * @throws {InvalidInputError}
+ * @throws {UnableToAuthenticateError}
+ * @throws {UnauthorizedAccessError}
+ * @throws {ResourceDoesNotExistError}
+ */
 async function deleteUser(sessionId, userId) {
     if (!validation.isValidSessionId(sessionId) || !validation.isValidUserId(userId)) {
         throw new serviceErrors.InvalidInputError();

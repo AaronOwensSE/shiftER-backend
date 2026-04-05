@@ -8,6 +8,9 @@ import pool from "../pool.js";
 // =================================================================================================
 // Public API
 // =================================================================================================
+/**
+ * @throws {EntryAlreadyExistsError}
+ */
 async function createUser({ id, hash, name, email }) {
     try {
         await pool.query(
@@ -23,6 +26,9 @@ async function createUser({ id, hash, name, email }) {
     }
 }
 
+/**
+ * @throws {EntryDoesNotExistError}
+ */
 async function readUser(id) {
     const result = await pool.query("SELECT * FROM users WHERE id = $1;", [id]);
     
@@ -35,6 +41,9 @@ async function readUser(id) {
     return user;
 }
 
+/**
+ * @throws {EntryDoesNotExistError}
+ */
 async function deleteUser(id) {
     const result = await pool.query("DELETE FROM users WHERE id = $1;", [id]);
 

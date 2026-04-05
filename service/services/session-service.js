@@ -12,6 +12,11 @@ import databaseErrors from "../../database/database-errors.js";
 // =================================================================================================
 // Public API
 // =================================================================================================
+/**
+ * @throws {InvalidInputError}
+ * @throws {UnableToAuthenticateError}
+ * @throws {TooManyAttemptsError}
+ */
 async function logIn(userId, password) {
     if (!validation.isValidUserId(userId) || !validation.isValidUserPassword(password)) {
         throw new serviceErrors.InvalidInputError();
@@ -34,6 +39,10 @@ async function logIn(userId, password) {
     return sessionId;
 }
 
+/**
+ * @throws {InvalidInputError}
+ * @throws {UnableToAuthenticateError}
+ */
 async function resumeSession(sessionId) {
     if (!validation.isValidSessionId(sessionId)) {
         throw new serviceErrors.InvalidInputError();
@@ -44,6 +53,10 @@ async function resumeSession(sessionId) {
     return userId;
 }
 
+/**
+ * @throws {InvalidInputError}
+ * @throws {UnableToAuthenticateError}
+ */
 async function logOut(sessionId) {
     if (!validation.isValidSessionId(sessionId)) {
         throw new serviceErrors.InvalidInputError();
@@ -66,6 +79,9 @@ export default sessionService;
 // =================================================================================================
 // Helper Functions
 // =================================================================================================
+/**
+ * @throws {TooManyAttemptsError}
+ */
 async function getNewSessionId(userId) {
     const expires = new Date(Date.now() + constants.SESSION_EXPIRATION);
     let randomBytes, sessionId;

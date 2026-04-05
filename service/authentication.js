@@ -27,6 +27,9 @@ async function authenticateCredentials(userId, password) {
     return credentialsValid;
 }
 
+/**
+ * @throws {UnableToAuthenticateError}
+ */
 async function authenticateSessionId(sessionId) {
     let userId;
 

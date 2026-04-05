@@ -8,6 +8,9 @@ import pool from "../pool.js";
 // =================================================================================================
 // Public API
 // =================================================================================================
+/**
+ * @throws {EntryAlreadyExistsError}
+ */
 async function createSession(sessionId, userId, expires) {
     try {
         await pool.query(
@@ -23,6 +26,9 @@ async function createSession(sessionId, userId, expires) {
     }
 }
 
+/**
+ * @throws {EntryDoesNotExistError}
+ */
 async function readUserIdFromActiveSession(sessionId) {
     const now = new Date(Date.now());
 
@@ -39,6 +45,9 @@ async function readUserIdFromActiveSession(sessionId) {
     return userId;
 }
 
+/**
+ * @throws {EntryDoesNotExistError}
+ */
 async function deleteSession(sessionId) {
     const result = await pool.query("DELETE FROM sessions WHERE id = $1;", [sessionId]);
 
@@ -47,6 +56,9 @@ async function deleteSession(sessionId) {
     }
 }
 
+/**
+ * @throws {EntryDoesNotExistError}
+ */
 async function deleteSessionsByUserId(userId) {
     const result = await pool.query("DELETE FROM sessions WHERE user_id = $1;", [userId]);
 
