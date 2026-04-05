@@ -41,7 +41,7 @@ test("createUser 1: Success", async () => {
     await expect(userRepository.createUser(testUser)).resolves.not.toThrow();
 });
 
-test("createUser 2: Failure: EntryAlreadyExistsError", async () => {
+test("createUser 2: EntryAlreadyExistsError", async () => {
     const randomId = testUtilities.generateRandomStringId(constants.USER_ID_MAX_LENGTH);
     const hash = await crypt.generateHash(testConstants.TEST_USER_PASSWORD);
 
@@ -66,7 +66,7 @@ test("readUser 1: Success", async () => {
     expect(retrievedUser.id).toBe(userId);
 });
 
-test("readUser 2: Failure: EntryDoesNotExistError", async () => {
+test("readUser 2: EntryDoesNotExistError", async () => {
     const randomId = testUtilities.generateRandomStringId(constants.USER_ID_MAX_LENGTH);
 
     await expect(userRepository.readUser(randomId))

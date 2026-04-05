@@ -43,7 +43,6 @@ test("logIn 2: InvalidInputError", async () => {
 });
 
 test("logIn 3: UnableToAuthenticateError", async () => {
-    //await testUtilities.createRandomUser();
     const userId = await testUtilities.generateRandomStringId(constants.USER_ID_MAX_LENGTH);
     
     await expect(sessionService.logIn(userId, testConstants.TEST_USER_PASSWORD))
