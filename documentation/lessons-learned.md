@@ -1,5 +1,17 @@
 # Lessons Learned
 
+## Function Naming Conventions and Database Returns
+
+*Code Complete* by Steve McConnell recommends naming functions with a return value after a description of that return value and functions without a return value (procedures) using a verb + object format. I quickly discovered when attempting to apply these recommendations to my codebase that this advice doesn't always improve readability of code.
+
+For example, my service layer has a *logIn* function, which accepts user credentials, validates them, authenticates them, clears unwanted session IDs from the database, creates a new session in the database, handles exceptions from the database layer, and returns the newly created session ID. If I were to name this function after a description of its return, I would call it *sessionId.* And if I were to do the same for the database function it calls to create the session and return the newly created session ID, I would call that function *sessionId* as well. Clearly, this naming convention can introduce unwanted ambiguity. In this case, it also discards information about what more might be happening in the service-level function.
+
+McConnell argues that an excess of side effects in a function is an indicator that the function is not sufficiently cohesive, but this fails to address the case in which a function's acceptable purpose is to coordinate several related tasks, as in the case of *logIn.*
+
+I find *Code Complete*'s recommendations to be intuitive for primitive functions and hope to apply them in those cases. But for now, I am not convinced that I should rename many of the functions on this project in this style. I would much rather have my controllers named after HTTP methods and resources, services named after use cases, and repositories named after CRUD functions and resources.
+
+One thing *Code Complete* did open my eyes to is the different ways a programmer can assert distinctions between functions and procedures. I have a few functions that return values that aren't really needed, and I think I should rewrite them as procedures. One example would be *deleteSession,* which receives a session ID argument and proceeds to delete the associated session from the database. Error handling in this function is such that all failure cases result in an exception. Therefore, requiring the success case to return the same session ID just provided by the caller is needless, and *deleteSession* is better off as a procedure with no return value. I'll be sifting through the code to catch cases like these.
+
 ## Sprint 1 Retrospective: Adapting to New Architecture
 
 ### What went right?
