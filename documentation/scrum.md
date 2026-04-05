@@ -50,6 +50,7 @@
 | Service Layer Testing | 5 | (+) Volume |
 | NODE_ENV Support | 2 | (-) Brief |
 | Decouple Cryptography Libraries from Service Layer | 2 | (-) Brief |
+| Layer-Based Error Handling | 5 | (+) Volume |
 | Authentication Demo | 5 | (+) Editing |
 | Render Link | 2 | (-) Brief |
 | User Profile Retrieval | 3 |  |
@@ -62,13 +63,16 @@
 
 | To Do | Doing | Done | Failed |
 |---|---|---|---|
-| User Profile Update | User Profile Retrieval Testing | NODE_ENV Support |  |
-| User Profile Update Testing | User Deletion Testing | Service Layer Architecture Adjustment |  |
-| User Profile Demo | Authentication Demo | Service Layer Refactoring |  |
-|  | Render Link | Service Layer Testing |  |
+| Authentication Demo | User Profile Update | NODE_ENV Support |  |
+| User Profile Demo | User Profile Update Testing | Service Layer Architecture Adjustment |  |
+| Render Link |  | Service Layer Refactoring |  |
+|  |  | Service Layer Testing |  |
 |  |  | User Profile Retrieval |  |
 |  |  | Decouple Cryptography Libraries from Service Layer |  |
 |  |  | User Deletion |  |
+|  |  | Layer-Based Error Handling |  |
+|  |  | User Profile Retrieval Testing |  |
+|  |  | User Deletion Testing |  |
 
 ### Sprint 1: Adapting to New Architecture
 
