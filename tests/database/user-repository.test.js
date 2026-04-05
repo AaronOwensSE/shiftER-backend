@@ -2,10 +2,10 @@
 // Internal Dependencies
 // =================================================================================================
 import constants from "../../constants.js";
-import errors from "../../errors.js";
 import testConstants from "../test-constants.js";
 import testUtilities from "../test-utilities.js";
 import crypt from "../../service/crypt.js";
+import databaseErrors from "../../database/database-errors.js";
 import pool from "../../database/pool.js";
 import userRepository from "../../database/repositories/user-repository.js";
 
@@ -38,12 +38,10 @@ test("createUser 1: Success", async () => {
         email: testConstants.TEST_USER_EMAIL
     };
 
-    const userId = await userRepository.createUser(testUser);
-
-    expect(userId).toBe(randomId);
+    await expect(userRepository.createUser(testUser)).resolves.not.toThrow();
 });
 
-test("createUser 2: Failure: Resource Already Exists", async () => {
+test("createUser 2: Failure: EntryAlreadyExistsError", async () => {
     const randomId = testUtilities.generateRandomStringId(constants.USER_ID_MAX_LENGTH);
     const hash = await crypt.generateHash(testConstants.TEST_USER_PASSWORD);
 
@@ -56,7 +54,9 @@ test("createUser 2: Failure: Resource Already Exists", async () => {
 
     await userRepository.createUser(testUser);
 
-    await expect(userRepository.createUser(testUser)).rejects.toThrow(errors.ResourceAlreadyExistsError);
+    await expect(userRepository.createUser(testUser))
+        .rejects
+        .toThrow(databaseErrors.EntryAlreadyExistsError);
 });
 
 test("readUser 1: Success", async () => {
@@ -66,8 +66,24 @@ test("readUser 1: Success", async () => {
     expect(retrievedUser.id).toBe(userId);
 });
 
-test("readUser 2: Failure: Resource Does Not Exist", async () => {
+test("readUser 2: Failure: EntryDoesNotExistError", async () => {
     const randomId = testUtilities.generateRandomStringId(constants.USER_ID_MAX_LENGTH);
 
-    await expect(userRepository.readUser(randomId)).rejects.toThrow(errors.ResourceDoesNotExistError);
+    await expect(userRepository.readUser(randomId))
+        .rejects
+        .toThrow(databaseErrors.EntryDoesNotExistError);
+});
+
+test("deleteUser 1: Success", async () => {
+    const userId = await testUtilities.createRandomUser();
+
+    await expect(userRepository.deleteUser(userId)).resolves.not.toThrow();
+});
+
+test("deleteUser 2: EntryDoesNotExistError", async () => {
+    const randomId = testUtilities.generateRandomStringId(constants.USER_ID_MAX_LENGTH);
+
+    await expect(userRepository.deleteUser(randomId))
+        .rejects
+        .toThrow(databaseErrors.EntryDoesNotExistError);
 });

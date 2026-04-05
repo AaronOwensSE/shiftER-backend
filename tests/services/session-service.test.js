@@ -2,9 +2,9 @@
 // Internal Dependencies
 // =================================================================================================
 import constants from "../../constants.js";
-import errors from "../../errors.js";
 import testConstants from "../test-constants.js";
 import testUtilities from "../test-utilities.js";
+import serviceErrors from "../../service/service-errors.js";
 import sessionService from "../../service/services/session-service.js";
 import pool from "../../database/pool.js";
 
@@ -33,22 +33,22 @@ test("logIn 1: Success", async () => {
     expect(typeof sessionId).toBe("string");
 });
 
-test("logIn 2: Validation Error", async () => {
+test("logIn 2: InvalidInputError", async () => {
     const userId = false;
     const password = 5;
 
     await expect(sessionService.logIn(userId, password))
         .rejects
-        .toThrow(errors.ValidationError);
+        .toThrow(serviceErrors.InvalidInputError);
 });
 
-test("logIn 3: Invalid Credentials", async () => {
-    await testUtilities.createRandomUser();
+test("logIn 3: UnableToAuthenticateError", async () => {
+    //await testUtilities.createRandomUser();
     const userId = await testUtilities.generateRandomStringId(constants.USER_ID_MAX_LENGTH);
     
     await expect(sessionService.logIn(userId, testConstants.TEST_USER_PASSWORD))
         .rejects
-        .toThrow(errors.InvalidCredentialsError);
+        .toThrow(serviceErrors.UnableToAuthenticateError);
 });
 
 test("resumeSession 1: Success", async () => {
@@ -59,24 +59,39 @@ test("resumeSession 1: Success", async () => {
     expect(returnedUserId).toBe(userId);
 });
 
-test("resumeSession 2: Validation Error", async () => {
+test("resumeSession 2: InvalidInputError", async () => {
     const sessionId = false;
 
     await expect(sessionService.resumeSession(sessionId))
         .rejects
-        .toThrow(errors.ValidationError);
+        .toThrow(serviceErrors.InvalidInputError);
+});
+
+test("resumeSession 3: UnableToAuthenticateError", async () => {
+    const sessionId = testUtilities.generateRandomStringId(constants.SESSION_ID_HEX_STRING_LENGTH);
+
+    await expect(sessionService.resumeSession(sessionId))
+        .rejects
+        .toThrow(serviceErrors.UnableToAuthenticateError);
 });
 
 test("logOut 1: Success", async () => {
     const userId = await testUtilities.createRandomUser();
     const sessionId = await testUtilities.createRandomSession(userId);
-    const success = await sessionService.logOut(sessionId);
 
-    expect(success).toBe(true);
+    await expect(sessionService.logOut(sessionId)).resolves.not.toThrow();
 });
 
-test("logOut 2: Validation Error", async () => {
+test("logOut 2: InvalidInputError", async () => {
     const sessionId = 5;
 
-    await expect(sessionService.logOut(sessionId)).rejects.toThrow(errors.ValidationError);
+    await expect(sessionService.logOut(sessionId)).rejects.toThrow(serviceErrors.InvalidInputError);
+});
+
+test("logOut 3: UnableToAuthenticateError", async () => {
+    const sessionId = testUtilities.generateRandomStringId(constants.SESSION_ID_HEX_STRING_LENGTH);
+
+    await expect(sessionService.logOut(sessionId))
+        .rejects
+        .toThrow(serviceErrors.UnableToAuthenticateError);
 });
