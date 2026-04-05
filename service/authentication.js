@@ -1,9 +1,10 @@
 // =================================================================================================
 // Internal Dependencies
 // =================================================================================================
-import errors from "../errors.js";
 import crypt from "./crypt.js";
+import serviceErrors from "./service-errors.js";
 import database from "../database/database.js";
+import databaseErrors from "../database/database-errors.js";
 
 // =================================================================================================
 // Public API
@@ -14,7 +15,7 @@ async function authenticateCredentials(userId, password) {
     try {
         user = await database.readUser(userId);
     } catch (error) {
-        if (error instanceof errors.ResourceDoesNotExistError) {
+        if (error instanceof databaseErrors.EntryDoesNotExistError) {
             return false;
         } else {
             throw error;
@@ -27,7 +28,17 @@ async function authenticateCredentials(userId, password) {
 }
 
 async function authenticateSessionId(sessionId) {
-    const userId = await database.readUserIdFromActiveSession(sessionId);
+    let userId;
+
+    try {
+        userId = await database.readUserIdFromActiveSession(sessionId);
+    } catch (error) {
+        if (error instanceof databaseErrors.EntryDoesNotExistError) {
+            throw new serviceErrors.UnableToAuthenticateError();
+        } else {
+            throw error;
+        }
+    }
 
     return userId;
 }

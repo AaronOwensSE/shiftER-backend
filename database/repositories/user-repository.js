@@ -1,7 +1,8 @@
 // =================================================================================================
 // Internal Dependencies
 // =================================================================================================
-import errors from "../../errors.js";
+import constants from "../../constants.js";
+import databaseErrors from "../database-errors.js";
 import pool from "../pool.js";
 
 // =================================================================================================
@@ -14,21 +15,19 @@ async function createUser({ id, hash, name, email }) {
             [ id, hash, name, email ]
         );
     } catch (error) {
-        if (error.code === "23505") {   // Unique constraint violation
-            throw new errors.ResourceAlreadyExistsError();
+        if (error.code === constants.UNIQUE_CONSTRAINT_VIOLATION_CODE) {
+            throw new databaseErrors.EntryAlreadyExistsError();
         } else {
             throw error;
         }
     }
-
-    return id;
 }
 
 async function readUser(id) {
     const result = await pool.query("SELECT * FROM users WHERE id = $1;", [id]);
     
     if (result.rowCount === 0) {
-        throw new errors.ResourceDoesNotExistError();
+        throw new databaseErrors.EntryDoesNotExistError();
     }
 
     const user = result.rows[0];
@@ -40,10 +39,8 @@ async function deleteUser(id) {
     const result = await pool.query("DELETE FROM users WHERE id = $1;", [id]);
 
     if (result.rowCount === 0) {
-        throw new errors.ResourceDoesNotExistError();
+        throw new databaseErrors.EntryDoesNotExistError();
     }
-
-    return true;    // Useful for testing.
 }
 
 const userRepository = { createUser, readUser, deleteUser };

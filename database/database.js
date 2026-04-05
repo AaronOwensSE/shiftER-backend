@@ -8,7 +8,7 @@ import userRepository from "./repositories/user-repository.js";
 // Public API
 // =================================================================================================
 async function createUser(user) {
-    return await userRepository.createUser(user);
+    await userRepository.createUser(user);
 }
 
 async function readUser(id) {
@@ -16,11 +16,11 @@ async function readUser(id) {
 }
 
 async function deleteUser(id) {
-    return await userRepository.deleteUser(id);
+    await userRepository.deleteUser(id);
 }
 
 async function createSession(sessionId, userId, expires) {
-    return await sessionRepository.createSession(sessionId, userId, expires);
+    await sessionRepository.createSession(sessionId, userId, expires);
 }
 
 async function readUserIdFromActiveSession(sessionId) {
@@ -28,11 +28,11 @@ async function readUserIdFromActiveSession(sessionId) {
 }
 
 async function deleteSession(sessionId) {
-    return await sessionRepository.deleteSession(sessionId);
+    await sessionRepository.deleteSession(sessionId);
 }
 
 async function deleteSessionsByUserId(userId) {
-    return await sessionRepository.deleteSessionsByUserId(userId);
+    await sessionRepository.deleteSessionsByUserId(userId);
 }
 
 const database = {

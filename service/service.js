@@ -8,7 +8,7 @@ import sessionService from "./services/session-service.js";
 // Public API
 // =================================================================================================
 async function createUser(user) {
-    return await userService.createUser(user);
+    await userService.createUser(user);
 }
 
 async function retrieveUserProfile(sessionId, userId) {
@@ -16,7 +16,7 @@ async function retrieveUserProfile(sessionId, userId) {
 }
 
 async function deleteUser(sessionId, userId) {
-    return await userService.deleteUser(sessionId, userId);
+    await userService.deleteUser(sessionId, userId);
 }
 
 async function logIn(userId, password) {
@@ -28,7 +28,7 @@ async function resumeSession(sessionId) {
 }
 
 async function logOut(sessionId) {
-    return await sessionService.logOut(sessionId);
+    await sessionService.logOut(sessionId);
 }
 
 const service = { createUser, retrieveUserProfile, deleteUser, logIn, resumeSession, logOut };

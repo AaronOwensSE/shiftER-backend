@@ -1,9 +1,10 @@
 // =================================================================================================
 // Internal Dependencies
 // =================================================================================================
-import errors from "../../errors.js";
+import constants from "../../constants.js";
 import httpTools from "../http-tools.js";
 import service from "../../service/service.js";
+import serviceErrors from "../../service/service-errors.js";
 
 // =================================================================================================
 // Public API
@@ -15,17 +16,17 @@ async function postSession(req, res) {
         const responseBody = await service.logIn(userId, password);
         const responseBodyJson = JSON.stringify(responseBody);
 
-        res.status(200);    // 200 OK
+        res.status(constants.HTTP_200_OK);
         res.send(responseBodyJson);
     } catch (error) {
-        if (error instanceof errors.ValidationError) {
-            res.sendStatus(400);    // 400 Bad Request
-        } else if (error instanceof errors.TooManyAttemptsError) {
-            res.sendStatus(500);    // Internal Server Error
-        } else if (error instanceof errors.InvalidCredentialsError) {
-            res.sendStatus(401);    // 401 Unauthorized
+        if (error instanceof serviceErrors.InvalidInputError) {
+            res.sendStatus(constants.HTTP_400_BAD_REQUEST);
+        } else if (error instanceof serviceErrors.UnableToAuthenticateError) {
+            res.sendStatus(constants.HTTP_401_UNAUTHORIZED);
+        } else if (error instanceof serviceErrors.TooManyAttemptsError) {
+            res.sendStatus(constants.HTTP_500_INTERNAL_SERVER_ERROR);
         } else {
-            res.sendStatus(500);    // 500 Internal Server Error
+            res.sendStatus(constants.HTTP_500_INTERNAL_SERVER_ERROR);
         }
     }
 }
@@ -37,15 +38,15 @@ async function getSession(req, res) {
         const responseBody = await service.resumeSession(sessionId);
         const responseBodyJson = JSON.stringify(responseBody);
 
-        res.status(200);    // 200 OK
+        res.status(constants.HTTP_200_OK);
         res.send(responseBodyJson);
     } catch (error) {
-        if (error instanceof errors.ValidationError) {
-            res.sendStatus(400);  // 400 Bad Request
-        } else if (error instanceof errors.ResourceDoesNotExistError) {
-            res.sendStatus(401);  // 401 Unauthorized
+        if (error instanceof serviceErrors.InvalidInputError) {
+            res.sendStatus(constants.HTTP_400_BAD_REQUEST);
+        } else if (error instanceof serviceErrors.UnableToAuthenticateError) {
+            res.sendStatus(constants.HTTP_401_UNAUTHORIZED);
         } else {
-            res.sendStatus(500);    // 500 Internal Server Error
+            res.sendStatus(constants.HTTP_500_INTERNAL_SERVER_ERROR);
         }
     }
 }
@@ -56,14 +57,14 @@ async function deleteSession(req, res) {
     try {
         await service.logOut(sessionId);
 
-        res.sendStatus(200);    // 200 OK
+        res.sendStatus(constants.HTTP_200_OK);
     } catch (error) {
-        if (error instanceof errors.ValidationError) {
-            res.sendStatus(400);    // 400 Bad Request
-        } else if (error instanceof errors.ResourceDoesNotExistError) {
-            res.sendStatus(401);    // 401 Unauthorized
+        if (error instanceof serviceErrors.InvalidInputError) {
+            res.sendStatus(constants.HTTP_400_BAD_REQUEST);
+        } else if (error instanceof serviceErrors.UnableToAuthenticateError) {
+            res.sendStatus(constants.HTTP_401_UNAUTHORIZED);
         } else {
-            res.sendStatus(500);    // 500 Internal Server Error
+            res.sendStatus(constants.HTTP_500_INTERNAL_SERVER_ERROR);
         }
     }
 }

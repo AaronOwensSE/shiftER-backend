@@ -1,39 +1,59 @@
 // =================================================================================================
 // Internal Dependencies
 // =================================================================================================
-import errors from "../../errors.js";
 import authentication from "../authentication.js";
 import crypt from "../crypt.js";
+import serviceErrors from "../service-errors.js";
 import validation from "../validation.js";
 import database from "../../database/database.js";
+import databaseErrors from "../../database/database-errors.js";
 
 // =================================================================================================
 // Public API
 // =================================================================================================
 async function createUser(user) {
     if (!validation.isValidUser(user)) {
-        throw new errors.ValidationError();
+        throw new serviceErrors.InvalidInputError();
     }
 
     const { id, password, name, email } = user;
     const hash = await crypt.generateHash(password);
     const dbReadyUser = { id: id, hash: hash, name: name, email: email };
 
-    return await database.createUser(dbReadyUser);
+    try {
+        await database.createUser(dbReadyUser);
+    } catch (error) {
+        if (error instanceof databaseErrors.EntryAlreadyExistsError) {
+            throw new serviceErrors.ResourceAlreadyExistsError();
+        } else {
+            throw error;
+        }
+    }
 }
 
 async function retrieveUserProfile(sessionId, userId) {
     if (!validation.isValidSessionId(sessionId) || !validation.isValidUserId(userId)) {
-        throw new errors.ValidationError();
+        throw new serviceErrors.InvalidInputError();
     }
 
     const authenticatedUserId = await authentication.authenticateSessionId(sessionId);
 
     if (userId !== authenticatedUserId) {
-        throw new errors.UnauthorizedAccessError();
+        throw new serviceErrors.UnauthorizedAccessError();
     }
 
-    const user = await database.readUser(userId);
+    let user;
+
+    try {
+        user = await database.readUser(userId);
+    } catch (error) {
+        if (error instanceof databaseErrors.EntryDoesNotExistError) {
+            throw new serviceErrors.ResourceDoesNotExistError();
+        } else {
+            throw error;
+        }
+    }
+    
     const userProfile = { userId: user.id, userName: user.name, userEmail: user.email };
 
     return userProfile;
@@ -41,19 +61,33 @@ async function retrieveUserProfile(sessionId, userId) {
 
 async function deleteUser(sessionId, userId) {
     if (!validation.isValidSessionId(sessionId) || !validation.isValidUserId(userId)) {
-        throw new errors.ValidationError();
+        throw new serviceErrors.InvalidInputError();
     }
 
     const authenticatedUserId = await authentication.authenticateSessionId(sessionId);
 
     if (userId !== authenticatedUserId) {
-        throw new errors.UnauthorizedAccessError();
+        throw new serviceErrors.UnauthorizedAccessError();
     }
 
-    await database.deleteSessionsByUserId(userId);
     // Manually cascade further? DB should be set to cascade, but redundancy might be a good idea.
+    try {
+        await database.deleteSessionsByUserId(userId);
+    } catch (error) {
+        if (!(error instanceof databaseErrors.EntryDoesNotExistError)) {    // Recoverable
+            throw error;
+        }
+    }
 
-    return await database.deleteUser(userId);
+    try {
+        database.deleteUser(userId);
+    } catch (error) {
+        if (error instanceof databaseErrors.EntryDoesNotExistError) {
+            throw new serviceErrors.ResourceDoesNotExistError();
+        } else {
+            throw error;
+        }
+    }
 }
 
 const userService = { createUser, retrieveUserProfile, deleteUser };

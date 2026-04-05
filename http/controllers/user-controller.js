@@ -1,9 +1,10 @@
 // =================================================================================================
 // Internal Dependencies
 // =================================================================================================
-import errors from "../../errors.js";
+import constants from "../../constants.js";
 import httpTools from "../http-tools.js";
 import service from "../../service/service.js";
+import serviceErrors from "../../service/service-errors.js";
 
 // =================================================================================================
 // Public API
@@ -12,18 +13,16 @@ async function postUser(req, res) {
     const user = req.body;
 
     try {
-        const responseBody = await service.createUser(user);
-        const responseBodyJson = JSON.stringify(responseBody);
+        await service.createUser(user);
 
-        res.status(200);    // 200 OK
-        res.send(responseBodyJson);
+        res.sendStatus(constants.HTTP_200_OK);
     } catch (error) {
-        if (error instanceof errors.ValidationError) {
-            res.sendStatus(400);    // 400 Bad Request
-        } else if (error instanceof errors.ResourceAlreadyExistsError) {
-            res.sendStatus(409);    // 409 Conflict
+        if (error instanceof serviceErrors.InvalidInputError) {
+            res.sendStatus(constants.HTTP_400_BAD_REQUEST);
+        } else if (error instanceof serviceErrors.ResourceAlreadyExistsError) {
+            res.sendStatus(constants.HTTP_409_CONFLICT);
         } else {
-            res.sendStatus(500);    // 500 Internal Server Error
+            res.sendStatus(constants.HTTP_500_INTERNAL_SERVER_ERROR);
         }
     }
 }
@@ -36,17 +35,19 @@ async function getUser(req, res) {
         const responseBody = await service.retrieveUserProfile(sessionId, userId);
         const responseBodyJson = JSON.stringify(responseBody);
 
-        res.status(200);    // 200 OK
+        res.status(constants.HTTP_200_OK);
         res.send(responseBodyJson);
     } catch (error) {
-        if (error instanceof errors.ValidationError) {
-            res.sendStatus(400);    // 400 Bad Request
-        } else if (error instanceof errors.ResourceDoesNotExistError) {
-            res.sendStatus(401);    // 401 Unauthorized
-        } else if (error instanceof errors.UnauthorizedAccessError) {
-            res.sendStatus(403);    // 403 Forbidden
+        if (error instanceof serviceErrors.InvalidInputError) {
+            res.sendStatus(constants.HTTP_400_BAD_REQUEST);
+        } else if (error instanceof serviceErrors.UnableToAuthenticateError) {
+            res.sendStatus(constants.HTTP_401_UNAUTHORIZED);
+        } else if (error instanceof serviceErrors.UnauthorizedAccessError) {
+            res.sendStatus(constants.HTTP_403_FORBIDDEN);
+        } else if (error instanceof serviceErrors.ResourceDoesNotExistError) {
+            res.sendStatus(constants.HTTP_404_NOT_FOUND);
         } else {
-            res.sendStatus(500);    // 500 Internal Server Error
+            res.sendStatus(constants.HTTP_500_INTERNAL_SERVER_ERROR);
         }
     }
 }
@@ -58,18 +59,18 @@ async function deleteUser(req, res) {
     try {
         await service.deleteUser(sessionId, userId);
 
-        res.sendStatus(200);    // 200 OK
+        res.sendStatus(constants.HTTP_200_OK);
     } catch (error) {
-        if (error instanceof errors.ValidationError) {
-            res.sendStatus(400);    // 400 Bad Request
-        } else if (error instanceof errors.ResourceDoesNotExistError) {
-            // Could be 400 in the case of userId lookup failing.
-            // Consider more granularity / layer awareness.
-            res.sendStatus(401);    // 401 Unauthorized
-        } else if (error instanceof errors.UnauthorizedAccessError) {
-            res.sendStatus(403);    // 403 Forbidden
+        if (error instanceof serviceErrors.InvalidInputError) {
+            res.sendStatus(constants.HTTP_400_BAD_REQUEST);
+        } else if (error instanceof serviceErrors.UnableToAuthenticateError) {
+            res.sendStatus(constants.HTTP_401_UNAUTHORIZED);
+        } else if (error instanceof serviceErrors.UnauthorizedAccessError) {
+            res.sendStatus(constants.HTTP_403_FORBIDDEN);
+        } else if (error instanceof serviceErrors.ResourceDoesNotExistError) {
+            res.sendStatus(constants.HTTP_404_NOT_FOUND);
         } else {
-            res.sendStatus(500);    // 500 Internal Server Error
+            res.sendStatus(constants.HTTP_500_INTERNAL_SERVER_ERROR);
         }
     }
 }

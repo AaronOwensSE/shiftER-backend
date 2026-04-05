@@ -1,7 +1,8 @@
 // =================================================================================================
 // Internal Dependencies
 // =================================================================================================
-import errors from "../../errors.js";
+import constants from "../../constants.js";
+import databaseErrors from "../database-errors.js";
 import pool from "../pool.js";
 
 // =================================================================================================
@@ -14,14 +15,12 @@ async function createSession(sessionId, userId, expires) {
             [sessionId, userId, expires]
         );
     } catch (error) {
-        if (error.code === "23505") {   // Unique constraint violation
-            throw new errors.ResourceAlreadyExistsError();
+        if (error.code === constants.UNIQUE_CONSTRAINT_VIOLATION_CODE) {
+            throw new databaseErrors.EntryAlreadyExistsError();
         } else {
             throw error;
         }
     }
-
-    return sessionId;
 }
 
 async function readUserIdFromActiveSession(sessionId) {
@@ -32,7 +31,7 @@ async function readUserIdFromActiveSession(sessionId) {
     );
 
     if (result.rowCount === 0) {
-        throw new errors.ResourceDoesNotExistError();
+        throw new databaseErrors.EntryDoesNotExistError();
     }
 
     const userId = result.rows[0].user_id;
@@ -44,20 +43,16 @@ async function deleteSession(sessionId) {
     const result = await pool.query("DELETE FROM sessions WHERE id = $1;", [sessionId]);
 
     if (result.rowCount === 0) {
-        throw new errors.ResourceDoesNotExistError();
+        throw new databaseErrors.EntryDoesNotExistError();
     }
-
-    return true;    // Useful for testing.
 }
 
 async function deleteSessionsByUserId(userId) {
     const result = await pool.query("DELETE FROM sessions WHERE user_id = $1;", [userId]);
 
     if (result.rowCount === 0) {
-        throw new errors.ResourceDoesNotExistError();
+        throw new databaseErrors.EntryDoesNotExistError();
     }
-
-    return true;    // Useful for testing.
 }
 
 const sessionRepository = {
