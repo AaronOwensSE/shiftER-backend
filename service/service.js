@@ -31,6 +31,16 @@ async function retrieveUserProfile(sessionId, userId) {
  * @throws {UnauthorizedAccessError}
  * @throws {ResourceDoesNotExistError}
  */
+async function updateUserProfile(sessionId, userId, updates) {
+    await userService.updateUserProfile(sessionId, userId, updates);
+}
+
+/**
+ * @throws {InvalidInputError}
+ * @throws {UnableToAuthenticateError}
+ * @throws {UnauthorizedAccessError}
+ * @throws {ResourceDoesNotExistError}
+ */
 async function deleteUser(sessionId, userId) {
     await userService.deleteUser(sessionId, userId);
 }
@@ -60,5 +70,15 @@ async function logOut(sessionId) {
     await sessionService.logOut(sessionId);
 }
 
-const service = { createUser, retrieveUserProfile, deleteUser, logIn, resumeSession, logOut };
+const service = {
+    createUser,
+    retrieveUserProfile,
+    updateUserProfile,
+    deleteUser,
+    
+    logIn,
+    resumeSession,
+    logOut
+};
+
 export default service;

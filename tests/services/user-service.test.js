@@ -7,6 +7,7 @@ import testUtilities from "../test-utilities.js";
 import pool from "../../database/pool.js";
 import serviceErrors from "../../service/service-errors.js";
 import userService from "../../service/services/user-service.js";
+import service from "../../service/service.js";
 
 // =================================================================================================
 // Setup/Teardown
@@ -94,7 +95,49 @@ test("retrieveUserProfile 4: UnauthorizedAccessError", async () => {
 });
 
 // retrieveUserProfile 4: ResourceDoesNotExistError
-// Should not be possible under current logic.
+// Should not be reachable unless logic expanded to allow retrieval of other users.
+
+test("updateUserProfile 1: Success", async () => {
+    const userId = await testUtilities.createRandomUser();
+    const sessionId = await testUtilities.createRandomSession(userId);
+    const updates = { name: "bob", email: "bob@example.com" };
+
+    await expect(userService.updateUserProfile(sessionId, userId, updates)).resolves.not.toThrow();
+});
+
+test("updateUserProfile 2: InvalidInputError", async () => {
+    const userId = 5;
+    const sessionId = false;
+    const updates = { notAField: "asdf" };
+
+    await expect(userService.updateUserProfile(sessionId, userId, updates))
+        .rejects
+        .toThrow(serviceErrors.InvalidInputError);
+});
+
+test("updateUserProfile 3: UnableToAuthenticateError", async () => {
+    const userId = await testUtilities.createRandomUser();
+    const sessionId = testUtilities.generateRandomStringId(constants.SESSION_ID_HEX_STRING_LENGTH);
+    const updates = { name: "bob", email: "bob@example.com" };
+
+    await expect(userService.updateUserProfile(sessionId, userId, updates))
+        .rejects
+        .toThrow(serviceErrors.UnableToAuthenticateError);
+});
+
+test("updateUserProfile 4: UnauthorizedAccessError", async () => {
+    const userId = await testUtilities.createRandomUser();
+    const sessionId = await testUtilities.createRandomSession(userId);
+    const updates = { name: "bob", email: "bob@example.com" };
+    const unauthorizedUserId = testUtilities.generateRandomStringId(constants.USER_ID_MAX_LENGTH);
+
+    await expect(userService.updateUserProfile(sessionId, unauthorizedUserId, updates))
+        .rejects
+        .toThrow(serviceErrors.UnauthorizedAccessError);
+});
+
+// updateUserProfile 5: ResourceDoesNotExistError
+// Should not be reachable unless logic expanded to allow update of other users.
 
 test("deleteUser 1: Success", async () => {
     const userId = await testUtilities.createRandomUser();
@@ -132,4 +175,4 @@ test("deleteUser 4: UnauthorizedAccessError", async () => {
 });
 
 // deleteUser 5: ResourceDoesNotExistError
-// Should not be possible under current logic.
+// Should not be reachable unless logic expanded to allow deletion of other users.

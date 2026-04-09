@@ -3,6 +3,7 @@
 // =================================================================================================
 import constants from "../../constants.js";
 import databaseErrors from "../database-errors.js";
+import updateTools from "../update-tools.js";
 import pool from "../pool.js";
 
 // =================================================================================================
@@ -44,6 +45,17 @@ async function readUser(id) {
 /**
  * @throws {EntryDoesNotExistError}
  */
+async function updateUser(id, updates) {
+    const result = await updateTools.updateQuery("users", { id: id }, updates);
+
+    if (result.rowCount === 0) {
+        throw new databaseErrors.EntryDoesNotExistError();
+    }
+}
+
+/**
+ * @throws {EntryDoesNotExistError}
+ */
 async function deleteUser(id) {
     const result = await pool.query("DELETE FROM users WHERE id = $1;", [id]);
 
@@ -52,5 +64,5 @@ async function deleteUser(id) {
     }
 }
 
-const userRepository = { createUser, readUser, deleteUser };
+const userRepository = { createUser, readUser, updateUser, deleteUser };
 export default userRepository;

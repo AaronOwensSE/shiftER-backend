@@ -74,6 +74,22 @@ test("readUser 2: EntryDoesNotExistError", async () => {
         .toThrow(databaseErrors.EntryDoesNotExistError);
 });
 
+test("updateUser 1: Success", async () => {
+    const userId = await testUtilities.createRandomUser();
+    const updates = { name: "bob", email: "bob@example.com" };
+    
+    await expect(userRepository.updateUser(userId, updates)).resolves.not.toThrow();
+});
+
+test("updateUser 2: EntryDoesNotExistError", async () => {
+    const userId = testUtilities.generateRandomStringId(constants.USER_ID_MAX_LENGTH);
+    const updates = { name: "bob", email: "bob@example.com" };
+
+    await expect(userRepository.updateUser(userId, updates))
+        .rejects
+        .toThrow(databaseErrors.EntryDoesNotExistError);
+});
+
 test("deleteUser 1: Success", async () => {
     const userId = await testUtilities.createRandomUser();
 

@@ -24,6 +24,13 @@ async function readUser(id) {
 /**
  * @throws {EntryDoesNotExistError}
  */
+async function updateUser(id, updates) {
+    return await userRepository.updateUser(id, updates);
+}
+
+/**
+ * @throws {EntryDoesNotExistError}
+ */
 async function deleteUser(id) {
     await userRepository.deleteUser(id);
 }
@@ -59,7 +66,9 @@ async function deleteSessionsByUserId(userId) {
 const database = {
     createUser,
     readUser,
+    updateUser,
     deleteUser,
+
     createSession,
     readUserIdFromActiveSession,
     deleteSession,

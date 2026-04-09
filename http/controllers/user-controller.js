@@ -52,6 +52,30 @@ async function getUser(req, res) {
     }
 }
 
+async function patchUser(req, res) {
+    const sessionId = httpTools.getBearerToken(req);
+    const userId = req.params.userId;
+    const updates = req.body;
+
+    try {
+        service.updateUserProfile(sessionId, userId, updates);
+
+        res.sendStatus(constants.HTTP_200_OK);
+    } catch (error) {
+        if (error instanceof serviceErrors.InvalidInputError) {
+            res.sendStatus(constants.HTTP_400_BAD_REQUEST);
+        } else if (error instanceof serviceErrors.UnableToAuthenticateError) {
+            res.sendStatus(constants.HTTP_401_UNAUTHORIZED);
+        } else if (error instanceof serviceErrors.UnauthorizedAccessError) {
+            res.sendStatus(constants.HTTP_403_FORBIDDEN);
+        } else if (error instanceof serviceErrors.ResourceDoesNotExistError) {
+            res.sendStatus(constants.HTTP_404_NOT_FOUND);
+        } else {
+            res.sendStatus(constants.HTTP_500_INTERNAL_SERVER_ERROR);
+        }
+    }
+}
+
 async function deleteUser(req, res) {
     const sessionId = httpTools.getBearerToken(req);
     const userId = req.params.userId;
@@ -75,5 +99,5 @@ async function deleteUser(req, res) {
     }
 }
 
-const userController = { postUser, getUser, deleteUser };
+const userController = { postUser, getUser, patchUser, deleteUser };
 export default userController;

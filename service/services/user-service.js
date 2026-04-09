@@ -1,8 +1,10 @@
 // =================================================================================================
 // Internal Dependencies
 // =================================================================================================
+import constants from "../../constants.js";
 import authentication from "../authentication.js";
 import crypt from "../crypt.js";
+import sanitization from "../sanitization.js";
 import serviceErrors from "../service-errors.js";
 import validation from "../validation.js";
 import database from "../../database/database.js";
@@ -16,13 +18,13 @@ import databaseErrors from "../../database/database-errors.js";
  * @throws {ResourceAlreadyExistsError}
  */
 async function createUser(user) {
-    if (!validation.isValidUser(user)) {
+    const sanitizedUser = sanitization.sanitizedObject(user, constants.CREATE_USER_ALLOWED_FIELDS);
+
+    if (!validation.isValidUser(sanitizedUser)) {
         throw new serviceErrors.InvalidInputError();
     }
 
-    const { id, password, name, email } = user;
-    const hash = await crypt.generateHash(password);
-    const dbReadyUser = { id: id, hash: hash, name: name, email: email };
+    const dbReadyUser = await replacePasswordWithHash(sanitizedUser);
 
     try {
         await database.createUser(dbReadyUser);
@@ -75,6 +77,43 @@ async function retrieveUserProfile(sessionId, userId) {
  * @throws {UnauthorizedAccessError}
  * @throws {ResourceDoesNotExistError}
  */
+async function updateUserProfile(sessionId, userId, updates) {
+    const sanitizedUpdates = sanitization.sanitizedObject(
+        updates, constants.UPDATE_USER_ALLOWED_FIELDS
+    );
+
+    if (!validation.isValidSessionId(sessionId)
+        || !validation.isValidUserId(userId)
+        || !validation.isValidUserUpdate(sanitizedUpdates))
+    {
+        throw new serviceErrors.InvalidInputError();
+    }
+
+    const authenticatedUserId = await authentication.authenticateSessionId(sessionId);
+
+    if (userId !== authenticatedUserId) {
+        throw new serviceErrors.UnauthorizedAccessError();
+    }
+
+    const dbReadyUpdates = await replacePasswordWithHash(sanitizedUpdates);
+
+    try {
+        await database.updateUser(userId, dbReadyUpdates);
+    } catch (error) {
+        if (error instanceof databaseErrors.EntryDoesNotExistError) {
+            throw new serviceErrors.ResourceDoesNotExistError();
+        } else {
+            throw error;
+        }
+    }
+}
+
+/**
+ * @throws {InvalidInputError}
+ * @throws {UnableToAuthenticateError}
+ * @throws {UnauthorizedAccessError}
+ * @throws {ResourceDoesNotExistError}
+ */
 async function deleteUser(sessionId, userId) {
     if (!validation.isValidSessionId(sessionId) || !validation.isValidUserId(userId)) {
         throw new serviceErrors.InvalidInputError();
@@ -106,5 +145,19 @@ async function deleteUser(sessionId, userId) {
     }
 }
 
-const userService = { createUser, retrieveUserProfile, deleteUser };
+const userService = { createUser, retrieveUserProfile, updateUserProfile, deleteUser };
 export default userService;
+
+//==================================================================================================
+// Helper Functions
+//==================================================================================================
+async function replacePasswordWithHash(userFields) {
+    let updatedUserFields = userFields;
+
+    if (Object.hasOwn(updatedUserFields, "password")) {
+        updatedUserFields.hash = await crypt.generateHash(userFields.password);
+        delete updatedUserFields.password;
+    }
+
+    return updatedUserFields;
+}

@@ -13,6 +13,12 @@ function isValidUser({ id, password, name, email }) {
         && isValidUserEmail(email);
 }
 
+function isValidUserUpdate({ password, name, email }) {
+    return isValidUserPassword(password)
+        || isValidUserName(name)
+        || isValidUserEmail(email);
+}
+
 function isValidUserId(id) {
     return typeof id == "string"
         && id.length >= constants.USER_ID_MIN_LENGTH
@@ -44,6 +50,7 @@ function isValidSessionId(sessionId) {
 
 const validation = {
     isValidUser,
+    isValidUserUpdate,
     isValidUserId,
     isValidUserPassword,
     isValidUserName,

@@ -22,6 +22,9 @@ app.post("/users", userController.postUser);
 // Get user -> Retrieve user profile
 app.get("/users/:userId", userController.getUser);
 
+// Patch user -> Update user profile
+app.patch("/users/:userId", userController.patchUser);
+
 // Delete user -> Delete user
 app.delete("/users/:userId", userController.deleteUser);
 
