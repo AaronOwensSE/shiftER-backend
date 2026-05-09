@@ -6,7 +6,6 @@
 |---|---|
 | Database Setup | High |
 | Deployment Setup | High |
-| CI/CD Setup | High |
 | Account Creation | High |
 | Login Authentication | High |
 | Session Authentication | High |
@@ -24,22 +23,56 @@
 
 | To Do | Doing | Done |
 |---|---|---|
-| CI/CD Setup | Basic User Functionality | Database Setup |
-| Basic Group Functionality |  | Deployment Setup |
-| Basic Draft and Schedule Functionality |  | Account Creation |
-| Fine-Grained User Functionality |  | Login Authentication |
-| Fine-Grained Group Functionality |  | Session Authentication |
-| Fine-Grained Draft and Schedule Functionality |  | Logout |
-| Password Recovery |  |  |
-| Rate Limiting |  |  |
-| Excel Integration |  |  |
+| Basic Draft and Schedule Functionality | Basic Group Functionality | Database Setup |
+| Fine-Grained User Functionality |  | Deployment Setup |
+| Fine-Grained Group Functionality |  | Account Creation |
+| Fine-Grained Draft and Schedule Functionality |  | Login Authentication |
+| Password Recovery |  | Session Authentication |
+| Rate Limiting |  | Logout |
+| Excel Integration |  | Basic User Functionality |
 | Qgenda Integration |  |  |
 
 ## Sprints
 
-### Sprint 2: Refactoring, Demoing, and Basic User Functionality
+### Sprint 3: Basic Group Functionality
 
 #### Velocity: 
+
+#### Backlog
+
+| Feature | Points | Rationale |
+|---|---|---|
+| Group Creation | 5 | (+) Schema Complexity |
+| Membership Retrieval by User | 3 |  |
+| Group Profile Retrieval | 8 | (+) Authorization, (+) Schema Complexity |
+| Membership Retrieval by Group | 8 | (+) Authorization, (+) Schema Complexity |
+| Group Invitation | 5 | (+) Authorization |
+| Invitation Retrieval | 3 |  |
+| Invitation Acceptance/Rejection | 3 |  |
+| Group Departure | 5 | (+) Authorization |
+| Group Removal | 5 | (+) Authorization |
+| Group Profile Update | 5 | (+) Authorization |
+| Group Admin Update | 8 | (+) Authorization, (+) Schema Complexity |
+| Group Deletion | 8 | (+) Authorization, (+) Schema Complexity |
+
+| To Do | Doing | Done | Failed |
+|---|---|---|---|
+|  | Group Creation |  |  |
+|  | Membership Retrieval by User |  |  |
+|  | Group Profile Retrieval |  |  |
+|  | Membership Retrieval by Group |  |  |
+| Group Invitation |  |  |  |
+| Invitation Retrieval |  |  |  |
+| Invitation Acceptance/Rejection |  |  |  |
+| Group Departure |  |  |  |
+| Group Removal |  |  |  |
+| Group Profile Update |  |  |  |
+| Group Admin Update |  |  |  |
+| Group Deletion |  |  |  |
+
+### Sprint 2: Refactoring, Demoing, and Basic User Functionality
+
+#### Velocity: 40
 
 #### Backlog
 
@@ -63,9 +96,9 @@
 
 | To Do | Doing | Done | Failed |
 |---|---|---|---|
-| User Profile Demo | Authentication Demo | NODE_ENV Support |  |
-| Render Link |  | Service Layer Architecture Adjustment |  |
-|  |  | Service Layer Refactoring |  |
+|  |  | NODE_ENV Support | Authentication Demo |
+|  |  | Service Layer Architecture Adjustment | User Profile Demo |
+|  |  | Service Layer Refactoring | Render Link |
 |  |  | Service Layer Testing |  |
 |  |  | User Profile Retrieval |  |
 |  |  | Decouple Cryptography Libraries from Service Layer |  |
