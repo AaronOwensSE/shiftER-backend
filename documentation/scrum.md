@@ -57,14 +57,10 @@
 
 | To Do | Doing | Done | Failed |
 |---|---|---|---|
-|  | Group Creation |  |  |
-|  | Membership Retrieval by User |  |  |
-|  | Group Profile Retrieval |  |  |
-|  | Membership Retrieval by Group |  |  |
-| Group Invitation |  |  |  |
-| Invitation Retrieval |  |  |  |
-| Invitation Acceptance/Rejection |  |  |  |
-| Group Departure |  |  |  |
+| Group Invitation | Group Creation |  |  |
+| Invitation Retrieval | Membership Retrieval by User |  |  |
+| Invitation Acceptance/Rejection | Group Profile Retrieval |  |  |
+| Group Departure | Membership Retrieval by Group |  |  |
 | Group Removal |  |  |  |
 | Group Profile Update |  |  |  |
 | Group Admin Update |  |  |  |
